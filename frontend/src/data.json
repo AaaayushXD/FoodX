@@ -1,0 +1,85 @@
+{
+  "orderHistory": [
+    {
+      "id": "ORD-001",
+      "product": ["Chicken Pizza * 2", "Veggie Burger * 1"],
+      "totalAmount": "Rs 2,000",
+      "deliveryStatus": "Delivered",
+      "paymentMethod": "Credit Card",
+      "orderDate": "2024-08-01"
+    },
+    {
+      "id": "ORD-002",
+      "product": ["Pepperoni Pizza * 3", "Garlic Bread * 2"],
+      "totalAmount": "Rs 3,500",
+      "deliveryStatus": "Received",
+      "paymentMethod": "Cash on Delivery",
+      "orderDate": "2024-08-02"
+    },
+    {
+      "id": "ORD-003",
+      "product": ["Chicken Wrap * 4", "Cold Drink * 2"],
+      "totalAmount": "Rs 1,800",
+      "deliveryStatus": "Preparing",
+      "paymentMethod": "UPI",
+      "orderDate": "2024-08-03"
+    },
+    {
+      "id": "ORD-004",
+      "product": ["Veggie Pizza * 1", "Chicken Wings * 2"],
+      "totalAmount": "Rs 2,200",
+      "deliveryStatus": "Delivered",
+      "paymentMethod": "Debit Card",
+      "orderDate": "2024-08-04"
+    },
+    {
+      "id": "ORD-005",
+      "product": ["Margarita Pizza * 2", "Pasta * 1"],
+      "totalAmount": "Rs 2,500",
+      "deliveryStatus": "Canceled",
+      "paymentMethod": "Credit Card",
+      "orderDate": "2024-08-05"
+    },
+    {
+      "id": "ORD-006",
+      "product": ["BBQ Chicken Pizza * 1", "Nachos * 2"],
+      "totalAmount": "Rs 1,700",
+      "deliveryStatus": "Delivered",
+      "paymentMethod": "PayPal",
+      "orderDate": "2024-08-06"
+    },
+    {
+      "id": "ORD-007",
+      "product": ["Hawaiian Pizza * 2", "Garlic Knots * 1"],
+      "totalAmount": "Rs 2,300",
+      "deliveryStatus": "Received",
+      "paymentMethod": "UPI",
+      "orderDate": "2024-08-07"
+    },
+    {
+      "id": "ORD-008",
+      "product": ["Buffalo Wings * 3", "Cheese Sticks * 1"],
+      "totalAmount": "Rs 2,100",
+      "deliveryStatus": "Preparing",
+      "paymentMethod": "Cash on Delivery",
+      "orderDate": "2024-08-08"
+    },
+    {
+      "id": "ORD-009",
+      "product": ["Supreme Pizza * 2", "Chicken Nuggets * 2"],
+      "totalAmount": "Rs 2,900",
+      "deliveryStatus": "Delivered",
+      "paymentMethod": "Credit Card",
+      "orderDate": "2024-08-09"
+    },
+    {
+      "id": "ORD-010",
+      "product": ["Pepperoni Pizza * 1", "Tacos * 2"],
+      "totalAmount": "Rs 2,400",
+      "deliveryStatus": "Canceled",
+      "paymentMethod": "Debit Card",
+      "orderDate": "2024-08-10"
+    }
+  ]  
+  
+}
