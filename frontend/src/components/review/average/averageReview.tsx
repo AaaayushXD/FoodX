@@ -1,9 +1,16 @@
 import { Icons } from "@/utils";
 import { StarRating } from "../star/starReview";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { AddProductReview } from "@/features";
 
 export const AverageReview = React.memo(
-  ({ ratings }: { ratings: Model.FeedbackDetail[] }) => {
+  ({
+    ratings,
+    productId,
+  }: {
+    ratings: Model.FeedbackDetail[];
+    productId?: string;
+  }) => {
     const averageRating = React.useMemo(() => {
       return (
         ratings?.reduce((acc, rating) => acc + rating.rating, 0) /
@@ -17,56 +24,79 @@ export const AverageReview = React.memo(
       );
     }, [ratings]);
 
-    const percentage = (allRating?.length / ratings.length) * 100;
+    const [openRating, setOpenRating] = useState<boolean>(false);
 
     return (
       <div className="  w-full flex flex-col bg-white p-3 items-start justify-start gap-5 ">
-        <div className="w-full flex flex-col  items-start justify-start">
+        <div className="flex items-center justify-between w-full">
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings
           </h1>
-          <div className="flex items-center justify-start gap-2">
-            <h1 className="font-bold text-[50px] ">
-              {averageRating.toFixed(1)}
-            </h1>
-            <div className="flex flex-col items-start justify-start gap-0.5">
-              <StarRating size="4" rating={averageRating} />
-              <span className=" text-[14px] text-[var(--secondary-text)] ">
-                {" "}
-                Based on {ratings.length.toFixed(1)} ratings
-              </span>
+          <button
+            onClick={() => setOpenRating(!openRating)}
+            className="flex max-w-[140px] sm:max-w-[150px] w-full items-center border border-gray-300 p-2 rounded-full justify-start gap-3"
+          >
+            <Icons.comment className="sm:size-5 size-4 " />
+            <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
+          </button>
+        </div>
+
+        {/* average ratings */}
+        <div className="w-full md:flex-row gap-3 md:gap-8 flex-col flex items-start justify-between">
+          <div className="w-full max-w-md flex flex-col  md:bg-slate-200 rounded-lg  items-start justify-start">
+            <div className="flex md:flex-col w-full py-5 rounded-lg items-center justify-center gap-2">
+              <h1 className="font-bold text-[50px] ">
+                {averageRating.toFixed(1)}
+              </h1>
+              <div className="flex flex-col items-start justify-start gap-0.5">
+                <StarRating size="4" rating={averageRating} />
+                <span className=" text-[14px] text-[var(--secondary-text)] ">
+                  {" "}
+                  Based on {ratings.length.toFixed(1)} ratings
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full border-dotted pt-8 border-t max-w-lg flex flex-col items-start justify-start gap-8">
-          {allRating.map((rating) => {
-            const ratingCount = ratings?.filter(
-              (rate) => rate.rating === rating
-            );
-            const percentage = (ratingCount.length / ratings.length) * 100;
-            return (
-              <div className=" relative max-w-lg w-full sm:h-4 h-2 bg-slate-300 rounded-full ">
-                <div
-                  style={{
-                    width: `${percentage}%`,
-                    boxSizing: "border-box",
-                  }}
-                  className={` ${
-                    percentage < 50
-                      ? "bg-red-500"
-                      : percentage >= 50 && percentage < 80
-                      ? "bg-yellow-500"
-                      : "bg-green-500"
-                  } h-full  rounded-full `}
-                ></div>
-                {allRating[0] && (
-                  <span className=" text-[15px] right-5 -top-5 sm:-top-6  absolute sm:text-[18px] ">
-                    {`${ratingCount.length}(${ratingCount[0].rating.toFixed(1)}) `}
-                  </span>
-                )}
-              </div>
-            );
-          })}
+          <div className="w-full border-dotted md:border-none pt-8 border-t max-w-lg flex flex-col items-start justify-start gap-8">
+            {allRating.map((rating) => {
+              const ratingCount = ratings?.filter(
+                (rate) => rate.rating === rating
+              );
+              const percentage = (ratingCount.length / ratings.length) * 100;
+              return (
+                <div className=" relative max-w-lg w-full sm:h-4 h-2 bg-slate-300 rounded-full ">
+                  <div
+                    style={{
+                      width: `${percentage}%`,
+                      boxSizing: "border-box",
+                    }}
+                    className={` ${
+                      percentage < 50
+                        ? "bg-red-500"
+                        : percentage >= 50 && percentage < 80
+                        ? "bg-yellow-500"
+                        : "bg-green-500"
+                    } h-full  rounded-full `}
+                  ></div>
+                  {allRating[0] && (
+                    <span className=" text-[15px] right-5 -top-5 sm:-top-6  absolute sm:text-[18px] ">
+                      {`${ratingCount.length}(${ratingCount[0].rating.toFixed(
+                        1
+                      )}) `}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {openRating && (
+            <AddProductReview
+              action="add"
+              openReview={openRating}
+              productId={productId}
+              setOpenReview={() => setOpenRating(!openRating)}
+            />
+          )}
         </div>
       </div>
     );

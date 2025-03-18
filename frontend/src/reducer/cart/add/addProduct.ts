@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-export function addProduct<T extends { products: Partial<Ui.Product[]> }>(
+export function addProduct<T extends { products: Ui.Product[] }>(
   state: T,
   action: PayloadAction<Ui.Product>
 ) {

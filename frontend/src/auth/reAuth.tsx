@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent } from "react";
 
 import toast from "react-hot-toast";
-import { reAuthUser } from "@/firebase/utils";
+// import { reAuthUser } from "@/firebase/utils";
 import { useHooks } from "@/hooks/useHooks";
 import { Icons } from "@/utils";
 
@@ -26,7 +26,7 @@ export const ReAuth: React.FC<ReAuthProp> = ({ isVerified }) => {
       return toast.error("Email or Password are required.");
     setLoading(true);
     try {
-      await reAuthUser(email, password);
+      // await reAuthUser(email, password);
       isVerified();
     } catch (error) {
       toast.error("Invalid Email or Password");

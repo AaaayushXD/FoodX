@@ -13,27 +13,24 @@ declare namespace Ui {
     totalSold?: number;
     createdAt?: Common.TimeStamp;
     updatedAt?: Common.TimeStamp;
-    collection?: Common.ProductCollection
+    collection?: Common.ProductCollection;
+    discountPrice?: number;
   }
-
 
   interface SpecialProducts extends Product {
-    discountPrice: number;  
+    discountPrice: number;
   }
-
 
   type BannerType = "banners" | "sponsors";
 
   interface FeedbackInfo {
     uid: string;
-    userId?: string
+    userId?: string;
     productId: string;
     rating: number;
     message: string;
     image?: string;
   }
-
-  
 
   interface Banner {
     id: string;
@@ -45,15 +42,15 @@ declare namespace Ui {
     updatedAt?: string;
   }
 
-
   interface Category {
     id: string; //pk
     name: string;
     image: string;
+    description?: string;
+    cover?: string;
     createdAt?: Common.TimeStamp;
     updatedAt?: Common.TimeStamp;
   }
-  
 
   interface SlideProp {
     url: string;

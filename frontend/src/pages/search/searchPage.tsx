@@ -10,16 +10,15 @@ import Empty from "@/assets/empty.png";
 export const SearchPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<Ui.Product[]>([]);
-  const { data: allProducts, isFetched } = useAllProducts();
+  const { isError, isLoading, products } = useAllProducts();
 
   const handleSearch = async (value: string) => {
     if (value.length <= 0) {
       return setSearchData([]);
     }
-    if (!isFetched) return setLoading(isFetched);
-    setLoading(isFetched);
+    if (isLoading) return;
+    setLoading(isLoading);
     try {
-      
       const filter = await searchProducts(value);
       setSearchData(filter as Ui.Product[]);
     } catch (error) {
@@ -30,17 +29,15 @@ export const SearchPage = () => {
   };
 
   const searchProducts = async (value: string) => {
-    if (isFetched) {
-      const filterProducts = allProducts?.filter((product) =>
+    if (!isLoading) {
+      const filterProducts = products?.filter((product) =>
         product.name.toLowerCase().includes(value.toLowerCase())
       );
       return filterProducts as Ui.Product[];
     }
   };
 
-  const debounceSearch = useCallback(debounce(handleSearch, 200), [
-    allProducts,
-  ]);
+  const debounceSearch = useCallback(debounce(handleSearch, 200), [products]);
 
   const navigate = useNavigate();
 
@@ -64,7 +61,7 @@ export const SearchPage = () => {
         <div className="w-full flex items-center justify-start gap-10 flex-wrap">
           {loading ? (
             <NotificationLoader />
-          ) :  searchData.length <= 0 ? (
+          ) : searchData.length <= 0 ? (
             <EmptyComponent image={Empty} title="Search Products" />
           ) : (
             searchData?.map((product) => (

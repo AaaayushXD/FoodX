@@ -3,7 +3,7 @@ import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
 export const get_productFeedback = async (
-  data: Common.FetchPaginate<keyof Model.FeedbackDetail, "">
+  data: Common.FetchPaginate<keyof Model.FeedbackDetail, ''> & {productId?:string}
 ): Promise<
   Api.Response<{
     feedbacks: Model.FeedbackDetail[];

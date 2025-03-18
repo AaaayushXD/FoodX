@@ -10,7 +10,7 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
   return (
     <div
       onClick={() => navigate(`/${product?.collection || "products"}/${product.id}`)}
-      className=" h-full cursor-pointer flex flex-col  gap-1.5 items-start justify-start rounded-lg w-full"
+      className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5 items-start justify-start rounded-lg w-full"
     >
       <div className=" w-full relative">
         <Image

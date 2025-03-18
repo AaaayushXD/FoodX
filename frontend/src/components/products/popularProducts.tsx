@@ -7,17 +7,19 @@ import { ApiError, Skeleton } from "@/helpers";
 import { Empty as EmptyComponent } from "@/commons";
 import { toaster } from "@/utils";
 import { useQuery } from "react-query";
+import { useAllProducts } from "@/hooks";
 
 export const PopularProducts = () => {
   const navigate = useNavigate();
+  const { products, isLoading: loading } = useAllProducts();
 
   const getProducts = async (): Promise<Ui.Product[]> => {
     try {
       const response = await getPopularProducts();
-      // const aggregatePopularProducts = response?.data?.map((product) => {
-      //   return { ...product, collection: "products" };
-      // });
-      return response?.data;
+      const filterProducts = products?.filter((product) =>
+        response?.data?.some((pro) => pro.id === product.id)
+      );
+      return filterProducts;
     } catch (error) {
       throw new Error("Error while fetching popular product", error);
     }
@@ -28,6 +30,7 @@ export const PopularProducts = () => {
     cacheTime: 10 * 60 * 60,
     staleTime: 10 * 60 * 60,
     refetchOnWindowFocus: false,
+    enabled: !loading,
   });
 
   return (

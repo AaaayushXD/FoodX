@@ -78,7 +78,28 @@ export const getPopularProducts = async (): Promise<
 export const getProductById = async (
   productId: string,
   collection: Common.ProductCollection
-): Promise<Api.Response<{ data: Ui.Product }>> => {
+): Promise<Api.Response<{ data: Ui.Product | Ui.SpecialProducts }>> => {
+  try {
+    const repsonse = await makeRequest({
+      method: "get",
+      url: `products/${productId}`,
+      params: { id: productId, collection: collection },
+    });
+    return repsonse.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const { status, data } = error.response;
+      throw new ApiError(status, data?.message, data?.errors, false);
+    }
+    throw new ApiError(500);
+  }
+};
+
+
+export const recentProducts = async (
+  productId: string,
+  collection: Common.ProductCollection
+): Promise<Api.Response<{ data:  Ui.SpecialProducts }>> => {
   try {
     const repsonse = await makeRequest({
       method: "get",

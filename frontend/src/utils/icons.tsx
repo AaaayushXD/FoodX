@@ -7,6 +7,7 @@ import {
   MdOutlineShoppingCartCheckout,
 } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
+import { FaComment, FaRegComment } from "react-icons/fa6";
 import { GiRingingBell, GiTakeMyMoney, GiTomato } from "react-icons/gi";
 import {
   IoLogOutOutline,
@@ -16,12 +17,7 @@ import {
   IoCallOutline,
   IoWarningOutline,
 } from "react-icons/io5";
-import {
-  FaChevronUp,
-  FaXTwitter,
-  FaArrowRightLong,
-  FaNewspaper,
-} from "react-icons/fa6";
+import { FaChevronUp, FaXTwitter, FaNewspaper } from "react-icons/fa6";
 import { RiMenu2Line } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
 import { PiShippingContainer } from "react-icons/pi";
@@ -48,7 +44,6 @@ import {
   FaMinus,
   FaPlus,
   FaTrashRestore,
-  FaRedoAlt,
   FaRegClock,
   FaInstagram,
   FaFacebookF,
@@ -69,6 +64,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Award,
   Ban,
   Check,
   Clipboard,
@@ -99,25 +95,25 @@ export const UpdateUser: React.FC = () => {
 
 const Filter: React.FC = () => {
   return (
-    <div className="bg-[var(--light-foreground)] p-2 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
-      <p className="text-xs">Filter</p>
-      <Icons.filter size={15} />
-    </div>
+    <div className="bg-[var(--light-foreground)] px-3 p-1 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
+    <p className="text-[14px] font-semibold sm:text-[16px] ">Filter</p>
+    <Icons.filter className="sm:size-5 size-4 " />
+  </div>
   );
 };
 const Sort: React.FC = () => {
   return (
-    <div className="bg-[var(--light-foreground)] p-2 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
-      <p className="text-xs">Sort</p>
-      <Icons.sort size={15} />
+    <div className="bg-[var(--light-foreground)] px-3 p-1 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
+      <p className="text-[14px] font-semibold sm:text-[16px] ">Sort</p>
+      <Icons.sort className="sm:size-5 size-4 " />
     </div>
   );
 };
 
 export const AddToCart = () => {
   return (
-    <button className="text-[20px] w-[100px] rounded-md tracking-wider  py-2 flex items-center justify-center text-white font-bold bg-gradient-to-t from-[var(--primary-color)] to-[var(--primary-light)] ">
-      ADD{" "}
+    <button className="text-[14px]  gap-2 py-3 rounded-full tracking-wider  px-3 flex items-center justify-center text-white  bg-[var(--primary-light)] ">
+    <Icons.shoppingCart className=" size-5"/>  Add to Cart
     </button>
   );
 };
@@ -214,6 +210,8 @@ export const FontAwesomeIcons = {
   cancel: Ban,
   loading: LoaderCircle,
   clibBoardCheck: ClipboardCheck,
+  comment: FaRegComment,
+  award:Award
 };
 
 export const Icons = {

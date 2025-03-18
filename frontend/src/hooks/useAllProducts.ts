@@ -1,8 +1,12 @@
 import { useQuery, useQueryClient } from "react-query";
 import { getNormalProducts, getSpecialProducts } from "@/services";
+import { useAppDispatch, useAppSelector } from "./useActions";
+import { useEffect } from "react";
+import { fetchProducts } from "@/actions";
+import { clearProducts } from "@/reducer";
 
-const getAllProducts = async (
-  specialProducts: Ui.Product[]
+export const getAllProducts = async (
+  specialProducts?: Ui.Product[]
 ): Promise<Ui.Product[]> => {
   try {
     let existProducts: Ui.Product[];
@@ -32,18 +36,26 @@ const getAllProducts = async (
 };
 
 export const useAllProducts = () => {
-  const queryClient = useQueryClient();
-  const specialProducts = queryClient.getQueryData<Ui.Product[]>("specials");
+  const { products, isError, isLoading, lastFetched } =
+    useAppSelector().product;
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+   
+    const timer = setTimeout(() => {
+      if (lastFetched && Date.now() - lastFetched > 5 * 60 * 1000) {
+        dispatch(clearProducts()); 
+        dispatch(fetchProducts());
+      }
+    }, 5 * 60 * 1000);
 
-  return useQuery<Ui.Product[]>(
-    "all",
-    () => getAllProducts(specialProducts as Ui.Product[]),
-    {
-      staleTime: 2 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  );
+    return () => clearTimeout(timer);
+  }, [dispatch]);
+
+  return {
+    products,
+    isError,
+    isLoading,
+  };
 };
 
 export const specialsProductsFn = async (): Promise<Ui.Product[]> => {

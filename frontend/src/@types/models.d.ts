@@ -7,6 +7,16 @@ declare namespace Model {
     updatedAt?: Date;
   }
 
+
+  interface initialStateProp{
+    products: Ui.Product[];
+    lastFetched: any;
+    isLoading: boolean;
+    isError: boolean;
+    error?: string;
+  }
+  
+
   interface Notification extends Omit<Actions.AddNotification, "userId"> {
     id: string;
     uid: string;

@@ -17,10 +17,11 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { productReducer } from "./reducer/products";
 const rootReducer = combineReducers({
   cart: cartReducer,
-  order: OrderReducer,
   favourite: favouriteReducer,
+  product: productReducer,
   category: categoryReducer,
   auth: authReducer,
 });

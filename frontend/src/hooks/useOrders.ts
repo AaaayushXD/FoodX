@@ -75,7 +75,7 @@ export const useGetRecentOrder = (
   return { data, loading, error };
 };
 
-export const useOrders = ({ status }: { status: Model.OrderStatus }) => {
+export const useOrders = ({ status, pageSize }: { status: Model.OrderStatus, pageSize?:number }) => {
   const { loading, setLoading, data, setData, setTotalData, totalData } =
     useHooks<Model.UserOrder[], "orderHistory">("orderHistory");
 
@@ -101,7 +101,7 @@ export const useOrders = ({ status }: { status: Model.OrderStatus }) => {
       const response = await getOrderByUser({
         status: status,
         sort: "asc",
-        pageSize: 5,
+        pageSize: pageSize || 5,
         direction: "next",
         currentFirstDoc: pageParam?.currentFirstDoc || null,
         currentLastDoc: pageParam?.currentLastDoc || null,

@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useSocket } from "../utils/socket";
 import Bell from "../assets/order.mp3";
+import ErrorBoundary from "@/errorBoundary";
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +34,12 @@ export const HomePage: React.FC = () => {
     if (!store?.auth?.userInfo?.uid) return;
     getFavouireProducts();
   }, [store?.auth?.userInfo?.uid]);
+
+  useEffect(() => {
+    const addProductsToRedux = () => {
+      
+    }
+  })
 
   const { socket } = useSocket(store?.auth?.success);
   useEffect(() => {
@@ -60,17 +67,19 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="flex items-center !overflow-x-hidden justify-center w-full h-full min-w-[100vw]  ">
-      <div className="w-full  h-full max-w-[1500px] flex flex-col justify-center items-center ">
-        <div className="w-full">
-          <Outlet />
+      <ErrorBoundary>
+        <div className="w-full  h-full max-w-[1500px] flex flex-col justify-center items-center ">
+          <div className="w-full">
+            <Outlet />
+          </div>
+          <div className="w-full">
+            <Footer />
+          </div>
+          <div className="w-full flex ">
+            <MobileNavbar />
+          </div>
         </div>
-        <div className="w-full">
-          <Footer />
-        </div>
-        <div className="w-full flex ">
-          <MobileNavbar />
-        </div>
-      </div>
+      </ErrorBoundary>
     </div>
   );
 };

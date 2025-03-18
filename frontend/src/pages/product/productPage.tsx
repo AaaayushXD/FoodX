@@ -1,13 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { data, useNavigate, useParams } from "react-router-dom";
 import {
-  specialProducts,
-  useAllProducts,
   useAppDispatch,
   useAppSelector,
   useFavourite,
+  useOrders,
+  useRating,
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { CategoryProduct } from "@/components";
+import { CategoryProduct, PopularProduct } from "@/components";
 import { useEffect, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
 import { motion } from "framer-motion";
@@ -22,14 +22,11 @@ import ProductReview from "@/components/review/productReview";
 import React from "react";
 import { AddProductReview } from "@/features";
 import { useQuery } from "react-query";
+import ErrorBoundary from "@/errorBoundary";
 
 export const ProductPage = () => {
-  const [haveProductQuantity, setHaveProductQuantity] = useState<boolean>();
   const [openReview, setOpenReview] = React.useState<boolean>(false);
   const { collection, productId } = useParams();
-
-  const dispatch = useAppDispatch();
-  const { cart, auth, category: categories } = useAppSelector();
 
   const { data, isLoading, isError, error } = useQuery(
     ["single:product", productId],
@@ -51,6 +48,7 @@ export const ProductPage = () => {
       throw new Error(error.message);
     }
   }
+  const { auth } = useAppSelector();
 
   const {
     addFavouriteProduct,
@@ -59,17 +57,99 @@ export const ProductPage = () => {
     removeFavouriteProduct,
   } = useFavourite(productId as string);
 
-  const productQuantity = cart?.products?.find(
-    (product) => product.id === productId
-  );
-
-  useEffect(() => {
-    productQuantity && productQuantity?.quantity > 0
-      ? setHaveProductQuantity(true)
-      : setHaveProductQuantity(false);
-  }, [productQuantity?.quantity]);
-
   const navigate = useNavigate();
+
+  return (
+    <div className="w-full relative flex flex-col items-center justify-start gap-3">
+      {/* product banner image */}
+      <div
+        style={{
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${data?.data?.data?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className={`md:h-[60vh] ${
+          isLoading ? `bg-gradient-to-r animate-pulse ` : ""
+        } sm:h-[50vh] h-[45vh]  relative w-screen`}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+
+        {/* Top Left & Right Buttons */}
+        <div className="absolute top-5 left-5 right-8 flex items-center justify-between z-10">
+          <button onClick={() => navigate(-1)} className="size-5 text-white">
+            <Icons.arrowLeft />
+          </button>
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() =>
+                isFavourite(productId as string)
+                  ? removeFavouriteProduct()
+                  : addFavouriteProduct(productId as string)
+              }
+              className=" bg-[#BDBDBD] hover:bg-[#d3d2d2] duration-150 text-white p-2.5 rounded-full "
+            >
+              <Icons.heart
+                className={`size-[18px] duration-150  ${heartColor} `}
+              />
+            </button>
+            <button
+              onClick={() => handleShare(data?.data?.data?.name)}
+              className="bg-[#BDBDBD] hover:bg-[#d3d2d2] duration-150 text-white p-2.5 rounded-full"
+            >
+              <Icons.share className=" size-[18px] " />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* product details */}
+      <div className="w-full z-[100] px-3 sm:px-10">
+        <div className=" w-full  gap-10  py-3 rounded-t-2xl flex flex-col items-center justify-center  z-[1000] sm:mt-[-80px] mt-[-60px] bg-white">
+          <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
+          {/* Recommended Products */}
+          {auth?.success && <RecommendProduct />}
+          <ErrorBoundary>
+            <ProductReview productId={productId} />
+          </ErrorBoundary>
+
+          {openReview && (
+            <AddProductReview
+              action="add"
+              openReview={openReview}
+              setOpenReview={setOpenReview}
+              productId={productId}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RecommendProduct = () => {
+  const { data } = useOrders({ status: "completed", pageSize: 10 });
+  const allProducts = data?.flatMap((product) => product.products) || [];
+
+  return (
+    <div className="flex w-full px-2  py-5 flex-col items-start justify-start gap-5">
+      <h1 className="sm:text-[24px] text-[18px] font-semibold ">
+        You might also like
+      </h1>
+      <div className="w-full overflow-auto flex  items-start justify-start gap-5">
+        {allProducts?.map((product) => (
+          <PopularProduct {...product} key={product.id} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
+  const [haveProductQuantity, setHaveProductQuantity] = useState<boolean>();
+  const dispatch = useAppDispatch();
+  const { auth, category: categories, cart } = useAppSelector();
+
+  const { data } = useRating(product?.id);
 
   async function handleProduct(product: Ui.Product) {
     const loading = toaster({
@@ -117,97 +197,69 @@ export const ProductPage = () => {
     toast.dismiss(loading);
   }
   const category = categories.categories.find(
-    (category) => category.id === data?.data?.data?.tagId
+    (category) => category.id === product?.tagId
   );
 
+  const productQuantity = cart?.products?.find(
+    (product) => product.id === product?.id
+  );
+
+  const comments = data?.reduce(
+    (count, review) => (review?.message ? count + 1 : count),
+    0
+  );
+
+  useEffect(() => {
+    productQuantity && productQuantity?.quantity > 0
+      ? setHaveProductQuantity(true)
+      : setHaveProductQuantity(false);
+  }, [productQuantity?.quantity]);
+
   return (
-    <div className="w-full flex flex-col items-start justify-start gap-3">
-      <div
-        style={{
-          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${data?.data?.data?.image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className={`md:h-[60vh] ${
-          isLoading ? `bg-gradient-to-r animate-pulse ` : ""
-        } sm:h-[50vh] h-[45vh] relative w-full`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-
-        {/* Bottom Left Product Info */}
-        <div className="absolute bottom-5 left-2 flex flex-col items-start z-10">
-          <h1 className="text-[20px] sm:text-[22px] font-bold text-white">
-            {data?.data?.data?.name}
-          </h1>
-          <p
-            className="text-[14px] flex items-center 
-          justify-center sm:text-[16px] gap-1 text-[var(--dark-secondary-text)]"
-          >
-            {category?.name}
-            <div className="h-3 bg-[var(--dark-secondary-text)] w-0.5"></div>
-            <span>{data?.data?.data?.cookingTime || "30mins - 40mins"}</span>
+    <div className="w-full flex items-start justify-start gap-5 md:gap-10 flex-col">
+      {/* Bottom Left Product Info */}
+      <div className=" flex w-full py-2 px-3 gap-2 flex-col items-start z-10">
+        <p
+          className="text-[12px] bg-blue-100 rounded-full px-2  border-blue-400 border text-blue-600 font-semibold flex items-center 
+          justify-center sm:text-[12px] gap-1 text-[var(--dark-secondary-text)]"
+        >
+          {category?.name}
+        </p>
+        <h1 className="text-[20px] sm:text-2xl md:text-3xl font-bold ">
+          {product.name}
+        </h1>
+        <div className="flex items-center justify-start gap-2  ">
+          <p className="flex text-[14px] text-green-700 font-semibold py-0.5 bg-green-100 rounded-full px-2  items-center justify-start gap-2">
+            <Icons.tomato className="size-4 text-red-500 " />
+            {data?.length.toFixed(1)}
           </p>
-        </div>
-
-        {/* Top Left & Right Buttons */}
-        <div className="absolute top-5 left-5 right-8 flex items-center justify-between z-10">
-          <button onClick={() => navigate(-1)} className="size-5 text-white">
-            <Icons.arrowLeft />
-          </button>
-          <div className="flex items-center gap-8">
-            <button
-              onClick={() =>
-                isFavourite(productId as string)
-                  ? removeFavouriteProduct()
-                  : addFavouriteProduct(productId as string)
-              }
-              className="text-white size-5"
-            >
-              <Icons.heart className={`size-6 duration-150 sm:size-7 ${heartColor} `} />
-            </button>
-            <button
-              onClick={() => handleShare(data?.data?.data?.name)}
-              className="text-white size-5"
-            >
-              <Icons.share className=" size-6 sm:size-7" />
-            </button>
-          </div>
+          <p className="flex text-[14px] text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
+            <Icons.comment className="size-4    " />
+            {comments} reviews
+          </p>
+          <p className="flex text-[14px] text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
+            <Icons.clock className="size-4    " />
+            {product?.cookingTime}
+          </p>
         </div>
       </div>
-
       {/* Product Details */}
       <div
-        className={`flex w-full ${
-          isLoading ? ` animate-pulse   p-2 ` : ""
-        } flex-col items-start justify-start gap-4 px-2`}
+        className={`flex w-full flex-col items-start justify-start gap-4 px-2`}
       >
-        <p className="text-[16px] sm:text-[18px] text-[var(--dark-text)]">
-          {data?.data?.data?.description}
-        </p>
-        <div className="flex items-center gap-1">
-          <span className="font-semibold text-[var(--dark-secondary-text)]  flex items-center">
-            <Icons.tomato className="text-[var(--dark-border)] fill-red-500 size-5 sm:size-7" />
-            <span className="text-sm sm:text-[16px] ml-1">
-              (4.5)1.9k reviews
-            </span>
-          </span>{" "}
-          <span className="w-0.5 h-2.5 mt-0.5 bg-slate-400 "></span>
-          <span
-            onClick={() => setOpenReview(!openReview)}
-            className=" text-xs mt-0.5 text-gray-500 cursor-pointer hover:underline "
-          >
-            Write a review
-          </span>
-        </div>
-
         {/* Ratings & Cart Button */}
-        <div className="w-full flex  flex-wrap gap-4 items-center justify-between text-sm">
-          <p className=" text-[18px] font-bold ">
-            Rs.{data?.data?.data?.price}
-          </p>
+        <div className="w-full flex  mt-4 flex-wrap gap-4 items-center justify-between text-sm">
+          <div className="flex flex-col sm:flex-row sm:items-end items-start justify-start   h-full  sm:gap-3">
+            <p className=" text-2xl md:text-3xl text-[var(--primary-light)] font-bold ">
+              Rs.{product?.price}
+            </p>
+            <p className=" text-[var(--secondary-text)] text-[14px] md:text-[16px] mb-1  line-through ">
+              {product?.discountPrice && "Rs." + product?.discountPrice} Rs.100
+            </p>
+          </div>
 
           {haveProductQuantity ? (
-            <div className="flex border-[1px] font-bold text-[16px] text-green-600  rounded-lg shadow items-center justify-center gap-3">
+            <div className="flex border-[1px] text-[14px] rounded-full shadow items-center justify-center gap-3">
               <motion.button
                 className="p-2"
                 onClick={() => {
@@ -219,11 +271,11 @@ export const ProductPage = () => {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Decrease quantity"
               >
-                <Icons.minus className="size-5" />
+                <Icons.minus className="size-4 text-[var(--secondary-text)]  " />
               </motion.button>
 
               <motion.p
-                className="text-[16px]  scale-[1.3] "
+                className="text-[16px]  text-black scale-[1.3] "
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
@@ -241,40 +293,26 @@ export const ProductPage = () => {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Increase quantity"
               >
-                <Icons.plus className="size-5" />
+                <Icons.plus className="size-4 text-[var(--secondary-text)] " />
               </motion.button>
             </div>
           ) : (
-            <button onClick={() => handleProduct(data?.data.data)}>
+            <button onClick={() => handleProduct(product)}>
               <Icons.addToCart />
             </button>
           )}
         </div>
       </div>
-      <ProductReview />
-      {/* Recommended Products */}
-      <RecommendProduct />
-      {openReview && (
-        <AddProductReview
-          action="add"
-          openReview={openReview}
-          setOpenReview={setOpenReview}
-          productId={productId}
-        />
-      )}
-    </div>
-  );
-};
-
-const RecommendProduct = () => {
-  const { data } = specialProducts();
-  return (
-    <div className="flex w-full px-2 border-[1px] border-[var(--dark-border)] py-5 flex-col items-start justify-start gap-5">
-      <h1 className="text-lg font-bold ">Related Products</h1>
-      <div className="w-full flex flex-col items-start justify-start gap-5">
-        {data?.map((product) => (
-          <CategoryProduct {...product} key={product.id} />
-        ))}
+      <div
+        className="flex flex-col items-start justify-start gap-0.5
+         "
+      >
+        <h1 className=" text-lg  ">Details</h1>
+        <p className=" text-[var(--secondary-text)] text-[16px] md:text-[18px] ">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt a
+          corporis quo odio doloribus cupiditate praesentium voluptatibus quasi
+          perferendis! Minus ea sunt repellat?
+        </p>
       </div>
     </div>
   );

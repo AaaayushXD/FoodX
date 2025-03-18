@@ -7,7 +7,7 @@ import { useAppSelector } from "@/hooks";
 import { ApiError, Image } from "@/helpers";
 import EmptyImage from "@/assets/empty.png";
 import { Delete } from "@/commons";
-import { toaster } from "@/utils";
+import { Icons, toaster } from "@/utils";
 import toast from "react-hot-toast";
 import { AddProductReview } from "@/features";
 
@@ -58,19 +58,26 @@ export const CustomerReview = ({
   });
 
   return (
-    <div className="w-full flex bg-white p-3 rounded-md flex-col items-start justify-start gap-2 max-w-lg ">
+    <div className="w-full border-dashed border-b pb-5 flex bg-white p-3 rounded-md flex-col items-start justify-start gap-2  ">
       <div className="w-full flex items-center justify-between">
-        <StarRating rating={4} size="3" />
-        <p className=" text-[16px] text-gray-600 ">
+        <StarRating rating={4} size="4" />
+        <p className=" text-[14px] text-gray-600 ">
           {dayjs.unix(review.createdAt._seconds).format("MMM D, YYYY")}
         </p>
       </div>
-      <p>{data?.data.fullName || "User"}</p>
-      <span className="w-full text-[var(--secondary-text)] text-[14px] line-clamp-2 sm:text-[16px] ">
+      {/* name */}
+      <div className="flex mt-1 items-center justify-start gap-2">
+      <p>{data?.data.fullName || "User"}</p>{" "}
+      <p className="flex items-center  px-1.5 gap-1 justify-start p-0.5 border border-green-200 text-[11px] bg-green-100 rounded-full text-green-600 font-semibold">
+        <Icons.award className="size-4" /> Verified
+      </p>
+      </div>
+      {/* comment */}
+      <span className="w-full -mt-1 text-[var(--secondary-text)] text-[14px] line-clamp-2 sm:text-[15px] ">
         {review?.message ||
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad voluptatum minima quaerat quam eligendi? Aperiam placeat optio adipisci voluptatibus fuga.  "}
       </span>
-      <div className="w-full flex items-end justify-between">
+      <div className="w-full mt-1 flex items-end justify-between">
         <div className="size-10 rounded-md bg-slate-300 ">
           <Image
             className="size-full object-cover rounded-md "
@@ -83,12 +90,12 @@ export const CustomerReview = ({
           <div className="flex items-center justify-start gap-3">
             <button
               onClick={() => setOpen(!open)}
-              className="text-xs hover:underline "
+              className="text-xs font-semibold  hover:underline "
             >
               Edit
             </button>
             <button
-              className="text-xs hover:underline "
+              className="text-xs bg-red-500 rounded-2xl px-3 text-white font-semibold p-1 hover:underline "
               onClick={() => setIsDelete(!isDelete)}
             >
               Delete

@@ -12,5 +12,7 @@ export const addCategories = (
     (category) => !existingIds.has(category?.id)
   );
 
-  state.categories = [...state?.categories, ...newCategories];
+  if (newCategories) {
+    state.categories = [...state.categories, ...newCategories];
+  }
 };

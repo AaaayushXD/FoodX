@@ -1,12 +1,15 @@
-import React, { useRef } from "react";
-import { specialProducts } from "@/hooks";
+import React, { useEffect, useRef } from "react";
+import { specialProducts, useAllProducts, useAppSelector } from "@/hooks";
 import { SpecialProduct } from "@/components";
 import { Skeleton } from "@/helpers";
 
 export const Specials: React.FC = () => {
-  const { data, isLoading } = specialProducts();
+  const { products, isLoading } = useAllProducts();
 
   const specialsRef = useRef<HTMLDivElement | null>(null);
+  const specialProducts = products?.filter(
+    (product) => product.collection === "specials"
+  );
 
   return (
     <div className="flex flex-col w-full h-full gap-8 py-8 rounded">
@@ -28,7 +31,7 @@ export const Specials: React.FC = () => {
             ref={specialsRef}
             className="w-full gap-5 flex items-start justify-start overflow-auto "
           >
-            {data?.map((product) => (
+            {specialProducts?.map((product) => (
               <SpecialProduct
                 key={product.id}
                 {...product}
