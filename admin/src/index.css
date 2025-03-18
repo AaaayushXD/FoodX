@@ -1,0 +1,201 @@
+@import "tailwindcss/base";
+@import "tailwindcss/utilities";
+@import "tailwindcss/components";
+
+@layer base {
+  :root {
+    --color: #1ba13dd2;
+    --primary-color: #2c398d;
+    --primary-light: #00a3d9;
+    --primary-dark: #0e76a8;
+
+    --secondary-color: #d90081;
+    --secondary-light: #ec008d;
+    --secondary-dark: #ec008e;
+
+    /* f4f6f8 
+    f5f9ff
+    */
+    --body-bg: #f4f6f8;
+    --light-foreground: #fbfbfb;
+    --light-background: #f4f6f8;
+    --light-secondary-background: #dadada;
+    --light-border: #dedde2;
+
+    --dark-foreground: #252329;
+    --dark-background: #19181b;
+    --dark-secondary-background: #919191;
+    --dark-border: #5d50772d;
+
+    --light-text: #fefefe;
+    --light-secondary-text: #d8d6dc;
+    --dark-text: #202020;
+    --dark-secondary-text: #646168;
+
+    --danger-text: #d91006;
+    --danger-bg: #e00b0b;
+    --popup-bg: #4b4a4a60;
+    --orange-bg: #ff9800;
+    --green-bg: #4caf50;
+
+    --green-text: #177e1a;
+  }
+  .dark {
+    --color: #1ba13dd2;
+    --primary-color: #1673d1;
+    --primary-light: #0076ce;
+    --primary-dark: #004792;
+
+    --secondary-color: #d90081;
+    --secondary-light: #ec008d;
+    --secondary-dark: #ec008e;
+
+    /* f4f6f8 
+    f5f9ff
+    */
+    --body-bg: #080e18;
+    --light-foreground: #10161f;
+    --light-background: #283041;
+    --light-secondary-background: #dadada;
+    --light-border: #dedde2;
+
+    --dark-foreground: #fbfbfb;
+    --dark-background: #f4f6f8;
+    --dark-secondary-background: #dadada;
+    --dark-border: #2a3447;
+
+    --light-text: #131010;
+    --light-secondary-text: #d8d6dc;
+    --dark-text: #e4e4e4;
+    --dark-secondary-text: #b5b7c0;
+
+    --danger-text: #d91006;
+    --danger-bg: #e00b0b;
+    --popup-bg: #4b4a4a60;
+    --orange-bg: #ff9800;
+    --green-bg: #4caf50;
+
+    --pending: #f29339;
+    --preparing: #ff9800;
+    --prepared: #2c398d;
+    --completed: #4caf50;
+    --cancelled: #e00b0b;
+    --green-text: #177e1a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    overflow-x: hidden;
+    background: var(--body-bg);
+    scroll-behavior: smooth;
+  }
+
+  .fade-in img {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  #specials {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .scrollbar-invisible {
+    @apply overscroll-y-auto;
+    width: 5px;
+  }
+  .scrollbar-custom {
+    @apply overflow-y-scroll; /* Enables scrolling */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 5px; /* Adjust scrollbar width */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-md; /* Customize the scrollbar thumb */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400; /* Hover effect */
+    @apply cursor-pointer;
+  }
+}
+
+.top-shadow {
+  box-shadow: inset 0 4px 2px 0px rgb(0 0 0 / 30%);
+  border-radius: 5px;
+  transition: 0.1 ease-in-out;
+}
+
+/* toogle button css style */
+/* The switch - the box around the slider */
+.switch {
+  display: block;
+  --width-of-switch: 3.5em;
+  --height-of-switch: 2em;
+  /* size of sliding icon -- sun and moon */
+  --size-of-icon: 1.4em;
+  /* it is like a inline-padding of switch */
+  --slider-offset: 0.3em;
+  position: relative;
+  width: var(--width-of-switch);
+  height: var(--height-of-switch);
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f4f4f5;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: var(--size-of-icon, 1.4em);
+  width: var(--size-of-icon, 1.4em);
+  border-radius: 20px;
+  left: var(--slider-offset, 0.3em);
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #303136;
+}
+
+input:checked + .slider:before {
+  left: calc(100% - (var(--size-of-icon, 1.4em) + var(--slider-offset, 0.3em)));
+  background: #303136;
+  /* change the value of second inset in box-shadow to change the angle and direction of the moon  */
+  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
+}

@@ -1,0 +1,23 @@
+.xAxisText, .yAxisText {
+  .MuiChartsAxis-tickLabel {
+    fill: var(--dark-text) !important;
+    font-weight: 500 !important;
+    font-size: 200px !important;
+  }
+}
+.MuiChartsLinePlot-line {
+    stroke-width: 3; /* Make the line bold */
+    stroke: blue; /* Change the color of the line */
+  }
+
+  .xAxisText.MuiChartsAxis-tickLabel {
+    fill: white;
+    color: white;
+    font-weight: 500;
+    font-size: larger; /* Or "34px" */
+  }
+
+
+
+
+

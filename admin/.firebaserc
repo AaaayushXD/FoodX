@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "foodx-nepal"
+  },
+  "targets": {
+    "foodx-nepal": {
+      "hosting": {
+        "admin": [
+          "foodx-admin"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
