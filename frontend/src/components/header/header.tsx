@@ -63,12 +63,12 @@ const DesktopNavbar = () => {
       className="w-full hidden relative px-20 lg:flex items-center justify-between"
     >
       <div className="w-full relative flex items-center px-10 py-5  justify-between  gap-5">
-        <div className="flex items-center justify-start gap-3">
+        <div className="flex items-center justify-start gap-1">
           <div
             onClick={() => {
               navigate("/");
             }}
-            className="  cursor-pointer -top-7  size-12 border rounded-lg "
+            className="  cursor-pointer -top-7  size-10  rounded-lg "
           >
             <ImageComponent
               className="w-full h-full object-cover"
@@ -77,11 +77,11 @@ const DesktopNavbar = () => {
               alt=""
             />
           </div>
-          <h1 className=" text-3xl font-bold text-white ">FoodX</h1>
+          <h1 className=" mb-2 text-3xl font-semibold text-white ">FoodX</h1>
         </div>
         <NavbarContainer />
       </div>
-      <div className="flex lg:hid items-center justify-start gap-8">
+      <div className="hidden   md:flex items-center justify-start gap-5">
         {auth?.success && (
           <button
             className="hidden md:flex"
@@ -96,9 +96,9 @@ const DesktopNavbar = () => {
               ? navigate("/favourite")
               : setShowNotification(!showNotification)
           }
-          className=" flex items-center text-lg justify-center w-[180px] font-semibold border-[var(--light-border)] text-white gap-2 border  py-3 rounded-xl "
+          className=" flex items-center text-lg justify-center  font-semibold  text-white gap-2  py-3 rounded-xl "
         >
-          Get the Favorite <Icons.heart className="size-5" />
+          <Icons.heart className="size-5" />
         </button>
         <div ref={profileRef} className="">
           {auth.userInfo?.avatar && (

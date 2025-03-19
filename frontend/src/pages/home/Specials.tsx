@@ -12,7 +12,7 @@ export const Specials: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col w-full h-full gap-8 py-8 rounded">
+    <div className="flex flex-col w-full h-full gap-8 rounded">
       <h1 className="sm:text-[25px]  text-[18px] tracking-wide font-semibold    ">
         TODAY'S SPECIAL
       </h1>

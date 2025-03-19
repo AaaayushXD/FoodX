@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
 import { addToCart, removeCart } from "@/reducer";
-import Img from "@/assets/placeholder.webp";
+import Img from "@/assets/placeholder.svg";
 import { removeProductFromCart } from "@/services";
 import toast from "react-hot-toast";
 import { Icons, toaster } from "../../../utils";

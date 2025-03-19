@@ -96,9 +96,9 @@ export const UpdateUser: React.FC = () => {
 const Filter: React.FC = () => {
   return (
     <div className="bg-[var(--light-foreground)] px-3 p-1 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
-    <p className="text-[14px] font-semibold sm:text-[16px] ">Filter</p>
-    <Icons.filter className="sm:size-5 size-4 " />
-  </div>
+      <p className="text-[14px] font-semibold sm:text-[16px] ">Filter</p>
+      <Icons.filter className="sm:size-5 size-4 " />
+    </div>
   );
 };
 const Sort: React.FC = () => {
@@ -113,7 +113,7 @@ const Sort: React.FC = () => {
 export const AddToCart = () => {
   return (
     <button className="text-[14px]  gap-2 py-3 rounded-full tracking-wider  px-3 flex items-center justify-center text-white  bg-[var(--primary-light)] ">
-    <Icons.shoppingCart className=" size-5"/>  Add to Cart
+      <Icons.shoppingCart className=" size-5" /> Add to Cart
     </button>
   );
 };
@@ -121,19 +121,21 @@ export const AddToCart = () => {
 export const LeftArrow = ({ className }: { className?: string }) => {
   return (
     <div className="w-full flex items-center justify-start">
-      <button
-        className={`${className}hover:bg-[#666a752a]  duration-150  rounded-full p-1.5`}
+      <div
+        className={`${
+          className || "text-white"
+        }    bg-[#ffffff36] hover:bg-[#f4f6f859] duration-150 p-2.5 rounded-full`}
       >
-        <ArrowLeft className="size-6 sm:size-7  text-gray-400  " />{" "}
-      </button>
+        <ArrowLeft className="size-[18px] duration-150  " />{" "}
+      </div>
     </div>
   );
 };
 export const RightArrow = ({ className }: { className?: string }) => {
   return (
-    <button className={` hover:bg-[#666a752a] duration-150 rounded-full p-1.5`}>
+    <div className={` hover:bg-[#666a752a] duration-150 rounded-full p-1.5`}>
       <ArrowRight className="size-6 sm:size-7  text-white " />{" "}
-    </button>
+    </div>
   );
 };
 
@@ -211,7 +213,7 @@ export const FontAwesomeIcons = {
   loading: LoaderCircle,
   clibBoardCheck: ClipboardCheck,
   comment: FaRegComment,
-  award:Award
+  award: Award,
 };
 
 export const Icons = {

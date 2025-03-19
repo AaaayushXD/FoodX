@@ -116,10 +116,16 @@ export const MobileProfile = () => {
           Help & Support
         </h1>
         <nav className="w-full flex py-3 bg-white flex-col gap-6 items-start justify-start">
-          {supportNavigation?.map((accountNav) =>
+          {supportNavigation?.map((accountNav, key) =>
             accountNav.title === "Emergency Call" ? (
-              <div className="text-[18px] px-2 flex items-center  w-full justify-between py-2 text-[var(--dark-text)]">
-                <div className="flex items-center justify-start gap-1">
+              <div
+                key={key}
+                className="text-[18px] px-2 flex items-center  w-full justify-between py-2 text-[var(--dark-text)]"
+              >
+                <div
+                  key={key}
+                  className="flex items-center justify-start gap-1"
+                >
                   <button className="  rounded-full p-1 ">
                     {accountNav.icon}
                   </button>

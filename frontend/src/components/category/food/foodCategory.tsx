@@ -1,6 +1,6 @@
 import { Image } from "@/helpers";
 import { useNavigate } from "react-router-dom";
-import Img from "@/assets/placeholder.webp";
+import Img from "@/assets/placeholder.svg";
 export interface MenuProps {
   menu: Ui.Category[];
 }

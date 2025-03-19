@@ -7,7 +7,11 @@ import {
   useRating,
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { CategoryProduct, PopularProduct } from "@/components";
+import {
+  CategoryProduct,
+  NotificationLoader,
+  PopularProduct,
+} from "@/components";
 import { useEffect, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
 import { motion } from "framer-motion";
@@ -59,7 +63,9 @@ export const ProductPage = () => {
 
   const navigate = useNavigate();
 
-  return (
+  return isLoading ? (
+    <NotificationLoader />
+  ) : (
     <div className="w-full relative flex flex-col items-center justify-start gap-3">
       {/* product banner image */}
       <div
@@ -86,7 +92,7 @@ export const ProductPage = () => {
                   ? removeFavouriteProduct()
                   : addFavouriteProduct(productId as string)
               }
-              className=" bg-[#BDBDBD] hover:bg-[#d3d2d2] duration-150 text-white p-2.5 rounded-full "
+              className=" bg-[#ffffff36] hover:bg-[#f4f6f859] duration-150 text-white p-2.5 rounded-full "
             >
               <Icons.heart
                 className={`size-[18px] duration-150  ${heartColor} `}
@@ -94,7 +100,7 @@ export const ProductPage = () => {
             </button>
             <button
               onClick={() => handleShare(data?.data?.data?.name)}
-              className="bg-[#BDBDBD] hover:bg-[#d3d2d2] duration-150 text-white p-2.5 rounded-full"
+              className="bg-[#ffffff36] hover:bg-[#f4f6f859] duration-150 text-white p-2.5 rounded-full"
             >
               <Icons.share className=" size-[18px] " />
             </button>
@@ -103,7 +109,7 @@ export const ProductPage = () => {
       </div>
 
       {/* product details */}
-      <div className="w-full z-[100] px-3 sm:px-10">
+      <div className="w-full z-[100] px-3 md:px-20 lg:px-32 sm:px-16">
         <div className=" w-full  gap-10  py-3 rounded-t-2xl flex flex-col items-center justify-center  z-[1000] sm:mt-[-80px] mt-[-60px] bg-white">
           <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
           {/* Recommended Products */}
@@ -250,7 +256,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
         {/* Ratings & Cart Button */}
         <div className="w-full flex  mt-4 flex-wrap gap-4 items-center justify-between text-sm">
           <div className="flex flex-col sm:flex-row sm:items-end items-start justify-start   h-full  sm:gap-3">
-            <p className=" text-2xl md:text-3xl text-[var(--primary-light)] font-bold ">
+            <p className=" sm:text-2xl text-xl md:text-3xl text-[var(--primary-light)] font-bold ">
               Rs.{product?.price}
             </p>
             <p className=" text-[var(--secondary-text)] text-[14px] md:text-[16px] mb-1  line-through ">
@@ -271,11 +277,11 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Decrease quantity"
               >
-                <Icons.minus className="size-4 text-[var(--secondary-text)]  " />
+                <Icons.minus className="sm:size-4 size-3 text-[var(--secondary-text)]  " />
               </motion.button>
 
               <motion.p
-                className="text-[16px]  text-black scale-[1.3] "
+                className="sm:text-[16px] text-sm  text-black scale-[1.3] "
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
@@ -293,7 +299,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Increase quantity"
               >
-                <Icons.plus className="size-4 text-[var(--secondary-text)] " />
+                <Icons.plus className="sm:size-4 size-3 text-[var(--secondary-text)] " />
               </motion.button>
             </div>
           ) : (
@@ -304,7 +310,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
         </div>
       </div>
       <div
-        className="flex flex-col items-start justify-start gap-0.5
+        className="flex flex-col px-2 items-start justify-start gap-0.5
          "
       >
         <h1 className=" text-lg  ">Details</h1>

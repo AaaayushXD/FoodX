@@ -1,6 +1,6 @@
 import React from "react";
 import { Icons, toaster } from "@/utils";
-import PlaceholderImg from "@/assets/placeholder.webp";
+import PlaceholderImg from "@/assets/placeholder.svg";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { addProductToCart, removeProductFromCart } from "@/services";

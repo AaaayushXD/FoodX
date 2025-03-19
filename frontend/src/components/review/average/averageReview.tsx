@@ -58,13 +58,16 @@ export const AverageReview = React.memo(
             </div>
           </div>
           <div className="w-full border-dotted md:border-none pt-8 border-t max-w-lg flex flex-col items-start justify-start gap-8">
-            {allRating.map((rating) => {
+            {allRating.map((rating, key) => {
               const ratingCount = ratings?.filter(
                 (rate) => rate.rating === rating
               );
               const percentage = (ratingCount.length / ratings.length) * 100;
               return (
-                <div className=" relative max-w-lg w-full sm:h-4 h-2 bg-slate-300 rounded-full ">
+                <div
+                  key={key}
+                  className=" relative max-w-lg w-full sm:h-4 h-2 bg-slate-300 rounded-full "
+                >
                   <div
                     style={{
                       width: `${percentage}%`,

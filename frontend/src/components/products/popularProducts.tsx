@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+
 import { getPopularProducts } from "@/services";
 import { useNavigate } from "react-router-dom";
 import Empty from "@/assets/empty.png";
@@ -32,6 +32,8 @@ export const PopularProducts = () => {
     refetchOnWindowFocus: false,
     enabled: !loading,
   });
+
+  console.log(loading)
 
   return (
     <div className="w-full h-full text-[var(--dark-text)] relative group/popular flex flex-col gap-6 rounded items-start justify-center ">

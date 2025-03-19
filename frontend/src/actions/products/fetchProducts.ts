@@ -1,18 +1,24 @@
 import { getAllProducts } from "@/hooks";
 import { setLoading, setError, productAdd } from "@/reducer";
 import { AppDispatch, RootState } from "@/store";
+import dayjs from "dayjs";
 
-const isStale = (lastFetched) => {
-  const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutes in milliseconds
-  return Date.now() - lastFetched > FIVE_MINUTES;
+const isStale = (lastFetched: number) => {
+  const FIVE_MINUTES = 5 * 60 * 1000;
+  const diff = Date.now() - lastFetched > FIVE_MINUTES;
+  const remainingMinutes = Math.floor((Date.now() - lastFetched) / (1000 * 60));
+  console.log(`Cached time: ${remainingMinutes}`);
+  return diff;
 };
 
 export const fetchProducts =
   () => async (dispatch: AppDispatch, getState: () => RootState) => {
     const { lastFetched, products } = getState().root.product;
-    const allProducts = await getAllProducts();
+
     // If the data is stale, fetch new data
-    if (!lastFetched || isStale(lastFetched)) {
+    if (!lastFetched || isStale(lastFetched as number)) {
+      const allProducts = await getAllProducts();
+      console.log(lastFetched, isStale(lastFetched))
       dispatch(setLoading(true));
       try {
         dispatch(

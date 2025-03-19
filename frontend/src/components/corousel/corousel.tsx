@@ -77,6 +77,7 @@ export const Carousel: React.FC<CarouselProp> = ({
         <div className="flex absolute -bottom-2 right-1/2 items-center justify-start gap-2">
           {props?.map((key, index) => (
             <button
+              key={index}
               onClick={() => setCurrentSlide(index)}
               className={` size-2 duration-150 ${
                 props[currentSlide].id === key.id

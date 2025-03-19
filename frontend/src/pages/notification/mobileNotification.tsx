@@ -44,7 +44,7 @@ export const MobileNotification = () => {
     >
       <div className="w-full fixed top-0 right-0 left-0  py-4 z-[100] bg-white flex  items-center justify-between">
         <button onClick={() => navigate(-1)}>
-          <Icons.arrowLeft />
+          <Icons.arrowLeft className="text-gray-800" />
         </button>
         <h1 className=" font-semibold text-[16px] text-[var(--secondary-text)] sm:text-[20px] ">
           Notications

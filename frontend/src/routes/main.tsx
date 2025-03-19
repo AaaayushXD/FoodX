@@ -19,27 +19,6 @@ export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const store = useAppSelector();
 
-  const getFavouireProducts = async () => {
-    try {
-      const response = await getFavourites(store?.auth?.userInfo.uid as string);
-      response.data.products?.forEach((data: string) => {
-        dispatch(addToFavourite(data));
-      });
-    } catch (error) {
-      throw new Error("Error while adding favourite products" + error);
-    }
-  };
-
-  useEffect(() => {
-    if (!store?.auth?.userInfo?.uid) return;
-    getFavouireProducts();
-  }, [store?.auth?.userInfo?.uid]);
-
-  useEffect(() => {
-    const addProductsToRedux = () => {
-      
-    }
-  })
 
   const { socket } = useSocket(store?.auth?.success);
   useEffect(() => {

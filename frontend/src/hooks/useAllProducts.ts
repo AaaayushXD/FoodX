@@ -5,31 +5,27 @@ import { useEffect } from "react";
 import { fetchProducts } from "@/actions";
 import { clearProducts } from "@/reducer";
 
-export const getAllProducts = async (
-  specialProducts?: Ui.Product[]
-): Promise<Ui.Product[]> => {
+export const getAllProducts = async (): Promise<Ui.Product[]> => {
   try {
-    let existProducts: Ui.Product[];
-    const normalProducts = await getNormalProducts();
+    const [normalProducts, specialProducts] = await Promise.all([
+      getNormalProducts(),
+      getSpecialProducts(),
+    ]);
+
     const aggregateProducts = normalProducts?.data?.map((product) => {
       return {
         ...product,
         collection: "products" as Common.ProductCollection,
       };
     });
-    if (!specialProducts) {
-      const unExistProducts = await getSpecialProducts();
-      const aggregateSpecialProducts = unExistProducts?.data?.map((product) => {
-        return {
-          ...product,
-          collection: "specials" as Common.ProductCollection,
-        };
-      });
-      existProducts = [...aggregateProducts, ...aggregateSpecialProducts];
-    } else {
-      existProducts = [...aggregateProducts, ...specialProducts];
-    }
-    return existProducts;
+
+    const aggregateSpecialProducts = specialProducts?.data?.map((product) => {
+      return {
+        ...product,
+        collection: "specials" as Common.ProductCollection,
+      };
+    });
+    return [...aggregateProducts, ...aggregateSpecialProducts];
   } catch (error) {
     throw new Error("Error while fetching all products " + error);
   }
@@ -40,15 +36,7 @@ export const useAllProducts = () => {
     useAppSelector().product;
   const dispatch = useAppDispatch();
   useEffect(() => {
-   
-    const timer = setTimeout(() => {
-      if (lastFetched && Date.now() - lastFetched > 5 * 60 * 1000) {
-        dispatch(clearProducts()); 
-        dispatch(fetchProducts());
-      }
-    }, 5 * 60 * 1000);
-
-    return () => clearTimeout(timer);
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   return {

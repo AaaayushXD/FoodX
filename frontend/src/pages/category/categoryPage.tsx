@@ -28,10 +28,10 @@ export const CategoryPage = () => {
   });
 
   const { id } = useParams();
+  const [products, setProducts] = useState<Ui.Product[]>([]);
 
-  const { products, isLoading } = useAllProducts();
-
-  const filterProducts = products?.filter((product) => product?.tagId === id);
+  const { products: data, isLoading } = useAllProducts();
+  const categoryProducts = data?.filter((product) => product?.tagId === id);
 
   const { category: categories } = useAppSelector();
 
@@ -41,12 +41,14 @@ export const CategoryPage = () => {
 
   useEffect(() => {
     setFilters((prev) => {
+      const existingFilter = prev.find((filter) => filter.type === "sort");
+      if (existingFilter?.value === sortData.value) return prev;
+
       const updatedFilters = prev.map((filter) =>
         filter.type === "sort"
-          ? { ...filter, value: sortData.value, label: sortData.type }
+          ? { ...filter, value: sortData?.value, label: sortData?.type }
           : filter
       );
-
       const isSortFilterExist = updatedFilters.some(
         (filter) => filter.label === sortData.type
       );
@@ -57,19 +59,25 @@ export const CategoryPage = () => {
             { type: "sort", value: sortData.value, label: sortData.type },
           ];
     });
-  }, [sortData.value]);
+  }, [sortData]);
 
   useEffect(() => {
+    if (filters.length <= 0) {
+      return setProducts(categoryProducts ?? []);
+    }
     filters?.forEach((filter) => {
-      if (filter.value) {
+      if (filter?.value) {
         const filterProducts = productSort(
-          products,
+          categoryProducts,
           filter.value as Common.SortType
         );
+    
         setProducts(filterProducts);
       }
     });
-  }, [filters, products]);
+  }, [filters]);
+
+  console.log(products)
 
   return (
     <div className="flex w-full h-full  flex-col items-start justify-start gap-5 ">
@@ -77,7 +85,7 @@ export const CategoryPage = () => {
         style={{
           backgroundImage: `  url(${category?.cover || Image})`,
         }}
-        className=" w-full flex items-start  pt-5 pl-3  bg-right-bottom bg-no-repeat bg-cover h-[100px] "
+        className=" w-full flex items-start  pt-5 pl-3   bg-right-bottom bg-no-repeat bg-cover sm:h-[180px] h-[100px] "
       >
         <button onClick={() => navigate(-1)} className="  text-white ">
           {<Icons.arrowLeft />}
@@ -125,7 +133,7 @@ export const CategoryPage = () => {
             )}
           </div>
         </div>
-        <h1 className=" w-1/2 lg:flex hidden text-end text-[18px] px-2 font-bold ">
+        <h1 className=" w-1/2 lg:flex hidden justify-end text-end text-[18px] px-2  text-[var(--secondary-text)] ">
           {products?.length} Products are available
         </h1>
       </div>
@@ -141,10 +149,10 @@ export const CategoryPage = () => {
             count={7}
             className="w-full h-full px-3  flex items-start gap-8 justify-start flex-col"
           />
-        ) : filterProducts?.length <= 0 ? (
+        ) : products?.length <= 0 ? (
           <Empty image={EmptyImage} title="No products are available" />
         ) : (
-          filterProducts?.map((product) => (
+          products?.map((product) => (
             <CategoryProduct key={product.id} {...product} />
           ))
         )}

@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
 import { ApiError, handleShare, Image } from "@/helpers";
 import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
-import PlaceholderImg from "@/assets/placeholder.webp";
+import PlaceholderImg from "@/assets/placeholder.svg";
 
 export const CategoryProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
 
         {/* Favorite Button */}
         <button
-          className="absolute top-2 right-2 z-10 bg-white p-2 rounded-full "
+          className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full "
           onClick={() =>
             isFavourite(product.id)
               ? removeFavouriteProduct()
@@ -82,7 +82,7 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
           }
         >
           <Heart
-            className={`size-5 transition-all duration-150 ${heartColor}   sm:size-6k`}
+            className={`size-[18px] duration-150  ${heartColor}   sm:size-6`}
           />
         </button>
 

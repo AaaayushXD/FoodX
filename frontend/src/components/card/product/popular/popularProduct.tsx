@@ -2,7 +2,7 @@ import React from "react";
 import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Image } from "@/helpers";
-import Img from "@/assets/placeholder.webp"
+import Img from "@/assets/placeholder.svg";
 
 export const PopularProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();

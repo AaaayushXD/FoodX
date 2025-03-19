@@ -75,7 +75,13 @@ export const useGetRecentOrder = (
   return { data, loading, error };
 };
 
-export const useOrders = ({ status, pageSize }: { status: Model.OrderStatus, pageSize?:number }) => {
+export const useOrders = ({
+  status,
+  pageSize,
+}: {
+  status: Model.OrderStatus;
+  pageSize?: number;
+}) => {
   const { loading, setLoading, data, setData, setTotalData, totalData } =
     useHooks<Model.UserOrder[], "orderHistory">("orderHistory");
 
@@ -90,10 +96,10 @@ export const useOrders = ({ status, pageSize }: { status: Model.OrderStatus, pag
 
   const getUserOrders = async ({ pageParam }) => {
     setLoading(true);
-    setError("")
+    setError("");
     const isPreviousOrderExist = data?.some((order) => order.status === status);
     if (!isPreviousOrderExist) {
- 
+      setHasMore(true);
       setCurrentDoc({ currentFirstDoc: "", currentLastDoc: "" });
       setData([]);
     }

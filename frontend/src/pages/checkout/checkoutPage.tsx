@@ -11,7 +11,7 @@ export const CheckoutPage: React.FC = () => {
     <div className="flex flex-col w-full gap-8 ">
       <div className="w-full sm:py-5 py-4 fixed top-0 left-0 right-0 z-[100] bg-white flex items-center justify-between px-2">
         <button onClick={() => navigate(-1)}>
-          <Icons.arrowLeft />
+          <Icons.arrowLeft className="text-gray-800" />
         </button>
         <h1 className=" font-semibold text-[16px] text-[var(--secondary-text)] sm:text-[20px] ">
           Checkout
