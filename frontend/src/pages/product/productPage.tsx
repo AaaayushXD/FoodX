@@ -1,5 +1,6 @@
 import { data, useNavigate, useParams } from "react-router-dom";
 import {
+  useAllProducts,
   useAppDispatch,
   useAppSelector,
   useFavourite,
@@ -134,12 +135,19 @@ export const ProductPage = () => {
 };
 
 const RecommendProduct = () => {
+  const { isLoading, products: allProducts } = useAllProducts();
+
   const { data } = useQuery([""], {
     queryFn: getPopularProducts,
     staleTime: 5 * 60 * 60,
     cacheTime: 5 * 60 * 60,
     refetchOnWindowFocus: false,
+    enabled: !isLoading,
   });
+
+  const products = allProducts?.filter((product) =>
+    data.data?.some((pro) => pro.id === product.id)
+  );
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-5">
@@ -147,11 +155,11 @@ const RecommendProduct = () => {
         You might also like
       </h1>
       <div className="w-full overflow-auto">
-      <div className=" w-max  flex  items-start justify-start gap-5">
-        {data?.data?.map((product) => (
-          <PopularProduct {...product} key={product.id} />
-        ))}
-    </div>
+        <div className=" w-max  flex  items-start justify-start gap-5">
+          {products.map((product) => (
+            <PopularProduct {...product} key={product.id} />
+          ))}
+        </div>
       </div>
     </div>
   );
