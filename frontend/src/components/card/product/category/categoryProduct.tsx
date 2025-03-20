@@ -49,12 +49,12 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
   const [openEllipse, setOpenEllipse] = useState<boolean>(false);
 
   return (
-    <div className="w-full group/category lg:bg-white bg-transparent  rounded-lg relative flex items-center justify-start gap-2 sm:gap-5 h-[150px] sm:h-[200px] ">
+    <div className="w-full  lg:bg-white group/category bg-transparent  rounded-lg relative flex items-center justify-start gap-2 sm:gap-5 h-[150px] sm:h-[200px] ">
       {/* Image Section */}
-      <div className="relative w-1/2  group-hover/category:scale-95 duration-150  cursor-pointer min-w-[135px] md:w-[280px] sm:w-[300px] h-full overflow-hidden rounded-xl shadow-lg">
+      <div className="relative w-1/2 cursor-pointer min-w-[135px] md:w-[280px] sm:w-[300px] h-full overflow-hidden rounded-xl shadow-lg">
         <Image
           lowResSrc={PlaceholderImg}
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full transform scale-100 group-hover/category:scale-110 duration-150 transition-transform object-cover rounded-lg"
           highResSrc={product.image}
           alt={product.name}
         />
@@ -62,7 +62,7 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
         {/* Price & Item Name */}
         <div
           onClick={() => navigate(`/${product?.collection}/${product?.id}`)}
-          className="absolute bottom-0  left-2 z-10 flex flex-col gap-0 items-start text-white"
+          className="absolute bottom-0 left-2 z-10 flex flex-col gap-0 items-start text-white"
         >
           <span className="text-[16px] sm:text-[17px] font-extrabold">
             ITEM
@@ -74,7 +74,7 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
 
         {/* Favorite Button */}
         <button
-          className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full "
+          className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full"
           onClick={() =>
             isFavourite(product.id)
               ? removeFavouriteProduct()
@@ -82,14 +82,14 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
           }
         >
           <Heart
-            className={`size-[18px] duration-150  ${heartColor}   sm:size-6`}
+            className={`size-[18px] duration-150 ${heartColor} sm:size-6`}
           />
         </button>
 
         {/* Gradient Overlays */}
         <div
           onClick={() => navigate(`/${product?.collection}/${product?.id}`)}
-          className="absolute   inset-0 bg-gradient-to-b from-black/20 to-transparent"
+          className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"
         ></div>
         <div
           onClick={() => navigate(`/${product?.collection}/${product?.id}`)}

@@ -10,9 +10,10 @@ export const Specials: React.FC = () => {
   const specialProducts = products?.filter(
     (product) => product.collection === "specials"
   );
+  console.log(isLoading)
 
   return (
-    <div className="flex flex-col w-full h-full gap-8 rounded">
+    <div className="flex flex-col w-full h-full gap-6 rounded">
       <h1 className="sm:text-[25px]  text-[18px] tracking-wide font-semibold    ">
         TODAY'S SPECIAL
       </h1>

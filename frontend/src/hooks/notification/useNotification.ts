@@ -30,6 +30,8 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
         direction: "next",
         sort: "asc",
       });
+
+      setTotalData(response?.data.length)
       setCurrentDoc({
         currentFirstDoc: response.data.currentFirstDoc,
         currentLastDoc: response.data.currentLastDoc,

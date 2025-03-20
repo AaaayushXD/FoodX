@@ -58,7 +58,7 @@ export const CustomerReview = ({
   });
 
   return (
-    <div className="w-full border-dashed border-b pb-5 flex bg-white p-3 rounded-md flex-col items-start justify-start gap-2  ">
+    <div className="w-full border-dashed border-b pb-5 flex bg-gray-100 p-3 rounded-md flex-col items-start justify-start gap-2  ">
       <div className="w-full flex items-center justify-between">
         <StarRating rating={4} size="4" />
         <p className=" text-[14px] text-gray-600 ">

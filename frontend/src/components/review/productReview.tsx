@@ -29,7 +29,7 @@ export default function ProductReview({ productId }: { productId: string }) {
   }, [data, view]);
 
   return (
-    <div className="w-full flex  flex-col items-start justify-start gap-16 mt-8 mx-auto">
+    <div className="w-full flex  flex-col items-start justify-start gap-16">
       <div className="flex flex-col sm:items-start items-center w-full justify-start  gap-5 sm:gap-10">
         {isLoading ? (
           <Skeleton
@@ -50,7 +50,7 @@ export default function ProductReview({ productId }: { productId: string }) {
         {isLoading ? (
           <Skeleton
             children={{
-              className: "max-w-klg w-full h-[60px]",
+              className: "max-w-lg w-full h-[60px]",
             }}
             className="w-full flex flex-col items-start justify-start gap-4"
             count={5}

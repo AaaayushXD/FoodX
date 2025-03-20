@@ -40,11 +40,11 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
     });
     try {
       const response = await add_productFeedback({
-        message: description,
+        message: data.message,
         productId: productId,
-        rating: rating,
+        rating: data?.rating,
         uid: auth?.userInfo?.uid,
-        image: image,
+        image: data?.image,
       });
       toaster({
         className: "bg-green-50 ",
@@ -142,18 +142,18 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   return (
     <div
-      className={` duration-150 fixed top-0 z-[100] flex flex-col items-start justify-between bg-gradient-to-t from-black/65 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
+      className={` duration-150 fixed top-0 z-[100000] flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
         openReview ? "opacity-100 visible " : "opacity-0 invisible"
       } `}
     >
-      <div className="w-full flex  p-2  items-center justify-between">
+      <div className="w-full md:hidden flex  p-2   items-center justify-between">
         <button
           onClick={() => setOpenReview(!openReview)}
-          className=" p-1.5 rounded-full bg-white "
+          className=" p-2 rounded-full bg-white "
         >
-          <Icons.close className="text-[var(--secondary-text)] size-4 font-semibold " />
+          <Icons.close className="text-black size-6 font-semibold " />
         </button>
-        <h1 className=" text-white text-[18px] sm:text-[22px]  ">
+        <h1 className=" text-blue-500 font-semibold text-[18px] sm:text-[22px]  ">
           Reviews and Ratings
         </h1>
         <div></div>
@@ -163,9 +163,11 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
           openReview
             ? "bottom-0 visible opacity-100"
             : "-bottom-96 invisible opacity-0 "
-        } bg-slate-100  rounded-xl p-5 flex flex-col items-start justify-start gap-7`}
+        } bg-slate-100  rounded-xl p-5  md:max-w-lg flex flex-col items-start justify-start gap-7`}
       >
         <Rating
+          openReview={openReview}
+          setOpenReview={setOpenReview}
           action={(rate) => setData((prev) => ({ ...prev, rating: rate }))}
         />
         <Rating_description
@@ -190,11 +192,30 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   );
 };
 
-const Rating = ({ action }: { action: (rate: number) => void }) => {
+const Rating = ({
+  action,
+  setOpenReview,
+  openReview,
+}: {
+  action: (rate: number) => void;
+  openReview: boolean;
+  setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [index, setIndex] = useState<number>(0);
   return (
     <div className="w-full flex items-center justify-start gap-4 flex-col">
-      <h1 className="text-lg font-semibold ">Share your experience</h1>
+      <div className="w-full flex items-center justify-between">
+        <div></div>
+        <h1 className="text-lg ml-12 sm:text-2xl font-semibold ">
+          Share your experience
+        </h1>
+        <button
+          onClick={() => setOpenReview(!openReview)}
+          className=" p-2 md:visible invisible rounded-full  "
+        >
+          <Icons.close className="text-red-500 size-6 font-semibold " />
+        </button>
+      </div>
       <div className="flex items-center justify-center gap-1.5">
         {[1, 2, 3, 4, 5]?.map((star) => (
           <button
@@ -227,15 +248,17 @@ const Rating_description = ({
 }) => {
   return (
     <div className="w-full flex flex-col items-start justify-start  gap-4">
-      <h1 className="text-lg font-semibold ">Write your review</h1>
+      <h1 className="text-[16px] font-semibold sm:text-lg ">
+        Write your review
+      </h1>
       <textarea
         value={description}
         onChange={(event) => setDesription(event.target.value)}
         draggable={false}
-        cols={6}
-        role="6"
+        cols={100}
+        rows={100}
         placeholder="eg.This product is fantastic"
-        className=" h-[100px] w-full p-2 rounded-md bg-slate-200  "
+        className=" h-[100px] row-span-10 max-w-xl w-full p-2 rounded-md bg-slate-200  "
       />
     </div>
   );
@@ -253,10 +276,10 @@ const Rating_addImage = ({
   const imageRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex flex-col items-start justify-start gap-4">
-      <h1 className="text-[16px] font-semibold ">Share photo</h1>
+      <h1 className="text-[16px] sm:text-lg font-semibold ">Share photo</h1>
       <div className="w-full h-full  rounded-md">
         {image ? (
-          <div className="size-14 relative ">
+          <div className="size-14 sm:size-20 relative ">
             <img
               className=" size-full object-cover rounded-md "
               src={import.meta.env.VITE_URI + "assets/" + image}
@@ -274,8 +297,10 @@ const Rating_addImage = ({
             onClick={() => imageRef?.current?.click()}
             className="  border cursor-pointer p-2 border-dashed rounded-md flex flex-col items-center justify-start gap-2"
           >
-            <Icons.download className="size-4 text-slate-500 " />
-            <span className=" text-xs text-slate-500 ">Upload a image</span>
+            <Icons.download className="size-4 sm:size-6 text-slate-500 " />
+            <span className=" text-xs sm:text-[16px] text-slate-500 ">
+              Upload a image
+            </span>
           </div>
         )}
       </div>

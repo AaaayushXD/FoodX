@@ -16,7 +16,7 @@ export const StarRating = ({
           className={`${iconsSize} ${
             i < Math.round(rating)
               ? "fill-red-600 text-[var(--secondary-color)] "
-              : "text-green-500 fill-green-500  "
+              : "text-gray-400 fill-gray-400  "
           }`}
         />
       ))}

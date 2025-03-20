@@ -17,7 +17,7 @@ import Avatar from "@/assets/logo/avatar.png";
 export const Header = () => {
   return (
     <div
-      className=" bg-green-400  h-[45vh] rounded-b-lg sm:h-[80vh] gap-10 sm:gap-40 flex flex-col items-center justify-start   bg-cover sm:bg-center  py-3 px-2 w-full "
+      className=" bg-green-400  h-[45vh] rounded-b-lg sm:h-[80vh] gap-10 sm:gap-40 flex flex-col items-center justify-start   bg-cover sm:bg-center  py-3 px-2 w-screen "
       style={{
         backgroundImage: `url(${Image})`,
       }}
@@ -60,7 +60,7 @@ const DesktopNavbar = () => {
   return (
     <div
       ref={notifcationRef}
-      className="w-full hidden relative px-20 lg:flex items-center justify-between"
+      className="container hidden relative px-20 lg:flex items-center justify-between"
     >
       <div className="w-full relative flex items-center px-10 py-5  justify-between  gap-5">
         <div className="flex items-center justify-start gap-1">

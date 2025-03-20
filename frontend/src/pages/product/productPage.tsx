@@ -17,6 +17,7 @@ import { addToCart, removeCart } from "@/reducer";
 import { motion } from "framer-motion";
 import {
   addProductToCart,
+  getPopularProducts,
   getProductById,
   removeProductFromCart,
 } from "@/services";
@@ -109,11 +110,11 @@ export const ProductPage = () => {
       </div>
 
       {/* product details */}
-      <div className="w-full z-[100] px-3 md:px-20 lg:px-32 sm:px-16">
-        <div className=" w-full  gap-10  py-3 rounded-t-2xl flex flex-col items-center justify-center  z-[1000] sm:mt-[-80px] mt-[-60px] bg-white">
+      <div className="w-full z-[100] px-3 sm:px-16 ">
+        <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center  z-[1000] sm:mt-[-80px] mt-[-60px] bg-white">
           <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
           {/* Recommended Products */}
-          {auth?.success && <RecommendProduct />}
+          {<RecommendProduct />}
           <ErrorBoundary>
             <ProductReview productId={productId} />
           </ErrorBoundary>
@@ -133,18 +134,24 @@ export const ProductPage = () => {
 };
 
 const RecommendProduct = () => {
-  const { data } = useOrders({ status: "completed", pageSize: 10 });
-  const allProducts = data?.flatMap((product) => product.products) || [];
+  const { data } = useQuery([""], {
+    queryFn: getPopularProducts,
+    staleTime: 5 * 60 * 60,
+    cacheTime: 5 * 60 * 60,
+    refetchOnWindowFocus: false,
+  });
 
   return (
-    <div className="flex w-full px-2  py-5 flex-col items-start justify-start gap-5">
+    <div className="flex w-full flex-col items-start justify-start gap-5">
       <h1 className="sm:text-[24px] text-[18px] font-semibold ">
         You might also like
       </h1>
-      <div className="w-full overflow-auto flex  items-start justify-start gap-5">
-        {allProducts?.map((product) => (
+      <div className="w-full overflow-auto">
+      <div className=" w-max  flex  items-start justify-start gap-5">
+        {data?.data?.map((product) => (
           <PopularProduct {...product} key={product.id} />
         ))}
+    </div>
       </div>
     </div>
   );
@@ -222,9 +229,9 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
   }, [productQuantity?.quantity]);
 
   return (
-    <div className="w-full flex items-start justify-start gap-5 md:gap-10 flex-col">
+    <div className="w-full flex items-start justify-start gap-5  flex-col">
       {/* Bottom Left Product Info */}
-      <div className=" flex w-full py-2 px-3 gap-2 flex-col items-start z-10">
+      <div className=" flex w-full  gap-2 flex-col items-start z-10">
         <p
           className="text-[12px] bg-blue-100 rounded-full px-2  border-blue-400 border text-blue-600 font-semibold flex items-center 
           justify-center sm:text-[12px] gap-1 text-[var(--dark-secondary-text)]"
@@ -250,9 +257,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
         </div>
       </div>
       {/* Product Details */}
-      <div
-        className={`flex w-full flex-col items-start justify-start gap-4 px-2`}
-      >
+      <div className={`flex w-full flex-col items-start justify-start gap-4`}>
         {/* Ratings & Cart Button */}
         <div className="w-full flex  mt-4 flex-wrap gap-4 items-center justify-between text-sm">
           <div className="flex flex-col sm:flex-row sm:items-end items-start justify-start   h-full  sm:gap-3">
@@ -310,11 +315,11 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
         </div>
       </div>
       <div
-        className="flex flex-col px-2 items-start justify-start gap-0.5
+        className="flex flex-col items-start justify-start gap-0.5
          "
       >
         <h1 className=" text-lg  ">Details</h1>
-        <p className=" text-[var(--secondary-text)] text-[16px] md:text-[18px] ">
+        <p className=" text-[var(--secondary-text)] text-[16px] md:text-[16px] ">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt a
           corporis quo odio doloribus cupiditate praesentium voluptatibus quasi
           perferendis! Minus ea sunt repellat?

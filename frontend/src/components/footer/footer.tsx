@@ -27,7 +27,7 @@ const links: { icon: React.ReactNode; href: string; title?: string }[] = [
 ];
 export const Footer: React.FC = () => {
   return (
-    <div className="flex flex-col w-full text-white ">
+    <div className="flex  flex-col w-full text-white ">
       <footer className="w-full mt-5    rounded-t  bg-[var(--primary-color)] text-white place-items-center sm:grid px-5">
         <div className="w-full flex  items-start sm:items-center sm:justify-evenly justify-between flex-wrap  ">
           <div className="flex sm:col-span-1 col-span-3 flex-col gap-6 p-8 ">

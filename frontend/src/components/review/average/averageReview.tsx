@@ -27,14 +27,14 @@ export const AverageReview = React.memo(
     const [openRating, setOpenRating] = useState<boolean>(false);
 
     return (
-      <div className="  w-full flex flex-col bg-white p-3 items-start justify-start gap-5 ">
+      <div className="  w-full flex flex-col bg-white items-start justify-start gap-5 ">
         <div className="flex items-center justify-between w-full">
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings
           </h1>
           <button
             onClick={() => setOpenRating(!openRating)}
-            className="flex max-w-[140px] sm:max-w-[150px] w-full items-center border border-gray-300 p-2 rounded-full justify-start gap-3"
+            className="flex max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3"
           >
             <Icons.comment className="sm:size-5 size-4 " />
             <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
@@ -42,14 +42,14 @@ export const AverageReview = React.memo(
         </div>
 
         {/* average ratings */}
-        <div className="w-full md:flex-row gap-3 md:gap-8 flex-col flex items-start justify-between">
-          <div className="w-full max-w-md flex flex-col  md:bg-slate-200 rounded-lg  items-start justify-start">
+        <div className="w-full md:flex-row flex-grow gap-3 flex-col justify-between sm:gap-5 flex items-start ">
+          <div className="w-full max-w-md flex flex-col  md:bg-[#E2EEFF] rounded-lg  items-start justify-start">
             <div className="flex md:flex-col w-full py-5 rounded-lg items-center justify-center gap-2">
               <h1 className="font-bold text-[50px] ">
                 {averageRating.toFixed(1)}
               </h1>
               <div className="flex flex-col items-start justify-start gap-0.5">
-                <StarRating size="4" rating={averageRating} />
+                <StarRating size="5" rating={averageRating} />
                 <span className=" text-[14px] text-[var(--secondary-text)] ">
                   {" "}
                   Based on {ratings.length.toFixed(1)} ratings
@@ -57,7 +57,7 @@ export const AverageReview = React.memo(
               </div>
             </div>
           </div>
-          <div className="w-full border-dotted md:border-none pt-8 border-t max-w-lg flex flex-col items-start justify-start gap-8">
+          <div className="w-full h-full border-dotted md:border-none   border-t flex   flex-col items-start justify-between gap-8 pt-5 ">
             {allRating.map((rating, key) => {
               const ratingCount = ratings?.filter(
                 (rate) => rate.rating === rating
@@ -66,7 +66,7 @@ export const AverageReview = React.memo(
               return (
                 <div
                   key={key}
-                  className=" relative max-w-lg w-full sm:h-4 h-2 bg-slate-300 rounded-full "
+                  className=" relative  w-full sm:h-3 h-2 bg-slate-300 rounded-full "
                 >
                   <div
                     style={{

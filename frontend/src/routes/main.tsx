@@ -51,7 +51,7 @@ export const HomePage: React.FC = () => {
           <div className="w-full">
             <Outlet />
           </div>
-          <div className="w-full">
+          <div className="w-screen">
             <Footer />
           </div>
           <div className="w-full flex ">
