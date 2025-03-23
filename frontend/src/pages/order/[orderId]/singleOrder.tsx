@@ -8,7 +8,7 @@ import { addProductToCart, getOrder, removeProductFromCart } from "@/services";
 import { addToCart, removeCart } from "@/reducer";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const SingleOrder = () => {
   const orderIdReference = useRef<HTMLSpanElement | null>(null);
@@ -16,16 +16,14 @@ export const SingleOrder = () => {
   const [isCopy, setIsCopy] = useState<boolean>(false);
   const route = useNavigate();
 
-  const { data, isError, isLoading, error } = useQuery(
-    ["single-order", orderId],
-    {
-      queryFn: async () => getOrder(orderId),
-      cacheTime: 5 * 60 * 60,
-      staleTime: 5 * 60 * 60,
-      refetchOnWindowFocus: false,
-      enabled: !!orderId,
-    }
-  );
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: ["single-order", orderId],
+    queryFn: async () => getOrder(orderId),
+    gcTime: 5 * 60 * 60,
+    staleTime: 5 * 60 * 60,
+    refetchOnWindowFocus: false,
+    enabled: !!orderId,
+  });
 
   const { auth, cart } = useAppSelector();
   const dispatch = useAppDispatch();

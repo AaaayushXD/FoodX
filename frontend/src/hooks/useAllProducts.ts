@@ -1,9 +1,8 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getNormalProducts, getSpecialProducts } from "@/services";
 import { useAppDispatch, useAppSelector } from "./useActions";
 import { useEffect } from "react";
 import { fetchProducts } from "@/actions";
-import { clearProducts } from "@/reducer";
 
 export const getAllProducts = async (): Promise<Ui.Product[]> => {
   try {
@@ -63,9 +62,10 @@ export const specialsProductsFn = async (): Promise<Ui.Product[]> => {
 };
 
 export const specialProducts = () => {
-  return useQuery<Ui.Product[]>("specials", specialsProductsFn, {
+  return useQuery<Ui.Product[]>({
+    queryKey: ["specials", specialsProductsFn],
     staleTime: 2 * 60 * 1000,
-    cacheTime: 2 * 60 * 1000,
+    gcTime: 2 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { SingleCard, TotalPay } from "@/components";
+import { NotificationLoader, SingleCard, TotalPay } from "@/components";
 import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
 import { addProductToCart, getProductsOfCart } from "@/services";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAllProducts, useAppDispatch, useAppSelector } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import { Empty } from "@/commons";
@@ -13,7 +13,7 @@ interface CardProp {
 }
 
 export const Cart: React.FC<CardProp> = () => {
-  const { data: products } = useAllProducts();
+  const { products, isLoading } = useAllProducts();
   const store = useAppSelector();
   const dispatch = useAppDispatch();
 
@@ -57,13 +57,12 @@ export const Cart: React.FC<CardProp> = () => {
     }
   };
 
-  const { data: productIdsInCart } = useQuery(
-    "productsOfCart",
-    fetchProductsOfCartFn,
-    {
-      enabled: store?.auth?.success && !store?.cart?.products,
-    }
-  );
+  const { data: productIdsInCart } = useQuery({
+    queryKey: ["productsOfCart"],
+    queryFn: fetchProductsOfCartFn,
+
+    enabled: store?.auth?.success && !store?.cart?.products,
+  });
 
   useEffect(() => {
     if (productIdsInCart) {
@@ -133,7 +132,9 @@ export const Cart: React.FC<CardProp> = () => {
         <div
           className={`flex flex-col relative  h-full pr-2 items-center gap-2 w-full py-5    overflow-auto`}
         >
-          {store?.cart?.products?.length > 0 ? (
+          {isLoading ? (
+            <NotificationLoader />
+          ) : store?.cart?.products?.length > 0 ? (
             store?.cart?.products?.map((singleSelectedProduct) => (
               <SingleCard
                 prop={singleSelectedProduct}

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Image from "@/assets/banner.png";
 import { Icons } from "@/utils";
 import { getProductsByTag } from "@/services";
-import { useQuery } from "react-query";
+
 import { CategoryProduct } from "@/components";
 import { specialProducts, useAllProducts } from "@/hooks/useAllProducts";
 import { useEffect, useState } from "react";
@@ -71,51 +71,64 @@ export const CategoryPage = () => {
           categoryProducts,
           filter.value as Common.SortType
         );
-    
+
         setProducts(filterProducts);
       }
     });
   }, [filters]);
 
-  console.log(products)
-
   return (
-    <div className="flex w-full h-full  flex-col items-start justify-start gap-5 ">
+    <div className="flex w-full bg-white h-full flex-col items-start justify-start gap-5">
+      {/* Category Header */}
       <div
         style={{
-          backgroundImage: `  url(${category?.cover || Image})`,
+          backgroundImage: `url(${category?.cover || Image})`,
         }}
-        className=" w-full flex items-start  pt-5 pl-3   bg-right-bottom bg-no-repeat bg-cover sm:h-[180px] h-[100px] "
+        className="w-full relative flex items-start pt-5 pl-3 bg-right-bottom bg-no-repeat bg-cover sm:h-[230px] h-[100px] transition-all ease-in-out duration-500"
       >
-        <button onClick={() => navigate(-1)} className="  text-white ">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-white hover:scale-110 transition-transform duration-300"
+        >
           {<Icons.arrowLeft />}
         </button>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+
+        {/* Category Description */}
+        <div className="px-2 bottom-0 absolute border-b-[1px] border-[var(--dark-border)] w-full flex flex-col items-start justify-start">
+          <h1 className="text-[20px] text-white tracking-wide sm:text-[22px] font-semibold">
+            {category?.name}
+          </h1>
+          <p className="text-[16px] sm:text-[18px] text-gray-200">
+            {category?.description || "fldsjklsfk;jadsfjdsklfsd;lkdsalkfs;ld"}
+          </p>
+        </div>
       </div>
-      <div className=" px-2 border-b-[1px] border-[var(--dark-border)] pb-5 w-full flex flex-col items-start justify-start gap-4  ">
-        <h1 className=" text-[20px] tracking-wide sm:text-[22px] font-semibold ">
-          {category?.name}
-        </h1>
-        <p className=" text-[16px] sm:text-[18px] text-[var(--dark-secondary-text)] ">
-          {category?.description}
-        </p>
-      </div>
-      <div className="w-full  mb-4 flex items-center justify-between ">
-        <div className=" px-2 w-full overflow-auto  flex items-center justify-start gap-5">
-          <button onClick={() => setOpen(!open)}>
+
+      {/* Filters and Sort Buttons */}
+      <div className="w-full mb-4 flex items-center justify-between">
+        <div className="px-2 w-full overflow-auto flex items-center justify-start gap-5">
+          <button
+            onClick={() => setOpen(!open)}
+            className="hover:text-blue-500"
+          >
             <Icons.filterButton />
           </button>
-          <button onClick={() => setOpenSort(!openSort)}>
+          <button
+            onClick={() => setOpenSort(!openSort)}
+            className="hover:text-blue-500"
+          >
             <Icons.sortButton />
           </button>
 
-          <div className="flex w-full py-2  items-center gap-4 justify-start">
+          {/* Active Filters */}
+          <div className="flex w-full py-2 items-center gap-4 justify-start">
             {filters.map(
               (filter, index) =>
                 filter.value && (
                   <div
                     key={index}
-                    className=" px-5 p-1 sm:py-1.5
-             rounded-full min-w-[170px] w-fit flex items-center justify-start gap-2 ring-[1px] hover:bg-gray-400 duration-150 cursor-pointer ring-[var(--secondary-text)]   bg-gray-200  text-gray-600 text-[14px] "
+                    className="px-5 p-1 sm:py-1.5 rounded-full min-w-[170px] w-fit flex items-center justify-start gap-2 ring-[1px] hover:bg-gray-400 duration-150 cursor-pointer ring-[var(--secondary-text)] bg-gray-200 text-gray-600 text-[14px] transition-all ease-in-out"
                   >
                     {filter.label.charAt(0).toUpperCase() +
                       filter?.label?.slice(1)}
@@ -133,21 +146,28 @@ export const CategoryPage = () => {
             )}
           </div>
         </div>
-        <h1 className=" w-1/2 lg:flex hidden justify-end text-end text-[18px] px-2  text-[var(--secondary-text)] ">
+
+        {/* Available Products Count */}
+        <h1 className="w-1/2 lg:flex hidden justify-end text-end text-[18px] px-2 text-[var(--secondary-text)]">
           {products?.length} Products are available
         </h1>
       </div>
-      <h1 className="  lg:hidden flex text-start text-[18px] px-2 font-bold ">
+
+      {/* Mobile View Product Count */}
+      <h1 className="lg:hidden flex text-start text-[18px] px-2 font-bold">
         {products?.length} Products are available
       </h1>
+
+      {/* Product Cards */}
       <div className="w-full px-2 flex flex-col lg:flex-row items-start justify-start sm:gap-10 gap-6">
         {isLoading ? (
           <Skeleton
             children={{
-              className: "max-w-full h-[150px]  rounded-md sm:h-[180px] ",
+              className:
+                "max-w-full h-[150px] rounded-md sm:h-[180px] bg-gray-300",
             }}
             count={7}
-            className="w-full h-full px-3  flex items-start gap-8 justify-start flex-col"
+            className="w-full h-full px-3 flex items-start gap-8 justify-start flex-col"
           />
         ) : products?.length <= 0 ? (
           <Empty image={EmptyImage} title="No products are available" />
@@ -157,6 +177,8 @@ export const CategoryPage = () => {
           ))
         )}
       </div>
+
+      {/* Filter and Sort Modals */}
       {open && (
         <ProductFilter
           setFilterData={setFilters}
@@ -165,6 +187,7 @@ export const CategoryPage = () => {
           isOpen={open}
         />
       )}
+
       {openSort && (
         <ProductSort
           close={() => setOpenSort(!openSort)}

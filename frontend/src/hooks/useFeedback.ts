@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import toast from "react-hot-toast";

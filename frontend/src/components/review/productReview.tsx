@@ -45,7 +45,7 @@ export default function ProductReview({ productId }: { productId: string }) {
       </div>
       <div
         className=" w-full flex flex-col 
-      items-start justify-start gap-5"
+      items-center justify-start gap-5"
       >
         {isLoading ? (
           <Skeleton
@@ -63,9 +63,9 @@ export default function ProductReview({ productId }: { productId: string }) {
         {!view && (
           <button
             onClick={() => setView(!view)}
-            className=" text-sm tracking-wide hover:underline w-full flex gap-1 items-center justify-end px-2 "
+            className=" text-sm tracking-wide px-1 py-0.5 hover:bg-gray-300 duration-150 ring-gray-200 max-w-[100px] rounded-xl ring-[1px] w-full flex gap-1 items-center justify-center  "
           >
-            View all <Icons.chevronRight className="text-black  " />
+            View all <Icons.chevronRight className="rotate-90 size-4 text-black  " />
           </button>
         )}
       </div>

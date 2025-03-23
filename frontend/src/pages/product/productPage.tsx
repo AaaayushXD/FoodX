@@ -1,15 +1,14 @@
-import { data, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useAllProducts,
   useAppDispatch,
   useAppSelector,
   useFavourite,
-  useOrders,
   useRating,
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import {
-  CategoryProduct,
+  
   NotificationLoader,
   PopularProduct,
 } from "@/components";
@@ -27,34 +26,28 @@ import { ApiError, handleShare, Styles } from "@/helpers";
 import ProductReview from "@/components/review/productReview";
 import React from "react";
 import { AddProductReview } from "@/features";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
 
 export const ProductPage = () => {
   const [openReview, setOpenReview] = React.useState<boolean>(false);
   const { collection, productId } = useParams();
 
-  const { data, isLoading, isError, error } = useQuery(
-    ["single:product", productId],
-    {
-      queryFn: () =>
-        getProductById(productId, collection as Common.ProductCollection),
-      staleTime: 5 * 60 * 60,
-      cacheTime: 5 * 60 * 60,
-      refetchOnWindowFocus: false,
-      enabled: !!productId,
-      onError: (err) => {
-        console.log(err);
-      },
-    }
-  );
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["single:product", productId],
+    queryFn: () =>
+      getProductById(productId, collection as Common.ProductCollection),
+    staleTime: 5 * 60 * 60,
+    gcTime: 5 * 60 * 60,
+    refetchOnWindowFocus: false,
+    enabled: !!productId,
+  });
 
   if (isError || error) {
     if (error instanceof ApiError) {
       throw new Error(error.message);
     }
   }
-  const { auth } = useAppSelector();
 
   const {
     addFavouriteProduct,
@@ -72,7 +65,7 @@ export const ProductPage = () => {
       {/* product banner image */}
       <div
         style={{
-          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${data?.data?.data?.image})`,
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${data?.data?.data?.image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -84,9 +77,9 @@ export const ProductPage = () => {
 
         {/* Top Left & Right Buttons */}
         <div className="absolute top-5 left-5 right-8 flex items-center justify-between z-10">
-          <button onClick={() => navigate(-1)} className="size-5 text-white">
+          <div onClick={() => navigate(-1)} className="size-5 text-white">
             <Icons.arrowLeft />
-          </button>
+          </div>
           <div className="flex items-center gap-8">
             <button
               onClick={() =>
@@ -112,7 +105,7 @@ export const ProductPage = () => {
 
       {/* product details */}
       <div className="w-full z-[100] px-3 sm:px-16 ">
-        <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center  z-[1000] sm:mt-[-80px] mt-[-60px] bg-white">
+        <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center  z-[1000]  bg-white">
           <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
           {/* Recommended Products */}
           {<RecommendProduct />}
@@ -137,20 +130,21 @@ export const ProductPage = () => {
 const RecommendProduct = () => {
   const { isLoading, products: allProducts } = useAllProducts();
 
-  const { data } = useQuery([""], {
+  const { data } = useQuery({
+    queryKey: ["products:popular"],
     queryFn: getPopularProducts,
     staleTime: 5 * 60 * 60,
-    cacheTime: 5 * 60 * 60,
+    gcTime: 5 * 60 * 60,
     refetchOnWindowFocus: false,
     enabled: !isLoading,
   });
 
   const products = allProducts?.filter((product) =>
-    data.data?.some((pro) => pro.id === product.id)
+    data?.data?.some((pro) => pro.id === product.id)
   );
 
   return (
-    <div className="flex w-full flex-col items-start justify-start gap-5">
+    <div className="flex w-full flex-col items-start justify-start gap-6">
       <h1 className="sm:text-[24px] text-[18px] font-semibold ">
         You might also like
       </h1>
@@ -217,7 +211,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
     dispatch(removeCart(product.id));
     toast.dismiss(loading);
   }
-  const category = categories.categories.find(
+  const category = categories?.categories?.find(
     (category) => category.id === product?.tagId
   );
 
@@ -312,13 +306,13 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Increase quantity"
               >
-                <Icons.plus className="sm:size-4 size-3 text-[var(--secondary-text)] " />
+                <Icons.plus className="sm:size-4  size-3 text-[var(--secondary-text)] " />
               </motion.button>
             </div>
           ) : (
-            <button onClick={() => handleProduct(product)}>
+            <div onClick={() => handleProduct(product)}>
               <Icons.addToCart />
-            </button>
+            </div>
           )}
         </div>
       </div>

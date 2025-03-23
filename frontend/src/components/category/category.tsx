@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "@/services";
 import { FoodCategory } from "./food";
 import { ApiError, Skeleton } from "@/helpers";
@@ -33,14 +33,13 @@ export const MenuType: React.FC = () => {
     }
   };
 
-  const { data, isLoading, error, refetch, isError, isSuccess } = useQuery(
-    "categories",
-    CategoriesData,
-    {
-      refetchOnWindowFocus: false,
-      cacheTime: 1 * 60 * 1000,
-    }
-  );
+  const { data, isLoading, error, refetch, isError, isSuccess } = useQuery({
+    queryKey: ["categories"],
+    queryFn: CategoriesData,
+    refetchOnWindowFocus: false,
+    gcTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+  });
 
   useEffect(() => {
     if (!isLoading && isSuccess) {
@@ -49,7 +48,7 @@ export const MenuType: React.FC = () => {
   }, [isLoading, isSuccess]);
 
   return (
-    <div className="flex flex-col items-center w-full sm:gap-8 gap-6 ">
+    <div className="flex flex-col items-center w-full gap-6 ">
       <div className="flex items-center justify-start w-full ">
         <p className=" text-center font-[600] sm:text-[22px] text-[13px] sm:min-w-[248px] w-[280px] tracking-wide text-[var(--dark-text)]">
           WHAT'S ON YOUR MIND?

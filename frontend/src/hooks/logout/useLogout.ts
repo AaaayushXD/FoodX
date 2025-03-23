@@ -1,6 +1,5 @@
 import React from "react";
 import toast from "react-hot-toast";
-import { makeRequest } from "@/makeRequest";
 import { authLogout, resetOrder, resetFavourite, resetCart } from "@/reducer";
 import Cookies from "js-cookie";
 import { addLogs, logoutUser } from "@/services";

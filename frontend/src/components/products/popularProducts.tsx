@@ -1,4 +1,3 @@
-
 import { getPopularProducts } from "@/services";
 import { useNavigate } from "react-router-dom";
 import Empty from "@/assets/empty.png";
@@ -6,7 +5,7 @@ import { PopularProduct } from "@/components";
 import { ApiError, Skeleton } from "@/helpers";
 import { Empty as EmptyComponent } from "@/commons";
 import { toaster } from "@/utils";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAllProducts } from "@/hooks";
 
 export const PopularProducts = () => {
@@ -25,15 +24,16 @@ export const PopularProducts = () => {
     }
   };
 
-  const { data, isLoading } = useQuery("products:popular", {
+  const { data, isLoading } = useQuery({
+    queryKey: ["product:popular"],
     queryFn: getProducts,
-    cacheTime: 10 * 60 * 60,
+    gcTime: 10 * 60 * 60,
     staleTime: 10 * 60 * 60,
     refetchOnWindowFocus: false,
     enabled: !loading,
   });
 
-  console.log(loading)
+
 
   return (
     <div className="w-full h-full text-[var(--dark-text)] relative group/popular flex flex-col gap-6 rounded items-start justify-center ">
@@ -50,7 +50,7 @@ export const PopularProducts = () => {
           count={8}
         />
       ) : (
-        <div className="w-full   gap-y-4 grid grid-cols-2   sm:grid-cols-3 lg:grid-cols-4 gap-x-6 sm:gap-14  ">
+        <div className="w-full   grid grid-cols-2  justify-center gap-6  sm:grid-cols-3 lg:grid-cols-4  ">
           {data?.map((product) => (
             <PopularProduct {...product} key={product.id} />
           ))}

@@ -3,8 +3,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 const PrivateRoute = React.lazy(() =>
   import("@/routes").then((module) => ({ default: module.PrivateRoute }))
 );
+import { ReactQueryDevtools}       from "@tanstack/react-query-devtools"
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { routes } from "./routes";
 import { useAppSelector } from "@/hooks";
 const HomePage = React.lazy(() =>
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
       <Routes>
         {Object.entries(routes).map(([pathName, config]) =>
           config.isAccessibleToPublicOnly ? (

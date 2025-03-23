@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { specialProducts, useAllProducts, useAppSelector } from "@/hooks";
+import { specialProducts, useAllProducts } from "@/hooks";
 import { SpecialProduct } from "@/components";
 import { Skeleton } from "@/helpers";
 
@@ -10,7 +10,6 @@ export const Specials: React.FC = () => {
   const specialProducts = products?.filter(
     (product) => product.collection === "specials"
   );
-  console.log(isLoading)
 
   return (
     <div className="flex flex-col w-full h-full gap-6 rounded">

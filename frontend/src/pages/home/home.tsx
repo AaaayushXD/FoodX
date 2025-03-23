@@ -4,9 +4,9 @@ import ErrorBoundary from "@/errorBoundary";
 
 export const Home = () => {
   return (
-    <div className="flex flex-col sm:gap-20 gap-4 items-center justify-center w-full h-full">
+    <div className="flex flex-col gap-4 items-center justify-center w-full h-full">
       <Header />
-      <div className="w-full max-w-[1500px] sm:gap-20 gap-4 h-full flex flex-col px-3.5  flex-grow">
+      <div className="w-full max-w-[1500px] sm:gap-10 gap-4 h-full flex flex-col px-3.5  flex-grow">
         <ErrorBoundary>
           <Banner />
         </ErrorBoundary>

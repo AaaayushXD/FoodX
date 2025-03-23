@@ -17,7 +17,7 @@ import Avatar from "@/assets/logo/avatar.png";
 export const Header = () => {
   return (
     <div
-      className=" bg-green-400  h-[45vh] rounded-b-lg sm:h-[80vh] gap-10 sm:gap-40 flex flex-col items-center justify-start   bg-cover sm:bg-center  py-3 px-2 w-screen "
+      className=" bg-green-400  h-[60vh] rounded-b-lg sm:h-[80vh] gap-10 sm:gap-40 flex flex-col items-center justify-start   bg-cover sm:bg-center  py-3 px-2 w-screen "
       style={{
         backgroundImage: `url(${Image})`,
       }}
@@ -87,7 +87,7 @@ const DesktopNavbar = () => {
             className="hidden md:flex"
             onClick={() => setShowNotification(!showNotification)}
           >
-            <Icons.bell className=" size-6 sm:size-7 text-white " />
+            <Icons.bell className=" size-5 sm:size-6 text-white " />
           </button>
         )}
         <button
@@ -98,7 +98,7 @@ const DesktopNavbar = () => {
           }
           className=" flex items-center text-lg justify-center  font-semibold  text-white gap-2  py-3 rounded-xl "
         >
-          <Icons.heart className="size-5" />
+          <Icons.heart className="size-5 sm:size-6" />
         </button>
         <div ref={profileRef} className="">
           {auth.userInfo?.avatar && (

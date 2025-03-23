@@ -1,7 +1,7 @@
 import { Carousel } from "@/components";
 import { getBanners } from "@/services";
 import { ApiError, Skeleton } from "@/helpers";
-import { isError, useQuery } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Error } from "@/commons";
 import { toaster } from "@/utils";
 
@@ -21,8 +21,14 @@ export const Banner: React.FC = () => {
     }
   };
 
-  const { data, isLoading, isError, refetch } = useQuery("banner", getBanner, {
-    staleTime: 1 * 60 * 1000,
+  const query = useQueryClient();
+  const previousData = query.getQueryData<Ui.Banner[]>(["banner"]);
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["banner"],
+    queryFn: getBanner,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
 
   if (isError) {
@@ -39,7 +45,7 @@ export const Banner: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className=" w-full h-[120px] sm:h-[250px] ">
+      <div className=" w-full h-[120px] sm:h-[400px] ">
         {isLoading ? (
           <Skeleton
             children={{
@@ -49,7 +55,6 @@ export const Banner: React.FC = () => {
             count={1}
           />
         ) : (
-          data &&
           data.length > 0 && (
             <Carousel props={data as Ui.Banner[]} time={5000} />
           )
@@ -60,7 +65,7 @@ export const Banner: React.FC = () => {
 };
 
 export const Sponsor: React.FC = () => {
-  const getBanner = async (): Promise<Ui.Banner[]> => {
+  const getSponsors = async (): Promise<Ui.Banner[]> => {
     try {
       const response = await getBanners("sponsors");
       return response.data.banners as Ui.Banner[];
@@ -75,13 +80,16 @@ export const Sponsor: React.FC = () => {
     }
   };
 
-  const { data, isLoading, error, isError } = useQuery("sponsor", getBanner, {
-    staleTime: 60 * 1000,
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: ["sponsors"],
+    queryFn: getSponsors,
+    gcTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
   });
 
   return (
     <div className="items-center justify-center  w-full h-full flex">
-      <div className="w-full h-[100px] sm:h-[200px]">
+      <div className="w-full h-[100px] sm:h-[300px]">
         {isLoading ? (
           <Skeleton
             children={{

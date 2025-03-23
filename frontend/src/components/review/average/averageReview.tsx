@@ -27,7 +27,7 @@ export const AverageReview = React.memo(
     const [openRating, setOpenRating] = useState<boolean>(false);
 
     return (
-      <div className="  w-full flex flex-col bg-white items-start justify-start gap-5 ">
+      <div className="  w-full flex flex-col bg-white items-start justify-start gap-6 ">
         <div className="flex items-center justify-between w-full">
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings

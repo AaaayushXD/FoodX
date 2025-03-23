@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { StarRating } from "../star/starReview";
 import dayjs from "dayjs";
-import { useMutation, useQuery } from "react-query";
-import { delete_productFeedback, getUserById, searchUser } from "@/services";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { delete_productFeedback, getUserById } from "@/services";
 import { useAppSelector } from "@/hooks";
 import { ApiError, Image } from "@/helpers";
 import EmptyImage from "@/assets/empty.png";
@@ -20,10 +20,11 @@ export const CustomerReview = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const { auth } = useAppSelector();
-  const { data, isError, isLoading } = useQuery(["get-user", review.userId], {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["get-user", review.userId],
     queryFn: async () => getUserById("customer", review.userId),
     staleTime: 15 * 60 * 60,
-    cacheTime: 15 * 60 * 60,
+    gcTime: 15 * 60 * 60,
   });
 
   async function handleDelete(id: string) {
@@ -67,10 +68,10 @@ export const CustomerReview = ({
       </div>
       {/* name */}
       <div className="flex mt-1 items-center justify-start gap-2">
-      <p>{data?.data.fullName || "User"}</p>{" "}
-      <p className="flex items-center  px-1.5 gap-1 justify-start p-0.5 border border-green-200 text-[11px] bg-green-100 rounded-full text-green-600 font-semibold">
-        <Icons.award className="size-4" /> Verified
-      </p>
+        <p>{data?.data.fullName || "User"}</p>{" "}
+        <p className="flex items-center  px-1.5 gap-1 justify-start p-0.5 border border-green-200 text-[11px] bg-green-100 rounded-full text-green-600 font-semibold">
+          <Icons.award className="size-4" /> Verified
+        </p>
       </div>
       {/* comment */}
       <span className="w-full -mt-1 text-[var(--secondary-text)] text-[14px] line-clamp-2 sm:text-[15px] ">
@@ -95,7 +96,7 @@ export const CustomerReview = ({
               Edit
             </button>
             <button
-              className="text-xs bg-red-500 rounded-2xl px-3 text-white font-semibold p-1 hover:underline "
+              className="text-xs bg-red-600 rounded-2xl px-3 text-white font-semibold p-1 hover:bg-red-500 duration-150 "
               onClick={() => setIsDelete(!isDelete)}
             >
               Delete

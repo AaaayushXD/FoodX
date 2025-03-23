@@ -2,7 +2,7 @@ import { data } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/hooks";
 import { fetchNotifications } from "@/services";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { ApiError } from "@/helpers";
 
 interface UseNotificationProp {
@@ -31,7 +31,7 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
         sort: "asc",
       });
 
-      setTotalData(response?.data.length)
+      setTotalData(response?.data.length);
       setCurrentDoc({
         currentFirstDoc: response.data.currentFirstDoc,
         currentLastDoc: response.data.currentLastDoc,
@@ -69,6 +69,7 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
       queryKey: ["fetch-notification"],
       queryFn: getNotification,
       getNextPageParam: (lastPage) => lastPage?.lastPage.currentDoc || null,
+      initialPageParam: 5,
     });
 
   return {

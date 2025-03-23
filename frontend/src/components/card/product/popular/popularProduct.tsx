@@ -12,12 +12,12 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
       onClick={() =>
         navigate(`/${product?.collection || "products"}/${product.id}`)
       }
-      className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5 items-start justify-start rounded-lg w-full"
+      className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5 items-start justify-start rounded-lg w-full lg:max-w-[400px] "
     >
       <div className=" w-full relative">
         <Image
           lowResSrc={Img}
-          className="w-full h-[160px] sm:h-[180px] md:h-[200px] object-cover rounded-lg  "
+          className="w-full md:h-[200px] h-[140px]  sm:h-[180px] object-cover rounded-lg  "
           highResSrc={product.image}
           alt={product.name}
         />

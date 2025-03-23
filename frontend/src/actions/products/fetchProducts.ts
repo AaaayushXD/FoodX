@@ -6,8 +6,8 @@ import dayjs from "dayjs";
 const isStale = (lastFetched: number) => {
   const FIVE_MINUTES = 5 * 60 * 1000;
   const diff = Date.now() - lastFetched > FIVE_MINUTES;
-  const remainingMinutes = Math.floor((Date.now() - lastFetched) / (1000 * 60));
-  console.log(`Cached time: ${remainingMinutes}`);
+  // const remainingMinutes = Math.floor((Date.now() - lastFetched) / (1000 * 60));
+
   return diff;
 };
 
@@ -18,7 +18,7 @@ export const fetchProducts =
     // If the data is stale, fetch new data
     if (!lastFetched || isStale(lastFetched as number)) {
       const allProducts = await getAllProducts();
-      console.log(lastFetched, isStale(lastFetched))
+
       dispatch(setLoading(true));
       try {
         dispatch(

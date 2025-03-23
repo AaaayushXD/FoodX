@@ -6,12 +6,11 @@ import {
   MdOutlineKeyboardArrowUp,
   MdOutlineShoppingCartCheckout,
 } from "react-icons/md";
-import { TbLockPassword } from "react-icons/tb";
-import { FaComment, FaRegComment } from "react-icons/fa6";
-import { GiRingingBell, GiTakeMyMoney, GiTomato } from "react-icons/gi";
+import { TbArrowsSort, TbLockPassword } from "react-icons/tb";
+import { FaRegComment } from "react-icons/fa6";
+import { GiTakeMyMoney, GiTomato } from "react-icons/gi";
 import {
   IoLogOutOutline,
-  IoFilter,
   IoShareSocialOutline,
   IoHomeOutline,
   IoCallOutline,
@@ -20,7 +19,7 @@ import {
 import { FaChevronUp, FaXTwitter, FaNewspaper } from "react-icons/fa6";
 import { RiMenu2Line } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
-import { PiShippingContainer } from "react-icons/pi";
+import { PiShippingContainer, PiSlidersHorizontal } from "react-icons/pi";
 import { BiDotsVerticalRounded, BiSupport } from "react-icons/bi";
 
 import {
@@ -62,10 +61,12 @@ import {
 import {
   AlertCircle,
   AlertTriangle,
+  ArrowDown10,
   ArrowLeft,
   ArrowRight,
   Award,
   Ban,
+  Bell,
   Check,
   Clipboard,
   ClipboardCheck,
@@ -95,17 +96,20 @@ export const UpdateUser: React.FC = () => {
 
 const Filter: React.FC = () => {
   return (
-    <div className="bg-[var(--light-foreground)] px-3 p-1 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
-      <p className="text-[14px] font-semibold sm:text-[16px] ">Filter</p>
-      <Icons.filter className="sm:size-5 size-4 " />
+    <div className="flex items-center border p-2 rounded-full justify-center gap-2">
+      <p className="text-[14px] font-semibold text-gray-800  ">Filter</p>
+      <Icons.filter
+        strokeWidth={3}
+        className="sm:size-5 tracking-wide text-gray-800  size-4 "
+      />
     </div>
   );
 };
 const Sort: React.FC = () => {
   return (
-    <div className="bg-[var(--light-foreground)] px-3 p-1 rounded-full flex justify-center items-center gap-2 cursor-pointer text-[var(--dark-text)] hover:bg-[var(--primary-color)] hover:text-[var(--light-text)] transition-all ease-in-out duration-250 border border-[var(--light-border)] ">
-      <p className="text-[14px] font-semibold sm:text-[16px] ">Sort</p>
-      <Icons.sort className="sm:size-5 size-4 " />
+    <div className="flex  w-[100px] items-center border p-2 rounded-full justify-center gap-2">
+      <p className="text-[14px] font-semibold text-gray-800 ">Sort By</p>
+      <Icons.sort className="sm:size-5 size-4 text-gray-800" />
     </div>
   );
 };
@@ -152,7 +156,7 @@ export const FontAwesomeIcons = {
   arrowRight: RightArrow,
   chevronRight: FaChevronRight,
   chevronUp: FaChevronUp,
-  bell: GiRingingBell,
+  bell: Bell,
   darkMode: MdDarkMode,
   lightMode: MdLightMode,
   plus: FaPlus,
@@ -190,8 +194,8 @@ export const FontAwesomeIcons = {
   cook: CookingPot,
   editProfile: EditProfileIcon,
   ellipse: BiDotsVerticalRounded,
-  filter: IoFilter,
-  sort: FaSortAlphaUpAlt,
+  filter: PiSlidersHorizontal,
+  sort: TbArrowsSort,
   filterButton: Filter,
   sortButton: Sort,
   share: IoShareSocialOutline,

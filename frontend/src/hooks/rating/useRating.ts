@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppSelector } from "../useActions";
-import { QueryClient, useQuery } from "react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { get_productFeedback } from "@/services";
 import { ApiError } from "@/helpers";
 
@@ -27,9 +27,9 @@ export const useRating = (productId: string) => {
       //   currentFirstDoc: response?.data?.currentFirstDoc,
       //   currentLastDoc: response?.data?.currentLastDoc,
       // });
-      const previousReview = queryClient.getQueryData(
-        "product:review"
-      ) as Model.FeedbackDetail[];
+      const previousReview = queryClient.getQueryData([
+        "product:review",
+      ]) as Model.FeedbackDetail[];
 
       const reviews = previousReview
         ? response?.data?.feedbacks?.filter(
@@ -46,15 +46,13 @@ export const useRating = (productId: string) => {
     }
   };
 
-  const { data, isError, isLoading, refetch, error } = useQuery(
-    ["product:review"],
-    {
-      queryFn: get_productReview,
-      staleTime: 5 * 60 * 60,
-      cacheTime: 5 * 60 * 60,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data, isError, isLoading, refetch, error } = useQuery({
+    queryKey: ["product:review"],
+    queryFn: get_productReview,
+    staleTime: 5 * 60 * 60,
+    gcTime: 5 * 60 * 60,
+    refetchOnWindowFocus: false,
+  });
 
   return {
     currentDoc,

@@ -9,6 +9,13 @@
           "foodxcafe"
         ]
       }
+    },
+    "foodxcafe": {
+      "hosting": {
+        "foodxcafe-target": [
+          "foodxcafe"
+        ]
+      }
     }
   },
   "etags": {},
