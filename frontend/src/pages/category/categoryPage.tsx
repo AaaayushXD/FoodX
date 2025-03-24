@@ -92,7 +92,7 @@ export const CategoryPage = () => {
           {<Icons.arrowLeft />}
         </RippleButton>
         {/* Category Description */}
-        <div className="px-2 bottom-0 pb-1 absolute border-b-[1px] border-[var(--dark-border)] w-full flex flex-col items-start justify-start">
+        <div className=" bottom-0 pb-2.5 absolute border-b-[1px] border-[var(--dark-border)] max-w-5xl w-full flex flex-col items-start justify-start">
           <h1 className="text-[20px] text-white tracking-wide sm:text-[25px] font-semibold">
             {category?.name}
           </h1>

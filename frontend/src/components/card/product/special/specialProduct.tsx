@@ -27,7 +27,7 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
   return (
     <div
       onClick={() => navigate(`${product?.collection}/${product?.id}`)}
-      className=" md:min-w-[250px] flex flex-col items-start justify-start gap-1.5 sm:min-w-[200px] min-w-[200px]
+      className=" sm:min-w-[250px] min-w-[210px] flex flex-col items-start justify-start gap-1.5 
     "
     >
       <div className="w-full relative h-full">
@@ -49,24 +49,26 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
           </p>
         </div>
       </div>
-      <div className=" flex w-full items-end justify-between">
-        <div className="flex text-[18px] w-full  flex-col items-start justify-center gap-1">
-          <h2 className=" sm:text-lg text-[14px] font-bold ">
+      <div className=" w-full flex items-center  ">
+        <div className="flex text-[18px] w-full   flex-col items-start justify-center">
+          <h2 className=" sm:text-[16px] text-[14px] text-[var(--secondary-text)] ">
             {product?.name}
           </h2>
-          <div className="w-full flex items-center justify-start gap-6">
+          <div className="w-full flex items-center justify-start gap-3">
+            <p className="sm:text-lg font-semibold text-[var(--primary-dark)] text-[14px] tracking-wide ">
+              Rs. {product?.price - product?.discountPrice}
+            </p>
             <p className=" text-sm tracking-wide line-through text-red-700 ">
               Rs. {product?.price}
             </p>
-            <p className="sm:text-sm text-[14px] tracking-wide ">
-              Rs. {product?.price - product?.discountPrice}
-            </p>
           </div>
         </div>
-        <div className="flex flex-col items-end">
-          <span className=" flex items-center font-semibold justify-center gap-1 text-red-500">
+        <div className="flex  relative  flex-col items-end">
+          <span className=" flex items-center font-semibold justify-between gap-1 text-red-500">
             <Icons.tomato className="fill-red-500  " /> 49
           </span>
+          <p className="invisible">fdsj</p>
+          <p className=" absolute text-[13px] -bottom-0 sm:text-sm text-[var(--secondary-text)] w-[108px] text-end  ">{product?.cookingTime || "15mins - 20mins"}</p>
         </div>
       </div>
     </div>

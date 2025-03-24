@@ -31,8 +31,8 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
             <Icons.tomato className="fill-red-500 " /> 49
           </span>
         </div>
-        <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--dark-secondary-text)] ">
-          <p className=" sm:text-[18px] text-[16px] text-black">
+        <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--secondary-text)] ">
+          <p className=" sm:text-[18px] text-[16px] text-[var(--primary-dark)] font-semibold ">
             Rs. {product?.price}
           </p>
           <p>{product?.cookingTime || "15mins - 20mins"}</p>

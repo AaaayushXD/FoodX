@@ -15,7 +15,7 @@ export const FoodCategory = ({ menu }: MenuProps) => {
           menu?.length / 2
         )}, minmax(0,1fr) ) `,
       }}
-      className={`w-full text-nowrap grid  sm:gap-x-10 gap-x-14  justify-items-start gap-y-5  sm:gap-y-10`}
+      className={`w-full text-nowrap grid   gap-24  justify-items-start gap-y-5  `}
     >
       {menu?.map((product) => (
         <div
@@ -25,7 +25,7 @@ export const FoodCategory = ({ menu }: MenuProps) => {
         >
           <Image
             lowResSrc={Img}
-            highResSrc={product.image}
+            highResSrc={import.meta.env.VITE_URI + "assets/" + product?.image}
             className="sm:size-32 size-16 rounded-full  object-cover"
             alt="product"
           />

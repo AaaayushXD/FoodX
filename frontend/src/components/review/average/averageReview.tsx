@@ -44,7 +44,7 @@ export const AverageReview = React.memo(
 
         {/* average ratings */}
         <div className="w-full md:flex-row flex-grow gap-3 flex-col justify-between sm:gap-5 flex items-start ">
-          <div className="w-full max-w-md flex flex-col  md:bg-[#E2EEFF] rounded-lg  items-start justify-start">
+          <div className="w-full max-w-md flex flex-col  md:bg-[#fbfbfd] rounded-lg  items-start justify-start">
             <div className="flex md:flex-col w-full py-5 rounded-lg items-center justify-center gap-2">
               <h1 className="font-bold text-[50px] ">
                 {averageRating.toFixed(1)}
@@ -83,7 +83,7 @@ export const AverageReview = React.memo(
                     } h-full  rounded-full `}
                   ></div>
                   {allRating[0] && (
-                    <span className=" text-[15px] right-5 -top-5 sm:-top-6  absolute sm:text-[18px] ">
+                    <span className=" text-[0.75rem]  text-gray-600 right-5 -top-5 sm:top-[-1.75rem]  absolute sm:text-[18px] ">
                       {`${ratingCount.length}(${ratingCount[0].rating.toFixed(
                         1
                       )}) `}

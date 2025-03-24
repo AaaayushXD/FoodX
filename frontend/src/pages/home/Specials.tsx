@@ -29,7 +29,7 @@ export const Specials: React.FC = () => {
         ) : (
           <div
             ref={specialsRef}
-            className="w-full gap-5 flex items-start justify-start overflow-auto "
+            className="w-full gap-5 flex items-start justify-start overflow-x-auto "
           >
             {specialProducts?.map((product) => (
               <SpecialProduct

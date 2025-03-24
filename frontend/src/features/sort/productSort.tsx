@@ -29,9 +29,9 @@ export const ProductSort: React.FC<ProductSortProp> = ({
   return (
     <div className="w-screen h-screen fixed flex items-center justify-center top-0 left-0 z-[1000] right-0 bottom-0  bg-[#00000080] ">
       <div
-        className={`w-full p-1 sm:p-3 sm:max-w-md flex flex-col fixed gap-10  transition-all ${
+        className={`w-full p-4  sm:max-w-md flex flex-col fixed gap-10  transition-all ${
           isOpen ? "bottom-0 sm:bottom-36 opacity-100" : "-bottom-96 opacity-0"
-        } bottom-0 h-[55vh] bg-white sm:rounded-xl rounded-t-xl `}
+        } bottom-0  bg-white sm:rounded-xl rounded-t-xl `}
       >
         <div className="w-full  border-b-[1px] py-3 flex items-center justify-between">
           <h1 className=" text-[18px] font-semibold ">Sort</h1>
@@ -39,7 +39,7 @@ export const ProductSort: React.FC<ProductSortProp> = ({
             onClick={() => close()}
             className="bg-gray-100 rounded-full p-2 "
           >
-            <Icons.close className=" text-[var(--secondary-text)] size-5 sm:size-7 " />
+            <Icons.close className=" text-[var(--secondary-text)] size-5 sm:size-6 " />
           </button>
         </div>
         <div className="flex flex-col items-start justify-start gap-14 h-full">
