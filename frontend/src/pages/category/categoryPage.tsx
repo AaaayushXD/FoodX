@@ -1,15 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Image from "@/assets/banner.png";
 import { Icons } from "@/utils";
-import { getProductsByTag } from "@/services";
-
 import { CategoryProduct } from "@/components";
-import { specialProducts, useAllProducts } from "@/hooks/useAllProducts";
+import { useAllProducts } from "@/hooks/useAllProducts";
 import { useEffect, useState } from "react";
 import { ProductFilter, ProductSort } from "@/features";
 import { productSort, Skeleton } from "@/helpers";
-import { Empty } from "@/commons";
-import EmptyImage from "@/assets/EmptyOrder.png";
+import { Empty, RippleButton } from "@/commons";
+import EmptyImage from "@/assets/orderEmpty.webp";
 import { useAppSelector } from "@/hooks";
 
 export const CategoryPage = () => {
@@ -84,23 +82,23 @@ export const CategoryPage = () => {
         style={{
           backgroundImage: `url(${category?.cover || Image})`,
         }}
-        className="w-full relative flex items-start pt-5 pl-3 bg-right-bottom bg-no-repeat bg-cover sm:h-[230px] h-[100px] transition-all ease-in-out duration-500"
+        className="w-full relative flex items-start pt-5 pl-3 bg-right-bottom bg-no-repeat bg-cover h-[300px] sm:h-[400px]  transition-all ease-in-out duration-500"
       >
-        <button
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+        <RippleButton
           onClick={() => navigate(-1)}
-          className="text-white hover:scale-110 transition-transform duration-300"
+          className="text-white transition-transform duration-300"
         >
           {<Icons.arrowLeft />}
-        </button>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-
+        </RippleButton>
         {/* Category Description */}
-        <div className="px-2 bottom-0 absolute border-b-[1px] border-[var(--dark-border)] w-full flex flex-col items-start justify-start">
-          <h1 className="text-[20px] text-white tracking-wide sm:text-[22px] font-semibold">
+        <div className="px-2 bottom-0 pb-1 absolute border-b-[1px] border-[var(--dark-border)] w-full flex flex-col items-start justify-start">
+          <h1 className="text-[20px] text-white tracking-wide sm:text-[25px] font-semibold">
             {category?.name}
           </h1>
-          <p className="text-[16px] sm:text-[18px] text-gray-200">
-            {category?.description || "fldsjklsfk;jadsfjdsklfsd;lkdsalkfs;ld"}
+          <p className="text-[14px] sm:text-[16px] text-gray-200">
+            {category?.description ||
+              "   Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, ex?    Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, ex?   Lorem ipsum dolor sit amet consectetur adipisicing elit.    . Facere, ex? Facere, ex?"}
           </p>
         </div>
       </div>

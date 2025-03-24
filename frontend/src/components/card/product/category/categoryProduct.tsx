@@ -10,6 +10,7 @@ import { ApiError, handleShare, Image } from "@/helpers";
 import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
 import PlaceholderImg from "@/assets/placeholder.svg";
+import { RippleButton } from "@/commons";
 
 export const CategoryProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
@@ -73,24 +74,22 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
         </div>
 
         {/* Favorite Button */}
-        <button
-          className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full"
-          onClick={() =>
-            isFavourite(product.id)
-              ? removeFavouriteProduct()
-              : addFavouriteProduct(product.id)
-          }
-        >
-          <Heart
-            className={`size-[18px] duration-150 ${heartColor} sm:size-6`}
-          />
-        </button>
+        <div className="absolute top-2 right-2 z-10 ">
+          <RippleButton
+            className=" bg-white p-1.5 rounded-full"
+            onClick={() =>
+              isFavourite(product.id)
+                ? removeFavouriteProduct()
+                : addFavouriteProduct(product.id)
+            }
+          >
+            <Heart
+              className={`size-[18px] duration-150 ${heartColor} sm:size-6`}
+            />
+          </RippleButton>
+        </div>
 
-        {/* Gradient Overlays */}
-        <div
-          onClick={() => navigate(`/${product?.collection}/${product?.id}`)}
-          className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"
-        ></div>
+
         <div
           onClick={() => navigate(`/${product?.collection}/${product?.id}`)}
           className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"

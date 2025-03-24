@@ -2,6 +2,7 @@ import { Icons } from "@/utils";
 import { StarRating } from "../star/starReview";
 import React, { useMemo, useState } from "react";
 import { AddProductReview } from "@/features";
+import { RippleButton } from "@/commons";
 
 export const AverageReview = React.memo(
   ({
@@ -32,13 +33,13 @@ export const AverageReview = React.memo(
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings
           </h1>
-          <button
+          <RippleButton
             onClick={() => setOpenRating(!openRating)}
             className="flex max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3"
           >
             <Icons.comment className="sm:size-5 size-4 " />
             <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
-          </button>
+          </RippleButton>
         </div>
 
         {/* average ratings */}

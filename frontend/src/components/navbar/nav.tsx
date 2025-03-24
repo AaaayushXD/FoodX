@@ -29,7 +29,7 @@ const navbarItems = [
 ];
 
 export const NavbarContainer = () => {
-  const location = useLocation();
+  const [activeKey, setActiveKey] = useState<number>();
 
   return (
     <div className="flex items-center gap-1 justify-start">
@@ -39,12 +39,13 @@ export const NavbarContainer = () => {
             to={item.url}
             key={index}
             className={
-              "h-full px-5 py-4 text-white contrast-125    text-[18px]  text-start w-full  font-semibold "
+              "h-full px-5 relative group/data py-4 text-white contrast-125    text-[18px]  text-start w-full  font-semibold "
             }
           >
-            <p className="flex items-center justify-start w-full h-full tracking-wider md:justify-center text-md">
+            <p className="flex  items-center   justify-start w-full h-full tracking-wider md:justify-center text-md">
               {item.name}
             </p>
+            <p className="w-1/2 h-0.5 bg-white opacity-0 group-hover/data:opacity-100 -translate-x-2 group-hover/data:translate-x-0 duration-150 "></p>
           </Link>
         ))}
     </div>
@@ -672,7 +673,7 @@ export const MobileNavbar = () => {
     <div
       className={`w-full ${
         isScroll === "up" || null ? "bottom-0 lg:bottom-10 " : "lg:bottom-5"
-      } duration-150 flex z-[1000] justify-between  items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
+      } duration-150 flex z-[10] justify-between  items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
     >
       <div className="w-full flex-col  duration-150    flex items-center justify-between">
         <CartPopup />

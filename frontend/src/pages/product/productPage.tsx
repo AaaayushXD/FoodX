@@ -7,11 +7,7 @@ import {
   useRating,
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import {
-  
-  NotificationLoader,
-  PopularProduct,
-} from "@/components";
+import { NotificationLoader, PopularProduct } from "@/components";
 import { useEffect, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
 import { motion } from "framer-motion";
@@ -28,6 +24,7 @@ import React from "react";
 import { AddProductReview } from "@/features";
 import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
+import { RippleButton } from "@/commons";
 
 export const ProductPage = () => {
   const [openReview, setOpenReview] = React.useState<boolean>(false);
@@ -81,7 +78,7 @@ export const ProductPage = () => {
             <Icons.arrowLeft />
           </div>
           <div className="flex items-center gap-8">
-            <button
+            <RippleButton
               onClick={() =>
                 isFavourite(productId as string)
                   ? removeFavouriteProduct()
@@ -92,20 +89,20 @@ export const ProductPage = () => {
               <Icons.heart
                 className={`size-[18px] duration-150  ${heartColor} `}
               />
-            </button>
-            <button
+            </RippleButton>
+            <RippleButton
               onClick={() => handleShare(data?.data?.data?.name)}
               className="bg-[#ffffff36] hover:bg-[#f4f6f859] duration-150 text-white p-2.5 rounded-full"
             >
               <Icons.share className=" size-[18px] " />
-            </button>
+            </RippleButton>
           </div>
         </div>
       </div>
 
       {/* product details */}
-      <div className="w-full z-[100] px-3 sm:px-16 ">
-        <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center  z-[1000]  bg-white">
+      <div className="w-full z-[1]  mt-[-50px] md:mt-[-80px] px-3 sm:px-16 ">
+        <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center    bg-white">
           <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
           {/* Recommended Products */}
           {<RecommendProduct />}
@@ -216,7 +213,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
   );
 
   const productQuantity = cart?.products?.find(
-    (product) => product.id === product?.id
+    (pro) => pro.id === product?.id
   );
 
   const comments = data?.reduce(
@@ -233,7 +230,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
   return (
     <div className="w-full flex items-start justify-start gap-5  flex-col">
       {/* Bottom Left Product Info */}
-      <div className=" flex w-full  gap-2 flex-col items-start z-10">
+      <div className=" flex w-full  gap-2 flex-col items-start ">
         <p
           className="text-[12px] bg-blue-100 rounded-full px-2  border-blue-400 border text-blue-600 font-semibold flex items-center 
           justify-center sm:text-[12px] gap-1 text-[var(--dark-secondary-text)]"
@@ -272,47 +269,37 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
           </div>
 
           {haveProductQuantity ? (
-            <div className="flex border-[1px] text-[14px] rounded-full shadow items-center justify-center gap-3">
-              <motion.button
-                className="p-2"
+            <div className="flex bg-[var(--primary-light)] p-1.5 rounded-full text-[14px]  items-center justify-center gap-3">
+              <RippleButton
                 onClick={() => {
                   productQuantity && productQuantity?.quantity > 1
                     ? dispatch(addToCart({ ...productQuantity, quantity: -1 }))
                     : removeProduct(productQuantity as Ui.Product);
                 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Decrease quantity"
-              >
-                <Icons.minus className="sm:size-4 size-3 text-[var(--secondary-text)]  " />
-              </motion.button>
+                className="p-1.5 bg-[var(--primary-light)] rounded-full text-sm "
+                children={<Icons.minus className=" size-3.5 text-white  " />}
+              />
+              <p className=" text-[20px] text-white ">{productQuantity?.quantity|| 0}</p>
 
-              <motion.p
-                className="sm:text-[16px] text-sm  text-black scale-[1.3] "
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {productQuantity?.quantity || 0}
-              </motion.p>
-
-              <motion.button
-                className="p-2"
+              <RippleButton
+                className="p-1.5  rounded-full bg-[var(--primary-light)] "
                 onClick={() =>
                   dispatch(addToCart({ ...productQuantity, quantity: 1 }))
                 }
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                hover="red"
                 aria-label="Increase quantity"
               >
-                <Icons.plus className="sm:size-4  size-3 text-[var(--secondary-text)] " />
-              </motion.button>
+                <Icons.plus className="size-3 text-white " />
+              </RippleButton>
             </div>
           ) : (
-            <div onClick={() => handleProduct(product)}>
+            <RippleButton
+              className=""
+              color="red"
+              onClick={() => handleProduct(product)}
+            >
               <Icons.addToCart />
-            </div>
+            </RippleButton>
           )}
         </div>
       </div>

@@ -19,7 +19,6 @@ export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const store = useAppSelector();
 
-
   const { socket } = useSocket(store?.auth?.success);
   useEffect(() => {
     const handleNotification = async (order: Model.Order) => {
@@ -54,9 +53,8 @@ export const HomePage: React.FC = () => {
           <div className="w-screen">
             <Footer />
           </div>
-          <div className="w-full flex ">
-            <MobileNavbar />
-          </div>
+
+          <MobileNavbar />
         </div>
       </ErrorBoundary>
     </div>

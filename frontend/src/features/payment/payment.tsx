@@ -9,6 +9,7 @@ import { addOrder as orderAdd } from "@/services";
 import { addRevenue, addNotification, removeProductFromCart } from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
+import { RippleButton } from "@/commons";
 
 export const Payment: React.FC = () => {
   const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();
@@ -92,7 +93,7 @@ export const Payment: React.FC = () => {
             Select Payment Method
           </label>
           <div className="flex gap-3 mt-2">
-            <button
+            <RippleButton
               onClick={() => handlePaymentSelection("online")}
               className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${
                 paymentMethod === "online"
@@ -101,8 +102,8 @@ export const Payment: React.FC = () => {
               }`}
             >
               Online
-            </button>
-            <button
+            </RippleButton>
+            <RippleButton
               onClick={() => handlePaymentSelection("cash")}
               className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${
                 paymentMethod === "cash"
@@ -111,7 +112,7 @@ export const Payment: React.FC = () => {
               }`}
             >
               Cash
-            </button>
+            </RippleButton>
           </div>
         </div>
 

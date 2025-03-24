@@ -13,7 +13,8 @@ export const useFeedbackFn = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!user.success) throw new Error("Only FoodX users can submit feedback. Please log in.");
+    if (!user.success)
+      throw new Error("Only FoodX users can submit feedback. Please log in.");
     const form = new FormData(this);
     form.append("service_id", import.meta.env.VITE_SERVICE_ID);
     form.append("template_id", import.meta.env.VITE_TEMPLATE_ID);
@@ -38,13 +39,14 @@ export const useFeedbackFn = () => {
       throw new Error("Error while submit feedback " + error);
     } finally {
       toast.dismiss(toastLoader);
-      setFeedback("")
-      setFeedbackType("")
-      setRating(0)
+      setFeedback("");
+      setFeedbackType("");
+      setRating(0);
     }
   };
 
-  const { mutate, isLoading } = useMutation(handleSubmit, {
+  const { mutate, isPending } = useMutation({
+    mutationFn: handleSubmit,
     onSuccess: () => {
       toast.success("Thank you for your review.");
     },
@@ -55,7 +57,7 @@ export const useFeedbackFn = () => {
 
   return {
     mutate,
-    isLoading,
+    isPending,
     rating,
     setRating,
     feedback,

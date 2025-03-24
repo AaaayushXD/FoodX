@@ -142,8 +142,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   return (
     <div
-      className={` duration-150 fixed top-0 z-[100000] flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
-        openReview ? "opacity-100 visible " : "opacity-0 invisible"
+      className={` duration-150 fixed z-[1000]  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
+        openReview ? "opacity-100 visible  " : "opacity-0 invisible"
       } `}
     >
       <div className="w-full md:hidden flex  p-2   items-center justify-between">
@@ -153,7 +153,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         >
           <Icons.close className="text-black size-6 font-semibold " />
         </button>
-        <h1 className=" text-blue-500 font-semibold text-[18px] sm:text-[22px]  ">
+        <h1 className=" text-blue-500 font-semibold text-xl ">
           Reviews and Ratings
         </h1>
         <div></div>

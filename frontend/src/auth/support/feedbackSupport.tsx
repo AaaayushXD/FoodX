@@ -6,7 +6,7 @@ export const FeedbackSupport = () => {
     feedback,
     feedbackType,
     mutate,
-    rating,
+
     setFeedback,
     setFeedbackType,
     setRating,

@@ -22,9 +22,9 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
           alt={product.name}
         />
       </div>
-      <div className="w-full h-full flex  flex-col items-center justify-start gap-1 ">
+      <div className="w-full h-full flex  flex-col items-center justify-start gap-0.5 ">
         <div className="flex sm:text-lg text-[14px] gap-3 w-full items-center justify-between ">
-          <h1 className=" font-bold sm:text-[18px] text-[16px] ">
+          <h1 className=" text-[14px] text-[var(--secondary-text)]  ">
             {product.name}
           </h1>
           <span className=" flex items-center font-semibold justify-center gap-1 text-red-500">
@@ -32,8 +32,10 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
           </span>
         </div>
         <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--dark-secondary-text)] ">
-          <p>Rs. {product?.price}</p>
-          <p>{product?.cookingTime}</p>
+          <p className=" sm:text-[18px] text-[16px] text-black">
+            Rs. {product?.price}
+          </p>
+          <p>{product?.cookingTime || "15mins - 20mins"}</p>
         </div>
       </div>
     </div>

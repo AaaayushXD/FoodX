@@ -5,3 +5,4 @@ export * from "./selector/selector";
 export * from "./empty";
 export * from "./error/error";
 export * from "./delete/delete";
+export * from "./button/rippleButton"

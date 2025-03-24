@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Image from "@/assets/560px.png";
 import { ProductSearch } from "@/features";
 import { Icons } from "@/utils";
 import { useAppSelector } from "@/hooks";
@@ -17,10 +16,8 @@ import Avatar from "@/assets/logo/avatar.png";
 export const Header = () => {
   return (
     <div
-      className=" bg-green-400  h-[60vh] rounded-b-lg sm:h-[80vh] gap-10 sm:gap-40 flex flex-col items-center justify-start   bg-cover sm:bg-center  py-3 px-2 w-screen "
-      style={{
-        backgroundImage: `url(${Image})`,
-      }}
+      className={` bg-[url('@/assets/560px.png')] md:bg-[url('@/assets/banner2.png')]  h-[50vh] rounded-b-lg sm:h-[70vh] md:h-[90vh] gap-10 sm:gap-40 flex flex-col bg-cover items-center justify-start  bg-no-repeat  md:bg-cover sm:bg-center  py-3 px-2 w-screen `}
+   
     >
       <DesktopNavbar />
       <MobileNav />
