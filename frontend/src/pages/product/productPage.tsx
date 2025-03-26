@@ -145,7 +145,7 @@ const RecommendProduct = () => {
       <h1 className="sm:text-[24px] text-[18px] font-semibold ">
         You might also like
       </h1>
-      <div className="w-full overflow-auto">
+      <div className="w-full h-full overflow-y-hidden overflow-x-auto">
         <div className=" w-max  flex  items-start justify-start gap-5">
           {products.map((product) => (
             <PopularProduct {...product} key={product.id} />

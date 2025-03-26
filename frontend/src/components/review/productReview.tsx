@@ -63,7 +63,7 @@ export default function ProductReview({ productId }: { productId: string }) {
         {!view && (
           <button
             onClick={() => setView(!view)}
-            className=" text-sm tracking-wide  py-5 px-4  hover:bg-gray-300 duration-150 ring-gray-200 max-w-[130px] rounded-xl ring-[1px] w-full flex gap-4 items-center justify-center  "
+            className=" text-sm tracking-wide  py-2 px-3  hover:bg-gray-300 duration-150 ring-gray-200 max-w-[110px] rounded-xl ring-[1px] w-full flex gap-4 items-center justify-center  "
           >
             View all <Icons.chevronRight className="rotate-90 size-4 text-black  " />
           </button>

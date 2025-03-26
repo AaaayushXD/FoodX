@@ -35,7 +35,7 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
           <p className=" sm:text-[18px] text-[16px] text-[var(--primary-dark)] font-semibold ">
             Rs. {product?.price}
           </p>
-          <p>{product?.cookingTime || "15mins - 20mins"}</p>
+          <p className=" sm:text-[14px] text-[12px] ">{product?.cookingTime || "15mins - 20mins"}</p>
         </div>
       </div>
     </div>

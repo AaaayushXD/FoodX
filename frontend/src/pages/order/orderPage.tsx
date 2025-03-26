@@ -121,7 +121,7 @@ const OrderStatusFilter: React.FC<OrderStatusProp> = ({
     <div className=" w-full bg-white flex-col py-2 px-2 items-start z-[100]  justify-start  fixed top-0 left-0 right-0">
       <div className="w-full flex items-center justify-between">
         <button onClick={() => navigate("/")}>
-          <Icons.arrowLeft />
+          <Icons.arrowLeft className="text-black" />
         </button>
         <h1 className=" text-[18px] sm:text-[16px] font-semibold "> Orders</h1>
         <div></div>

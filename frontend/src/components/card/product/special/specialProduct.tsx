@@ -54,11 +54,11 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
           <h2 className=" sm:text-[16px] text-[14px] text-[var(--secondary-text)] ">
             {product?.name}
           </h2>
-          <div className="w-full flex items-center justify-start gap-3">
+          <div className="w-full flex items-center justify-start gap-2 sm:gap-3">
             <p className="sm:text-lg font-semibold text-[var(--primary-dark)] text-[14px] tracking-wide ">
               Rs. {product?.price - product?.discountPrice}
             </p>
-            <p className=" text-sm tracking-wide line-through text-red-700 ">
+            <p className=" sm:text-sm text-[12px] tracking-wide line-through text-red-700 ">
               Rs. {product?.price}
             </p>
           </div>
@@ -68,7 +68,7 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
             <Icons.tomato className="fill-red-500  " /> 49
           </span>
           <p className="invisible">fdsj</p>
-          <p className=" absolute text-[13px] -bottom-0 sm:text-sm text-[var(--secondary-text)] w-[108px] text-end  ">{product?.cookingTime || "15mins - 20mins"}</p>
+          <p className=" absolute text-[12px] bottom-[6px] sm:bottom-0 sm:text-[14px] text-[var(--secondary-text)] w-[108px] text-end  ">{product?.cookingTime || "15mins - 20mins"}</p>
         </div>
       </div>
     </div>

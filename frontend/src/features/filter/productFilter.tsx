@@ -138,7 +138,7 @@ export const ProductFilter: React.FC<FilterTypeProp> = ({
   return (
     <div className="w-screen h-screen fixed flex items-center justify-center  top-0 left-0 z-[1000] right-0 bottom-0 bg-[#00000080] ">
       <div
-        className={`w-full p-16 sm:max-w-md flex flex-col fixed  duration-200 ${
+        className={`w-full p-3 sm:max-w-md flex flex-col fixed  duration-200 ${
           isOpen ? "sm:bottom-20 bottom-0 opacity-100" : "-bottom-96 opacity-0"
         } bottom-0 h-[75vh] bg-white sm:rounded-xl sm:p-3 rounded-t-xl `}
       >

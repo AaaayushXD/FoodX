@@ -19,7 +19,7 @@ export const ProfilePage = () => {
       <div className="  sm:h-screen overflow-auto md:max-w-xs pr-1 w-full ">
         <MobileProfile />
       </div>
-      <div className="w-full flex-col sm:flex hidden ">
+      <div className="w-full flex-col md:flex hidden ">
         {setting === "password-change" ? (
           <PasswordChange />
         ) : setting === "account-delete" ? (
@@ -43,7 +43,7 @@ export const ProfilePage = () => {
           onClick={() => navigate(-1)}
           className="px-5 w-full   border-b py-3"
         >
-          <Icons.arrowLeft  />
+          <Icons.arrowLeft className="text-black  "  />
         </button>
         {setting === "password-change" ? (
           <PasswordChange />

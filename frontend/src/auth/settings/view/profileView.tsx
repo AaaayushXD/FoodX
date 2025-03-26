@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/hooks/useActions";
-import { AvatarUpdate, PersonlInformation, ProfileCard } from "../";
+import { AvatarUpdate, PersonlInformation, ProfileCard } from "..";
 
 export const ProfileView = () => {
   const { auth } = useAppSelector();

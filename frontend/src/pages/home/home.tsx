@@ -1,5 +1,5 @@
 import { MenuType, Header, PopularProducts } from "@/components";
-import { Banner, Specials, Sponsor } from "../home";
+import { Banner, Specials, Sponsor } from ".";
 import ErrorBoundary from "@/errorBoundary";
 
 export const Home = () => {

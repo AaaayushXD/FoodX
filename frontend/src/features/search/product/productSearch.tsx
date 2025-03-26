@@ -15,7 +15,7 @@ export const ProductSearch: React.FC<ProductSearchProp> = ({ action }) => {
         onChange={(e) => action(e.target.value)}
         onFocus={() => navigate(`/search`)}
         type="text"
-        className=" w-full placeholder:text-sm rounded-l-lg p-3 outline-none  "
+        className=" w-full placeholder:text-sm rounded-l-lg p-3 md:p-4 outline-none  "
         placeholder="Search for `Sweets` "
       />
       <button className=" p-2.5  text-[var(--secondary-text)] ">

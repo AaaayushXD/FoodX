@@ -12,17 +12,41 @@ import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/brand.png";
 import { Image as ImageComponent } from "@/helpers";
 import Avatar from "@/assets/logo/avatar.png";
+import Banner from "@/assets/bannerCard.png";
 
 export const Header = () => {
   return (
     <div
-      className={` bg-[url('@/assets/560px.png')] md:bg-[url('@/assets/banner2.png')]  h-[50vh] rounded-b-lg sm:h-[70vh] md:h-[90vh] gap-10 sm:gap-40 flex flex-col bg-cover items-center justify-start  bg-no-repeat  md:bg-cover sm:bg-center  py-3 px-2 w-screen `}
-   
+      style={{
+        background:
+          "linear-gradient(90deg, rgba(42,114,228,1) 38%, rgba(0,121,255,1) 100%)",
+      }}
+      className={`   h-[50vh] relative rounded-b-lg sm:h-[70vh] md:h-[90vh] gap-10  sm:gap-24 flex flex-col bg-cover items-center justify-start   bg-no-repeat  md:bg-cover sm:bg-center  py-3 px-2 w-screen `}
     >
       <DesktopNavbar />
       <MobileNav />
-      <div className=" max-w-lg w-full">
+      <div className="  md:gap-10 gap-5 flex flex-col items-center justify-center h-full container  ">
+        {" "}
         <ProductSearch action={(value) => console.log(value)} />
+        <div className=" w-full flex items-center justify-between px-2 ">
+          <div className="flex flex-col sm:pt-0    items-start justify-start gap-4 md:gap-8">
+            <div className="flex flex-col items-start justify-start sm:gap-4">
+              <h1 className="font-extrabold text-white sm:text-3xl text-lg   md:text-5xl">
+                Fast, Fresh and Easy
+              </h1>
+              <p className=" font-extrabold text-white text-lg md:text-3xl ">
+                Order With FoodX
+              </p>
+            </div>
+            <button className=" font-bold tracking-wider md:text-2xl text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] ">
+              Order Now
+            </button>
+          </div>
+          <ImageComponent
+            className="md:size-72 sm:size-52 size-32 object-contain"
+            highResSrc={Banner}
+          />
+        </div>
       </div>
     </div>
   );
@@ -57,9 +81,10 @@ const DesktopNavbar = () => {
   return (
     <div
       ref={notifcationRef}
-      className="container hidden relative px-20 lg:flex items-center justify-between"
+      className="container hidden relative 
+       lg:flex items-center justify-between"
     >
-      <div className="w-full relative flex items-center px-10 py-5  justify-between  gap-5">
+      <div className="w-full relative flex items-center  py-5  justify-between  gap-5">
         <div className="flex items-center justify-start gap-1">
           <div
             onClick={() => {
