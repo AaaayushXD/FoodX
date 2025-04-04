@@ -1,10 +1,8 @@
 import { AverageReview } from "./average/averageReview";
-
 import { ApiError, Skeleton } from "@/helpers";
-
 import { CustomerReview } from "./customer/customerReview";
 import { useEffect, useState } from "react";
-import {  useRating } from "@/hooks";
+import { useRating } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 
 export default function ProductReview({ productId }: { productId: string }) {
@@ -24,7 +22,7 @@ export default function ProductReview({ productId }: { productId: string }) {
 
   useEffect(() => {
     if (!view) {
-      setLimitReview(data?.slice(0, 5));
+      data && setLimitReview(data?.slice(0, 5));
     }
   }, [data, view]);
 
@@ -40,7 +38,10 @@ export default function ProductReview({ productId }: { productId: string }) {
             count={5}
           />
         ) : (
-          <AverageReview productId={productId} ratings={data} />
+          <AverageReview
+            productId={productId}
+            ratings={data as Model.FeedbackDetail[]}
+          />
         )}
       </div>
       <div
@@ -60,12 +61,13 @@ export default function ProductReview({ productId }: { productId: string }) {
             <CustomerReview key={review.id} review={review} />
           ))
         )}
-        {!view && (
+        {data && data?.length >0 && !view && (
           <button
             onClick={() => setView(!view)}
             className=" text-sm tracking-wide  py-2 px-3  hover:bg-gray-300 duration-150 ring-gray-200 max-w-[110px] rounded-xl ring-[1px] w-full flex gap-4 items-center justify-center  "
           >
-            View all <Icons.chevronRight className="rotate-90 size-4 text-black  " />
+            View all{" "}
+            <Icons.chevronRight className="rotate-90 size-4 text-black  " />
           </button>
         )}
       </div>

@@ -55,6 +55,7 @@ export const Banner: React.FC = () => {
             count={1}
           />
         ) : (
+          data &&
           data.length > 0 && (
             <Carousel props={data as Ui.Banner[]} time={5000} />
           )
@@ -77,10 +78,11 @@ export const Sponsor: React.FC = () => {
           className: "bg-red-50",
         });
       }
+      throw new ApiError(400);
     }
   };
 
-  const { data, isLoading, error, isError } = useQuery({
+  const { data, isLoading, error, isError, refetch } = useQuery({
     queryKey: ["sponsors"],
     queryFn: getSponsors,
     gcTime: 10 * 60 * 1000,
@@ -89,7 +91,9 @@ export const Sponsor: React.FC = () => {
 
   return (
     <div className="items-center justify-center  w-full h-full flex">
-      <div className="w-full h-[100px] sm:h-[300px]">
+      <div
+        className={`w-full ${isError ? "h-full" : "h-[100px]"} sm:h-[300px]`}
+      >
         {isLoading ? (
           <Skeleton
             children={{
@@ -99,7 +103,10 @@ export const Sponsor: React.FC = () => {
             count={1}
           />
         ) : isError || data === undefined ? (
-          <Error message="" />
+          <Error
+            button={{ onClick: () => refetch(), title: "Refresh" }}
+            message={error?.message}
+          />
         ) : (
           data &&
           data.length > 0 && (

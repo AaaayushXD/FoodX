@@ -5,7 +5,7 @@ import { CategoryProduct } from "@/components";
 import { useAllProducts } from "@/hooks/useAllProducts";
 import { useEffect, useState } from "react";
 import { ProductFilter, ProductSort } from "@/features";
-import { productSort, Skeleton } from "@/helpers";
+import { productFilter, productSort, Skeleton } from "@/helpers";
 import { Empty, RippleButton } from "@/commons";
 import EmptyImage from "@/assets/orderEmpty.webp";
 import { useAppSelector } from "@/hooks";
@@ -60,18 +60,29 @@ export const CategoryPage = () => {
   }, [sortData]);
 
   useEffect(() => {
-    if (filters.length <= 0) {
-      return setProducts(categoryProducts ?? []);
-    }
-    filters?.forEach((filter) => {
-      if (filter?.value) {
-        const filterProducts = productSort(
-          categoryProducts,
-          filter.value as Common.SortType
-        );
+    const totalValues = filters?.map((filter) => {
+      return {
+        value: filter?.value,
+      };
+    });
 
-        setProducts(filterProducts);
+    if (totalValues.length <= 0) {
+      return setProducts(categoryProducts);
+    }
+
+    filters?.forEach((filter) => {
+      if (filter.type !== "sort") {
+        const filterProducts = productFilter(
+          categoryProducts,
+          filter.value as any
+        );
+        return setProducts(filterProducts as Ui.Product[]);
       }
+      const filterProducts = productSort(
+        categoryProducts,
+        filter.value as Common.SortType
+      );
+      setProducts(filterProducts);
     });
   }, [filters]);
 
@@ -92,7 +103,7 @@ export const CategoryPage = () => {
           {<Icons.arrowLeft />}
         </RippleButton>
         {/* Category Description */}
-        <div className=" bottom-0 pb-2.5 absolute border-b-[1px] border-[var(--dark-border)] max-w-5xl w-full flex flex-col items-start justify-start">
+        <div className=" bottom-0 pb-2.5  absolute border-b-[1px] border-[var(--dark-border)] max-w-5xl w-full flex flex-col items-start justify-start">
           <h1 className="text-[20px] text-white tracking-wide sm:text-[25px] font-semibold">
             {category?.name}
           </h1>
@@ -120,13 +131,13 @@ export const CategoryPage = () => {
           </button>
 
           {/* Active Filters */}
-          <div className="flex w-full py-2 items-center gap-4 justify-start">
+          <div className="flex w-max px-2 py-2 items-center gap-4 justify-start">
             {filters.map(
               (filter, index) =>
                 filter.value && (
                   <div
                     key={index}
-                    className="px-5 p-1 sm:py-1.5 rounded-full min-w-[170px] w-fit flex items-center justify-start gap-2 ring-[1px] hover:bg-gray-400 duration-150 cursor-pointer ring-[var(--secondary-text)] bg-gray-200 text-gray-600 text-[14px] transition-all ease-in-out"
+                    className="px-5 p-1 sm:py-1.5 rounded-full  w-max flex items-center justify-start gap-2 ring-[1px] hover:bg-gray-400 duration-150 cursor-pointer ring-[var(--secondary-text)] bg-gray-200 text-gray-600 text-[14px] transition-all ease-in-out"
                   >
                     {filter.label.charAt(0).toUpperCase() +
                       filter?.label?.slice(1)}

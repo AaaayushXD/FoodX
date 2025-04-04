@@ -50,71 +50,67 @@ export const SingleCard: React.FC<SingleCardProp> = ({
       className={`duration-1000 h-[90px]  sm:h-[110px] border border-[var(--dark-border)]    group/cart relative flex gap-3 items-center  w-full bg-[var(--light-foreground)] rounded-md `}
     >
       <div className="w-full flex items-center justify-start h-full">
-      <div className="  sm:w-[120px] w-[100px]  h-full  ">
-        <Image
-          lowResSrc={Img}
-          className="w-full h-full  object-cover shrink-0 object-center rounded-l-lg"
-          highResSrc={prop.image}
-          alt="image"
-        />
-      </div>
-      <div className="flex flex-col py-1.5  gap-2 px-3 justfy-between">
-        <p className="sm:text-[18px] text-[14px]  pt-1 text-[var(--dark-text)] font-bold tracking-wide">
-          {prop.name.length > 18
-            ? prop.name.substring(0, 15) + "..."
-            : prop.name}
-        </p>
-        <p className="text-[12px] text-[var(--dark-secondary-text)] ">
-          Rs {prop.price}
-        </p>
-        <div className="flex items-center ">
-          <div className="flex items-center justify-start gap-2 text-[var(--primary-color)]">
-            <RippleButton
-              onClick={() => {
-                if (prop.quantity <= 1) {
-                  removeProductFromCartFn(prop.id);
-                } else {
+        <div className="  sm:w-[120px] w-[100px]  h-full  ">
+          <Image
+            lowResSrc={Img}
+            className="w-full h-full  object-cover shrink-0 object-center rounded-l-lg"
+            highResSrc={prop.image}
+            alt="image"
+          />
+        </div>
+        <div className="flex flex-col py-1.5  gap-2 px-3 justfy-between">
+          <p className="sm:text-[18px] text-[14px]  pt-1 text-[var(--dark-text)] font-bold tracking-wide">
+            {prop.name.length > 18
+              ? prop.name.substring(0, 15) + "..."
+              : prop.name}
+          </p>
+          <p className="text-[12px] text-[var(--dark-secondary-text)] ">
+            Rs {prop.price}
+          </p>
+          <div className="flex items-center ">
+            <div className="flex items-center justify-start gap-2 text-[var(--primary-color)]">
+              <RippleButton
+                onClick={() => {
+                  if (prop.quantity <= 1) {
+                    removeProductFromCartFn(prop.id);
+                  } else {
+                    dispatch(
+                      addToCart({
+                        id: prop.id,
+                        quantity: -1,
+                        image: prop.image,
+                        name: prop.name,
+                        price: prop.price,
+                      })
+                    );
+                  }
+                }}
+                className=" flex items-center justify-center  text-[10px] font-bold text-lg p-1 rounded-full  text-center hover:bg-[var(--primary-color)] hover:text-[var(--light-text)]"
+              >
+                <Icons.minus className=" size-3 " />
+              </RippleButton>
+              <p className="text-sm   ">{prop.quantity}</p>
+              <RippleButton
+                onClick={() =>
                   dispatch(
                     addToCart({
-                      id: prop.id,
-                      quantity: -1,
-                      image: prop.image,
-                      name: prop.name,
-                      price: prop.price,
+                      ...prop,
+                      quantity: +1,
                     })
-                  );
+                  )
                 }
-              }}
-              className=" flex items-center justify-center  text-[10px] font-bold text-lg p-1 rounded-full  text-center hover:bg-[var(--primary-color)] hover:text-[var(--light-text)]"
-            >
-              <Icons.minus className=" size-3 "/>
-            </RippleButton>
-            <p className="text-sm   ">
-              
-              {prop.quantity}
+                className=" justify-center flex items-center text-[10px] text-lg p-1   font-bold   rounded-full  text-center hover:bg-[var(--primary-color)] hover:text-[var(--light-text)]"
+              >
+                <Icons.plus className=" size-3 " />
+              </RippleButton>
+            </div>
+            <p className=" sm:text-sm text-[11px]  flex text-[var(--dark-secondary-text)] w-full items-center justify-center  px-[3px] py-[2px] rounded-sm">
+              {" "}
+              {prop.quantity} × {prop.price}
             </p>
-            <RippleButton
-              onClick={() =>
-                dispatch(
-                  addToCart({
-                    id: prop.id,
-                    quantity: +1,
-                    ...prop,
-                  })
-                )
-              }
-              className=" justify-center flex items-center text-[10px] text-lg p-1   font-bold   rounded-full  text-center hover:bg-[var(--primary-color)] hover:text-[var(--light-text)]"
-            >
-              <Icons.plus className=" size-3 "/>
-            </RippleButton>
           </div>
-          <p className=" sm:text-sm text-[11px]  flex text-[var(--dark-secondary-text)] w-full items-center justify-center  px-[3px] py-[2px] rounded-sm">
-            {" "}
-            {prop.quantity} × {prop.price}
-          </p>
         </div>
       </div>
-   </div>
       <RippleButton
         onClick={() => {
           removeProductFromCartFn(prop.id);

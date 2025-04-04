@@ -18,7 +18,7 @@ export const useRating = (productId: string) => {
         currentLastDoc: currentDoc?.currentLastDoc || null,
         direction: "next",
         uid: auth?.userInfo?.uid,
-        // productId: productId,
+        productId: productId,
       });
       if (response.data.feedbacks.length < 2) {
         setHasMore(false);
@@ -40,9 +40,7 @@ export const useRating = (productId: string) => {
 
       return previousReview ? [...previousReview, ...reviews] : reviews;
     } catch (error) {
-      if (error instanceof ApiError) {
-        console.log(error.message);
-      }
+      throw new ApiError(400, "Error while get reviews" + error);
     }
   };
 
@@ -53,7 +51,6 @@ export const useRating = (productId: string) => {
     gcTime: 5 * 60 * 60,
     refetchOnWindowFocus: false,
   });
-
   return {
     currentDoc,
     data,

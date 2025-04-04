@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-export function addProduct<T extends { products: Ui.Product[] }>(
-  state: T,
+export function addProduct(
+  state: { products: Ui.Product[] },
   action: PayloadAction<Ui.Product>
 ) {
   const productId = state.products.findIndex(

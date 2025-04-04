@@ -6,9 +6,12 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "skipLibCheck": false,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
-  },
-} 
+  }
+}

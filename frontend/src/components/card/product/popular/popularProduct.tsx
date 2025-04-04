@@ -12,14 +12,14 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
       onClick={() =>
         navigate(`/${product?.collection || "products"}/${product.id}`)
       }
-      className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5 items-start justify-start rounded-lg w-full lg:max-w-[400px] "
+      className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5  items-start justify-start rounded-lg w-full lg:max-w-[400px] "
     >
       <div className=" w-full relative">
         <Image
           lowResSrc={Img}
-          className="w-full md:h-[200px] h-[140px]  sm:h-[180px] object-cover rounded-lg  "
-          highResSrc={product.image}
-          alt={product.name}
+          className="w-full  md:h-[200px] h-[140px]  sm:h-[180px] object-cover rounded-lg  "
+          highResSrc={import.meta.env.VITE_URI + "assets/" + product?.image}
+          alt={product?.name}
         />
       </div>
       <div className="w-full h-full flex  flex-col items-center justify-start gap-0.5 ">
@@ -28,7 +28,7 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
             {product.name}
           </h1>
           <span className=" flex items-center font-semibold justify-center gap-1 text-red-500">
-            <Icons.tomato className="fill-red-500 " /> 49
+            <Icons.tomato className="fill-red-500 " /> {product?.rating}
           </span>
         </div>
         <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--secondary-text)] ">

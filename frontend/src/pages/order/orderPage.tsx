@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOrders } from "@/hooks";
 import { NotificationLoader, OrderCard } from "@/components";
 import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Empty, Error } from "@/commons";
-import EmptyImage from "@/assets/EmptyOrder.png";
+import EmptyImage from "@/assets/orderEmpty.webp";
 import { useInView } from "react-intersection-observer";
 
 export const OrderPage = () => {
@@ -81,14 +81,15 @@ export const OrderPage = () => {
               title: "Refresh",
             }}
           />
-        ) : data?.length <= 0 && !loading ? (
+        ) : data && data?.length <= 0 && !loading ? (
           <Empty
-            title="No orders"
-            description="You don't have any orders yet"
-            image={EmptyImage}
-            action={() => navigate("#categories")}
-            actionTitle="Browse categories"
-          />
+          image={EmptyImage}
+          title="No Orders Yet"
+          description="Looks like you haven't placed any orders. Start exploring delicious meals now!"
+          action={() => navigate("#categories")}
+          actionTitle="Browse Categories"
+        />
+        
         ) : (
           data?.map((order) => <OrderCard key={order.id} {...order} />)
         )}

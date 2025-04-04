@@ -23,7 +23,7 @@ export const Image = ({
       className={`${className} transition-opacity duration-500 ${
         loaded ? "opacity-100" : "opacity-50 blur-sm"
       }`}
-      src={error ? lowResSrc : loaded ? highResSrc : lowResSrc || highResSrc}
+      src={error ? lowResSrc : loaded ? highResSrc.trim() : lowResSrc || highResSrc}
       alt={alt}
       onLoad={() => setLoaded(true)}
       onError={() => setError(true)}

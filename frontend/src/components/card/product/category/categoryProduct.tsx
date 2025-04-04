@@ -56,7 +56,7 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
         <Image
           lowResSrc={PlaceholderImg}
           className="w-full h-full transform scale-100 group-hover/category:scale-110 duration-150 transition-transform object-cover rounded-lg"
-          highResSrc={product.image}
+          highResSrc={import.meta.env.VITE_URI + "assets/" + product?.image}
           alt={product.name}
         />
 
@@ -88,7 +88,6 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
             />
           </RippleButton>
         </div>
-
 
         <div
           onClick={() => navigate(`/${product?.collection}/${product?.id}`)}

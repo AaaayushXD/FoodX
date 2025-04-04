@@ -1,6 +1,6 @@
 import { Icons } from "@/utils";
 import { StarRating } from "../star/starReview";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { AddProductReview } from "@/features";
 import { RippleButton } from "@/commons";
 
@@ -13,8 +13,10 @@ export const AverageReview = React.memo(
     productId?: string;
   }) => {
     const averageRating = React.useMemo(() => {
+      if (!ratings || ratings.length === 0) return 0;
+
       return (
-        ratings?.reduce((acc, rating) => acc + rating.rating, 0) /
+        ratings.reduce((acc, rating) => acc + (rating?.rating || 0), 0) /
         ratings.length
       );
     }, [ratings]);
@@ -47,7 +49,7 @@ export const AverageReview = React.memo(
           <div className="w-full max-w-md flex flex-col  md:bg-[#fbfbfd] rounded-lg  items-start justify-start">
             <div className="flex md:flex-col w-full py-5 rounded-lg items-center justify-center gap-2">
               <h1 className="font-bold text-[50px] ">
-                {averageRating.toFixed(1)}
+                {averageRating?.toFixed(1) || 0}
               </h1>
               <div className="flex flex-col items-start justify-start gap-0.5">
                 <StarRating size="5" rating={averageRating} />

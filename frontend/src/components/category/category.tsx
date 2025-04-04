@@ -81,7 +81,7 @@ export const MenuType: React.FC = () => {
             onClick: () => refetch(),
           }}
         />
-      ) : data?.length <= 0 ? (
+      ) : data && data?.length <= 0 ? (
         <Empty title="No categories available" image={EmptyImage} />
       ) : (
         <div className="flex items-center justify-start flex-nowrap w-full gap-5 sm:gap-4 overflow-auto">

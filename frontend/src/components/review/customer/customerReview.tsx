@@ -20,7 +20,7 @@ export const CustomerReview = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const { auth } = useAppSelector();
-  const { data, isError, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["get-user", review.userId],
     queryFn: async () => getUserById("customer", review.userId),
     staleTime: 15 * 60 * 60,
@@ -63,7 +63,7 @@ export const CustomerReview = ({
       <div className="w-full flex items-center justify-between">
         <StarRating rating={4} size="4" />
         <p className=" text-[14px] text-gray-600 ">
-          {dayjs.unix(review.createdAt._seconds).format("MMM D, YYYY")}
+          {dayjs?.unix(review.createdAt._seconds).format("MMM D, YYYY")}
         </p>
       </div>
       {/* name */}

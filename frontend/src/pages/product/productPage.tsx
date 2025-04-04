@@ -33,7 +33,10 @@ export const ProductPage = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["single:product", productId],
     queryFn: () =>
-      getProductById(productId, collection as Common.ProductCollection),
+      getProductById(
+        productId as string,
+        collection as Common.ProductCollection
+      ),
     staleTime: 5 * 60 * 60,
     gcTime: 5 * 60 * 60,
     refetchOnWindowFocus: false,
@@ -62,7 +65,9 @@ export const ProductPage = () => {
       {/* product banner image */}
       <div
         style={{
-          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${data?.data?.data?.image})`,
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${
+            import.meta.env.VITE_URI + "assets/" + data?.data?.data?.image
+          })`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -73,7 +78,7 @@ export const ProductPage = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
 
         {/* Top Left & Right Buttons */}
-        <div className="absolute top-5 left-5 right-8 flex items-center justify-between z-10">
+        <div className="absolute top-5 left-5 right-8 flex items-center justify-between ">
           <div onClick={() => navigate(-1)} className="size-5 text-white">
             <Icons.arrowLeft />
           </div>
@@ -91,7 +96,7 @@ export const ProductPage = () => {
               />
             </RippleButton>
             <RippleButton
-              onClick={() => handleShare(data?.data?.data?.name)}
+              onClick={() => handleShare(data?.data?.data?.name as string)}
               className="bg-[#ffffff36] hover:bg-[#f4f6f859] duration-150 text-white p-2.5 rounded-full"
             >
               <Icons.share className=" size-[18px] " />
@@ -107,7 +112,7 @@ export const ProductPage = () => {
           {/* Recommended Products */}
           {<RecommendProduct />}
           <ErrorBoundary>
-            <ProductReview productId={productId} />
+            <ProductReview productId={productId as string} />
           </ErrorBoundary>
 
           {openReview && (
@@ -115,7 +120,7 @@ export const ProductPage = () => {
               action="add"
               openReview={openReview}
               setOpenReview={setOpenReview}
-              productId={productId}
+              productId={productId as string}
             />
           )}
         </div>
@@ -212,9 +217,9 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
     (category) => category.id === product?.tagId
   );
 
-  const productQuantity = cart?.products?.find(
-    (pro) => pro.id === product?.id
-  );
+  const productById = cart?.products?.find(
+    (pro) => pro?.id === product?.id
+  ) as Ui.Product;
 
   const comments = data?.reduce(
     (count, review) => (review?.message ? count + 1 : count),
@@ -222,10 +227,10 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
   );
 
   useEffect(() => {
-    productQuantity && productQuantity?.quantity > 0
+    productById && productById?.quantity > 0
       ? setHaveProductQuantity(true)
       : setHaveProductQuantity(false);
-  }, [productQuantity?.quantity]);
+  }, [productById?.quantity]);
 
   return (
     <div className="w-full flex items-start justify-start gap-5  flex-col">
@@ -272,19 +277,21 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
             <div className="flex bg-[var(--primary-light)] p-1.5 rounded-full text-[14px]  items-center justify-center gap-3">
               <RippleButton
                 onClick={() => {
-                  productQuantity && productQuantity?.quantity > 1
-                    ? dispatch(addToCart({ ...productQuantity, quantity: -1 }))
-                    : removeProduct(productQuantity as Ui.Product);
+                  productById && productById?.quantity > 1
+                    ? dispatch(addToCart({ ...productById, quantity: -1 }))
+                    : removeProduct(productById as Ui.Product);
                 }}
                 className="p-1.5 bg-[var(--primary-light)] rounded-full text-sm "
                 children={<Icons.minus className=" size-3.5 text-white  " />}
               />
-              <p className=" text-[20px] text-white ">{productQuantity?.quantity|| 0}</p>
+              <p className=" text-[20px] text-white ">
+                {productById?.quantity || 0}
+              </p>
 
               <RippleButton
                 className="p-1.5  rounded-full bg-[var(--primary-light)] "
                 onClick={() =>
-                  dispatch(addToCart({ ...productQuantity, quantity: 1 }))
+                  dispatch(addToCart({ ...productById, quantity: 1 }))
                 }
                 hover="red"
                 aria-label="Increase quantity"
@@ -309,9 +316,8 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
       >
         <h1 className=" text-lg  ">Details</h1>
         <p className=" text-[var(--secondary-text)] text-[16px] md:text-[16px] ">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt a
-          corporis quo odio doloribus cupiditate praesentium voluptatibus quasi
-          perferendis! Minus ea sunt repellat?
+          {product?.description ||
+            " Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt a  corporis quo odio doloribus cupiditate praesentium voluptatibus quasi  perferendis! Minus ea sunt repellat?"}
         </p>
       </div>
     </div>

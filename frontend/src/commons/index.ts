@@ -6,3 +6,4 @@ export * from "./empty";
 export * from "./error/error";
 export * from "./delete/delete";
 export * from "./button/rippleButton"
+export * from "./portal/portal"

@@ -9,15 +9,8 @@ import { useInView } from "react-intersection-observer";
 
 export const MobileNotification = () => {
   const { isVisible } = useViewPort();
-  const {
-    hasMore,
-    fetchData,
-    data,
-    fetchNextPage,
-    isError,
-    isLoading,
-    currentDoc,
-  } = useNotification({ isOpen: isVisible });
+  const { hasMore, fetchData, fetchNextPage, isError, isLoading } =
+    useNotification({ isOpen: isVisible });
 
   const { ref, inView } = useInView({
     rootMargin: "0px 0px 100px 0px",
@@ -26,12 +19,7 @@ export const MobileNotification = () => {
 
   useEffect(() => {
     if (inView && hasMore) {
-      fetchNextPage({
-        pageParam: {
-          currentFirstDoc: currentDoc?.currentFirstDoc,
-          currentLastDoc: currentDoc?.currentLastDoc,
-        },
-      });
+      fetchNextPage();
     }
   }, [inView, fetchNextPage]);
 
@@ -64,7 +52,16 @@ export const MobileNotification = () => {
         ) : isLoading ? (
           <NotificationLoader />
         ) : fetchData.length <= 0 ? (
-          <Empty title="You don't have any notification" />
+          <Empty
+          icons={
+            <div className="flex items-center justify-center p-3 rounded-full bg-red-500/10">
+              <Icons.emptyNotification className="size-6 sm:size-7 text-red-500" />
+            </div>
+          }
+          title="No Notifications"
+          description="You're all caught up! Check back later for updates."
+        />
+        
         ) : (
           fetchData?.map((notification) => (
             <NotificationCard

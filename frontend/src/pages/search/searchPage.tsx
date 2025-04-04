@@ -45,7 +45,7 @@ export const SearchPage = () => {
     <div className="w-full flex flex-col items-stretch justify-start gap-8 px-2 py-5">
       <div className="w-full flex items-center justify-between">
         <button onClick={() => navigate("/")}>
-          <Icons.arrowLeft />
+          <Icons.arrowLeft className="text-black" />
         </button>
         <h1 className="font-semibold text-[16px] text-[var(--secondary-text)] sm:text-[20px] ">
           Search for dishes

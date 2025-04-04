@@ -15,6 +15,7 @@ import {
   IoHomeOutline,
   IoCallOutline,
   IoWarningOutline,
+  IoNotificationsOffOutline,
 } from "react-icons/io5";
 import { FaChevronUp, FaXTwitter, FaNewspaper } from "react-icons/fa6";
 import { RiMenu2Line } from "react-icons/ri";
@@ -218,6 +219,7 @@ export const FontAwesomeIcons = {
   clibBoardCheck: ClipboardCheck,
   comment: FaRegComment,
   award: Award,
+  emptyNotification: IoNotificationsOffOutline,
 };
 
 export const Icons = {

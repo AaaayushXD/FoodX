@@ -74,11 +74,11 @@ export const ProductFilter: React.FC<FilterTypeProp> = ({
         },
         {
           label: "Rating below 4.0",
-          value: "rating-low[4.0]",
+          value: "rating[4.0]",
         },
         {
           label: "Rating below 5.0",
-          value: "rating-low[5.0]",
+          value: "rating[5.0]",
         },
       ],
     },
@@ -110,19 +110,19 @@ export const ProductFilter: React.FC<FilterTypeProp> = ({
       actions: [
         {
           label: "Less than Rs. 100",
-          value: "price[100] ",
+          value: "price[100]",
         },
         {
           label: "Less than Rs. 200",
-          value: "price[200] ",
+          value: "price[200]",
         },
         {
           label: "Less than Rs. 500",
-          value: "price[500] ",
+          value: "price[500]",
         },
         {
           label: "Less than Rs. 1000",
-          value: "price[1000] ",
+          value: "price[1000]",
         },
       ],
     },
@@ -138,11 +138,11 @@ export const ProductFilter: React.FC<FilterTypeProp> = ({
   return (
     <div className="w-screen h-screen fixed flex items-center justify-center  top-0 left-0 z-[1000] right-0 bottom-0 bg-[#00000080] ">
       <div
-        className={`w-full p-3 sm:max-w-md flex flex-col fixed  duration-200 ${
+        className={`w-full  py-2 sm:max-w-md flex flex-col fixed  duration-200 ${
           isOpen ? "sm:bottom-20 bottom-0 opacity-100" : "-bottom-96 opacity-0"
         } bottom-0 h-[75vh] bg-white sm:rounded-xl sm:p-3 rounded-t-xl `}
       >
-        <div className="w-full border-b-[1px] py-3 flex items-center justify-between">
+        <div className="w-full border-b-[1px] px-1  py-3 flex items-center justify-between">
           <h1 className=" text-[18px] font-semibold ">Filter</h1>
           <button
             onClick={() => close()}
@@ -157,7 +157,7 @@ export const ProductFilter: React.FC<FilterTypeProp> = ({
               <button
                 onClick={() => setFilterType(item.value)}
                 key={index}
-                className={`text-[16px] py-1 px-2 rounded-md sm:text-[18px] font-[500] ${
+                className={`text-[16px] py-1 px-1 rounded-md sm:text-[18px] font-[500] ${
                   filterType === item.value
                     ? "text-[var(--secondary-color)] border-l-[4px] border-[var(--secondary-color)] "
                     : "text-[var(--dark-text)]"

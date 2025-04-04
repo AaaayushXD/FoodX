@@ -20,15 +20,11 @@ export const Empty: React.FC<EmptyProp> = ({
   const navigate = useNavigate();
   return (
     <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
-      {image && (
-        <img src={image} alt="No orders found" className="size-44" />
-      )}
+      {image && <img src={image} alt="No orders found" className="size-44" />}
       {icons && icons}
-      <h4 className="text-xl text-[var(--dark-secondary-text)] mb-2">
-        {title}
-      </h4>
+      <h4 className="sm:text-xl text-lg  text-black mt-4">{title}</h4>
       {description && (
-        <p className="text-sm text-[var(--dark-secondary-text)] mb-4">
+        <p className="text-sm text-[var(--dark-secondary-text)]">
           {description}
         </p>
       )}

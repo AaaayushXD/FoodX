@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { specialProducts, useAllProducts } from "@/hooks";
+import React, { useRef } from "react";
+import { useAllProducts } from "@/hooks";
 import { SpecialProduct } from "@/components";
 import { Skeleton } from "@/helpers";
+import { Empty } from "@/commons";
+import EmptyImg from "@/assets/specialEmpty.png";
 
 export const Specials: React.FC = () => {
   const { products, isLoading } = useAllProducts();
@@ -31,13 +33,21 @@ export const Specials: React.FC = () => {
             ref={specialsRef}
             className="w-full gap-5 flex items-start justify-start overflow-x-auto "
           >
-            {specialProducts?.map((product) => (
-              <SpecialProduct
-                key={product.id}
-                {...product}
-                discountPrice={45}
+            {specialProducts?.length <= 0 ? (
+              <Empty
+                image={EmptyImg}
+                title="No Special Products"
+                description="Currently, there are no special products available. Please check back later!"
               />
-            ))}
+            ) : (
+              specialProducts?.map((product) => (
+                <SpecialProduct
+                  key={product.id}
+                  {...product}
+                  discountPrice={product?.discountPrice as number || 0}
+                />
+              ))
+            )}
           </div>
         )}
 

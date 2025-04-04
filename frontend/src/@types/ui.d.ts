@@ -6,8 +6,8 @@ declare namespace Ui {
     price: number;
     quantity: number;
     description?: string;
-    cookingTime?: number;
-    rating?: number;
+    cookingTime?: string;
+    rating?: string;
     tag?: string;
     tagId?: string;
     totalSold?: number;

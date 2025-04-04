@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Icons } from "@/utils";
 
 interface CarouselProp {
   props: Ui.Banner[];
@@ -69,7 +68,9 @@ export const Carousel: React.FC<CarouselProp> = ({
           className="w-full h-full overflow-hidden duration-500 bg-center bg-no-repeat bg-cover rounded-xl"
           ref={imageRef}
           style={{
-            backgroundImage: `url(${props[currentSlide].image})`,
+            backgroundImage: `url(${
+              import.meta.env.VITE_URI + "assets/" + props[currentSlide].image
+            })`,
           }}
         ></div>
       </a>

@@ -3,7 +3,7 @@ import { addProduct } from "./add/addProduct";
 import { deleteProduct } from "./delete/deleteProduct";
 import { deleteAll } from "./reset/resetCart";
 
-const initialState: { products: Partial<Ui.Product[]> } = {
+const initialState: { products: Ui.Product[] } = {
   products: [],
 };
 

@@ -32,7 +32,7 @@ export const Items = () => {
   const { cart } = useAppSelector();
 
   const totalPrice = cart.products?.reduce(
-    (acc, product) => acc + product?.price * product.quantity,
+    (acc, product) => acc +  product?.price * product.quantity,
     0
   );
 
@@ -83,10 +83,10 @@ export const Items = () => {
         >
           {cart.products?.map((product) => (
             <div className="flex justify-between items-center text-[var(--dark-secondary-text)] ">
-              <span className="text-[16px]">{product.name}</span>
+              <span className="text-[16px]">{product?.name}</span>
               <div>
-                <span className="text-[16px]">{product.quantity || "0"} </span>{" "}
-                × <span className="text-[16px]">{product.price || "0"} </span>
+                <span className="text-[16px]">{product?.quantity || "0"} </span>{" "}
+                × <span className="text-[16px]">{product?.price || "0"} </span>
               </div>
             </div>
           ))}

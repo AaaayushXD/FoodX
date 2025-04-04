@@ -6,7 +6,8 @@ import {
   userUpload,
 } from "@/services";
 import { Icons, toaster } from "@/utils";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import React, { ChangeEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface AddProductReviewProp {
@@ -16,6 +17,8 @@ interface AddProductReviewProp {
   productId: string;
 }
 
+
+
 export const AddProductReview: React.FC<AddProductReviewProp> = ({
   openReview,
   setOpenReview,
@@ -23,7 +26,14 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   action,
 }) => {
   const { auth } = useAppSelector();
-  const [data, setData] = useState<Partial<Ui.FeedbackInfo>>({});
+  const [data, setData] = useState<Ui.FeedbackInfo>({
+    message: "",
+    productId: "",
+    rating: 0,
+    uid: "",
+  });
+
+  const queryClient = useQueryClient();
 
   const handleAdd = async () => {
     if (!auth?.success) {
@@ -40,18 +50,29 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
     });
     try {
       const response = await add_productFeedback({
-        message: data.message,
+        message: data.message as string,
         productId: productId,
-        rating: data?.rating,
-        uid: auth?.userInfo?.uid,
+        rating: data?.rating as number,
+        uid: auth?.userInfo?.uid as string,
         image: data?.image,
       });
+      queryClient.invalidateQueries(["product:review"] as any);
       toaster({
         className: "bg-green-50 ",
         icon: "success",
         message: response?.message,
         title: "Thank you for review!",
       });
+      setData({
+        message: "",
+        productId: "",
+        rating: 0,
+        uid: "",
+        image: "",
+        userId: "",
+      });
+      setOpenReview(!openReview);
+
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -80,21 +101,34 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       icon: "loading",
     });
     try {
-      Object.keys(data).forEach(async (key: keyof Model.FeedbackDetail) => {
-        if (data[key] !== "") {
+      Object.keys(data).forEach(async (key) => {
+        const typedKey = key as keyof Ui.FeedbackInfo;
+        if (data[typedKey] !== "") {
           const response = await update_productFeedback(
             productId,
-            key,
-            data[key]
+            key as keyof Model.FeedbackDetail,
+            data[typedKey],
+            auth?.userInfo?.uid
           );
+          queryClient.invalidateQueries(["product:review"] as any);
           toaster({
             className: "bg-green-50 ",
             icon: "success",
             message: response?.message,
             title: "Your review updated!",
           });
+          setOpenReview(!openReview);
+          setData({
+            message: "",
+            productId: "",
+            rating: 0,
+            uid: "",
+            image: "",
+            userId: "",
+          });
         }
       });
+   
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -110,8 +144,13 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   };
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    const toastLoader = toaster({
+      title: "Please wait...",
+      icon: "loading",
+    });
     try {
-      const response = await userUpload(event.target.files[0], "reviews");
+      const response = await userUpload(file as File, "reviews");
       setData((prev) => ({
         ...prev,
         image: `${response?.data?.folderName}/${response?.data?.filename}`,
@@ -125,6 +164,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
           message: error?.message,
         });
       }
+    } finally {
+      toast.dismiss(toastLoader);
     }
   };
 
@@ -140,9 +181,15 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   //   };
   // }, [openReview]);
 
+  // const { mutate } = useMutation({
+  //   mutationKey: ["update:feedback"],
+  //   mutationFn: handleAdd,
+  //   gcTime: 5 * 60 * 60,
+  // });
+
   return (
     <div
-      className={` duration-150 fixed z-[1000]  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
+      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
         openReview ? "opacity-100 visible  " : "opacity-0 invisible"
       } `}
     >
@@ -178,7 +225,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         />
         <Rating_addImage
           remove={() => setData((prev) => ({ ...prev, image: "" }))}
-          image={data.image}
+          image={data.image as string}
           setImage={handleUpload}
         />
         <button

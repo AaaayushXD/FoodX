@@ -1,5 +1,4 @@
-import { data } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppSelector } from "@/hooks";
 import { fetchNotifications } from "@/services";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -20,7 +19,8 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
 
   const { auth } = useAppSelector();
 
-  const getNotification = async ({ pageParam = null }) => {
+  const getNotification = async ({ pageParam }: any) => {
+    console.log(pageParam);
     try {
       const response = await fetchNotifications({
         userId: auth?.userInfo?.uid,
@@ -69,7 +69,9 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
       queryKey: ["fetch-notification"],
       queryFn: getNotification,
       getNextPageParam: (lastPage) => lastPage?.lastPage.currentDoc || null,
-      initialPageParam: 5,
+      initialPageParam: currentDoc,
+      gcTime: 5 * 60 * 60,
+      staleTime: 5 * 60 * 60,
     });
 
   return {

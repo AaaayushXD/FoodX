@@ -5,14 +5,15 @@ import axios from "axios";
 export const update_productFeedback = async (
   id: string,
   field: keyof Model.FeedbackDetail,
-  newData: string
+  newData: Ui.FeedbackInfo[keyof Ui.FeedbackInfo],
+  uid: Auth.User["uid"]
 ): Promise<Api.Response<Model.FeedbackDetail>> => {
   try {
     const response = await makeRequest({
       method: "patch",
-      url: "feedback/update",
-      data: { field, newData },
+      url: "feedback/update/",
       params: { id },
+      data: { field, newData, uid },
     });
     return response?.data;
   } catch (error) {

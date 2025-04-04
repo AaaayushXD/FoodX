@@ -8,7 +8,7 @@ export const delete_productFeedback = async (
   try {
     const response = await makeRequest({
       method: "delete",
-      url: "feedback/delete",
+      url: "feedback/delete/",
       params: { id },
     });
     return response?.data;
