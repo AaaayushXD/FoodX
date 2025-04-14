@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import { storeImageInFirebase } from "@/firebase/storage";
 import { Icons, toaster } from "@/utils";
 import { useAppDispatch } from "@/hooks/useActions";
 import avatar from "@/assets/logo/avatar.png";
@@ -11,25 +10,17 @@ import { ApiError, Image, Skeleton } from "@/helpers";
 export const ProfileCard: React.FC<Auth.User> = (user) => {
   const uploadAvatarRef = useRef<HTMLInputElement | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  const [updateAvatar, setUpdateAvatar] = useState<string>(avatar);
+  const [previewAvatar, setPreviewAvatar] = useState<string>(avatar);
+  const [originalAvatar, setOriginalAvatar] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event?.target.files[0];
-    const loading = toaster({ title: "Please wait...", icon: "loading" });
+    const file = event?.target.files && event?.target.files[0];
+    const loading = toaster({ title: "Loading...", icon: "loading" });
     try {
-      const response = await userUpload(file, "users");
-
-      setUpdateAvatar(
-        `${response?.data.folderName}/${response?.data.filename}`
-      );
-
-      toaster({
-        title: response?.message,
-        icon: "success",
-        className: "bg-green-50",
-      });
+      setOriginalAvatar(file as File);
+      setPreviewAvatar(URL.createObjectURL(file as File));
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -37,16 +28,31 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
         });
       }
     } finally {
-      toast.dismiss(loading);
+      toast.dismiss();
     }
   };
 
   const UpdateUserProfile = async () => {
     setLoading(true);
     try {
-      await dispatch(updateUserAction({ avatar: updateAvatar }));
+      const response = await userUpload(originalAvatar as File, "users");
+      setPreviewAvatar(
+        `${response?.data.folderName}/${response?.data.filename}`
+      );
+      await dispatch(
+        updateUserAction({
+          avatar: `${response?.data.folderName}/${response?.data.filename}`,
+        })
+      );
     } catch (error) {
-      // throw new Error("Error while updating avatar" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          title: "Error",
+          className: "bg-red-50 ",
+          icon: "error",
+          message: error?.message,
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -67,20 +73,25 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
       <div className="flex gap-5">
         <div className=" relative group/editable size-20 overflow-hidden rounded-full">
           {edit ? (
-            <img
+            <Image
               className="object-cover h-full w-full"
-              src={
-                updateAvatar?.includes("users")
-                  ? import.meta.env.VITE_URI + "assets/" + updateAvatar
-                  : updateAvatar
+              lowResSrc={avatar}
+              highResSrc={
+                previewAvatar?.startsWith("blob:")
+                  ? previewAvatar
+                  : `${import.meta.env.VITE_URI}assets/${previewAvatar}`
               }
-              alt=""
+              alt="User Avatar"
             />
           ) : (
             <div className=" sm:w-[80px] w-[50px] h-[65px] sm:h-[80px] ">
               <Image
-                highResSrc={import.meta.env.VITE_URI + "assets/" + user.avatar}
                 lowResSrc={avatar}
+                highResSrc={
+                  previewAvatar?.startsWith("blob:")
+                    ? previewAvatar
+                    : `${import.meta.env.VITE_URI}assets/${previewAvatar}`
+                }
                 className="w-full h-full"
                 alt="avatar"
               />
@@ -143,25 +154,21 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
 
 export const AvatarUpdate: React.FC<Auth.User> = (user) => {
   const [edit, setEdit] = useState(false);
-  const [updateAvatar, setUpdateAvatar] = useState(user?.avatar || avatar);
+  const [previewAvatar, setPreviewAvatar] = useState<string>(
+    user?.avatar || avatar
+  );
+  const [originalAvatar, setOriginalAvatar] = useState<File | string>("");
   const [loading, setLoading] = useState(false);
   const uploadAvatarRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useAppDispatch();
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event?.target.files[0];
+    const file = event?.target.files && event?.target.files[0];
     const loading = toaster({ title: "Loading...", icon: "loading" });
     try {
-      const response = await userUpload(file, "users");
-
-      setUpdateAvatar(
-        `${response?.data.folderName}/${response?.data.filename}`
-      );
-
-      toaster({
-        title: response?.message,
-      });
+      setOriginalAvatar(file as File);
+      setPreviewAvatar(URL.createObjectURL(file as File));
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -176,9 +183,24 @@ export const AvatarUpdate: React.FC<Auth.User> = (user) => {
   const UpdateUserProfile = async () => {
     setLoading(true);
     try {
-      await dispatch(updateUserAction({ avatar: updateAvatar }));
+      const response = await userUpload(originalAvatar as File, "users");
+      setPreviewAvatar(
+        `${response?.data.folderName}/${response?.data.filename}`
+      );
+      await dispatch(
+        updateUserAction({
+          avatar: `${response?.data.folderName}/${response?.data.filename}`,
+        })
+      );
     } catch (error) {
-      // throw new Error("Error while updating avatar" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          title: "Error",
+          className: "bg-red-50 ",
+          icon: "error",
+          message: error?.message,
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -198,7 +220,11 @@ export const AvatarUpdate: React.FC<Auth.User> = (user) => {
       <div className="relative size-24 rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
         <Image
           lowResSrc={avatar}
-          highResSrc={`${import.meta.env.VITE_URI}assets/${updateAvatar}`}
+          highResSrc={
+            previewAvatar?.startsWith("blob:")
+              ? previewAvatar
+              : `${import.meta.env.VITE_URI}assets/${previewAvatar}`
+          }
           alt="User Avatar"
           className="w-full h-full object-cover"
         />

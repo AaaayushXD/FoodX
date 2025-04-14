@@ -1,4 +1,4 @@
-import { ApiError } from "@/helpers";
+import { ApiError, Image } from "@/helpers";
 import { useAppSelector } from "@/hooks";
 import {
   add_productFeedback,
@@ -7,7 +7,7 @@ import {
 } from "@/services";
 import { Icons, toaster } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface AddProductReviewProp {
@@ -17,8 +17,6 @@ interface AddProductReviewProp {
   productId: string;
 }
 
-
-
 export const AddProductReview: React.FC<AddProductReviewProp> = ({
   openReview,
   setOpenReview,
@@ -26,6 +24,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   action,
 }) => {
   const { auth } = useAppSelector();
+  const [originalFile, setOriginalFile] = useState<File>();
+
   const [data, setData] = useState<Ui.FeedbackInfo>({
     message: "",
     productId: "",
@@ -49,6 +49,14 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       icon: "loading",
     });
     try {
+      if (originalFile) {
+        const response = await userUpload(originalFile as File, "reviews");
+
+        setData((prev) => ({
+          ...prev,
+          image: `${response?.data?.folderName}/${response?.data?.filename}`,
+        }));
+      }
       const response = await add_productFeedback({
         message: data.message as string,
         productId: productId,
@@ -72,7 +80,6 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         userId: "",
       });
       setOpenReview(!openReview);
-
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -101,6 +108,13 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       icon: "loading",
     });
     try {
+      if (originalFile) {
+        const response = await userUpload(originalFile as File, "reviews");
+        setData((prev) => ({
+          ...prev,
+          image: `${response?.data?.folderName}/${response?.data?.filename}`,
+        }));
+      }
       Object.keys(data).forEach(async (key) => {
         const typedKey = key as keyof Ui.FeedbackInfo;
         if (data[typedKey] !== "") {
@@ -128,7 +142,6 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
           });
         }
       });
-   
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -145,15 +158,11 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
-    const toastLoader = toaster({
-      title: "Please wait...",
-      icon: "loading",
-    });
     try {
-      const response = await userUpload(file as File, "reviews");
+      setOriginalFile(file as File);
       setData((prev) => ({
         ...prev,
-        image: `${response?.data?.folderName}/${response?.data?.filename}`,
+        image: URL.createObjectURL(file as File),
       }));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -164,22 +173,20 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
           message: error?.message,
         });
       }
-    } finally {
-      toast.dismiss(toastLoader);
     }
   };
 
-  // useEffect(() => {
-  //   if (openReview) {
-  //     document.body.style.overflow = "hidden";
-  //   } else {
-  //     document.body.style.overflow = "auto";
-  //   }
+  useEffect(() => {
+    if (openReview) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
 
-  //   return () => {
-  //     document.body.style.overflow = "auto";
-  //   };
-  // }, [openReview]);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [openReview]);
 
   // const { mutate } = useMutation({
   //   mutationKey: ["update:feedback"],
@@ -327,10 +334,14 @@ const Rating_addImage = ({
       <div className="w-full h-full  rounded-md">
         {image ? (
           <div className="size-14 sm:size-20 relative ">
-            <img
+            <Image
               className=" size-full object-cover rounded-md "
-              src={import.meta.env.VITE_URI + "assets/" + image}
-              alt=""
+              highResSrc={
+                image?.startsWith("blob:")
+                  ? image
+                  : `${import.meta.env.VITE_URI}assets/${image}`
+              }
+              alt="image"
             />
             <button
               onClick={() => remove()}
