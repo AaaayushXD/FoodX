@@ -4,21 +4,20 @@ import { OptGenerator } from "../../helpers/otp/otpGenerator.js";
 import { redisClient } from "../../utils/cache/cache.js";
 import { sendOTPEmail } from "../../utils/messaging/email.js";
 import { APIError } from "../../helpers/error/ApiError.js";
-import { getUserWithEmailFromDatabase } from "../../actions/user/get/getUserWithEmail.js";
 import { isEmailValid } from "../../helpers/validator/auth.validator.js";
+import { findUserByEmailInDatabase } from "../../actions/user/get/findUser.js";
 
 export const resetPasswordController = asyncHandler(
-  async (
-    req: Request<{}, {}, { role: User.RoleType; email: string }>,
-    res: Response
-  ) => {
-    const { role, email } = req.body;
+  async (req: Request<{}, {}, { email: string }>, res: Response) => {
+    const { email } = req.body;
 
-    if (!role || !email) throw new APIError("Role and email is required.", 400);
+    if (!email) throw new APIError("Email is required.", 400);
     const validateEmail = isEmailValid(email);
     if (!validateEmail) throw new APIError("Invalid email.", 400);
 
-    await getUserWithEmailFromDatabase(role, email);
+    const user = await findUserByEmailInDatabase(email);
+    if (!user) throw new APIError("User not found.", 404);
+
     const otp = OptGenerator();
     await redisClient.setEx(`reset:${email}`, 300, `${otp}`);
     await sendOTPEmail(email, `${otp}`);

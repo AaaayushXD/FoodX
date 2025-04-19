@@ -21,3 +21,28 @@ export const findUserInDatabase = async (id: string) => {
     throw new APIError("Error finding user in database.", 500);
   }
 };
+
+export const findUserByEmailInDatabase = async (email: string) => {
+  try {
+    const collections = ["admin", "chef", "customer"];
+
+    for (const collection of collections) {
+      const snapshot = await db
+        .collection(collection)
+        .where("email", "==", email)
+        .limit(1)
+        .get();
+
+      if (!snapshot.empty) {
+        const userDoc = snapshot.docs[0];
+        return {
+          role: collection,
+          userData: userDoc.data() as User.UserInfo,
+        };
+      }
+    }
+    return null;
+  } catch (error) {
+    throw new APIError("Error finding user using email in database.", 500);
+  }
+};
