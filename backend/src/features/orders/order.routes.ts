@@ -49,7 +49,7 @@ orderRoutes.post(
   verifyRoles(["chef", "admin"]),
   validateRequest(
     createPaginationSchema({
-      status: true,
+      status: false,
       direction: true,
     })
   ),
