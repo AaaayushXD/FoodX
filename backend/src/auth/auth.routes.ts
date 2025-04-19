@@ -40,8 +40,8 @@ authRouter.post(
   rateLimiter(60, 10),
   ChangePassword
 );
-authRouter.get(
-  "/reset/:uid",
+authRouter.post(
+  "/reset",
   verifyRoles(["admin", "chef", "customer"]),
   rateLimiter(60, 10),
   resetPasswordController
