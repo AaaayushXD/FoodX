@@ -17,7 +17,7 @@ export const App: React.FC = () => {
   const { auth } = useAppSelector();
 
   useEffect(() => {
-    auth.success ? setIsAuthenticated(true) : setIsAuthenticated(false);
+    auth.userInfo?.isVerified ? setIsAuthenticated(true) : setIsAuthenticated(false);
   }, [auth]);
 
   const queryClient = new QueryClient();

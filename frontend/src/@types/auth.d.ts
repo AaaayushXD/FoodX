@@ -1,6 +1,7 @@
 declare namespace Auth {
   type role = "admin" | "chef" | "customer";
   interface User {
+    isVerified?: boolean
     uid?: string;
     avatar?: string;
     fullName?: string;

@@ -1,7 +1,7 @@
 import React, {
   ChangeEvent,
   FormEvent,
-  useEffect,
+  
   useRef,
   useState,
 } from "react";
@@ -17,7 +17,6 @@ import { AuthFooter } from "@/components";
 import logo from "@/assets/logo/Fx.png";
 import toast from "react-hot-toast";
 import ClipLoader from "react-spinners/HashLoader";
-import { signUp } from "@/services";
 import { ApiError, compressImage } from "@/helpers";
 import { Icons } from "@/utils";
 import { signUpAction } from "@/actions";
@@ -109,8 +108,8 @@ export const RegisterContainer: React.FC = () => {
         setLoading(true);
         await dispatch(
           signUpAction({
-            ...RegisterValue,
-            role: "customer",
+            data: { ...RegisterValue, role: "customer" },
+            navigate: navigate,
           })
         );
       }
@@ -120,10 +119,6 @@ export const RegisterContainer: React.FC = () => {
 
     setLoading(false);
   };
-
-  useEffect(() => {
-    document.body.classList.remove("dark");
-  }, []);
 
   return (
     <div className="flex flex-col items-center bg-white w-full  lg:py-10 lg:flex-row lg:gap-3 gap-6  justify-between lg:items-center lg:justify-evenly ">

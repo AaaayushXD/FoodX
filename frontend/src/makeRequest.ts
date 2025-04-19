@@ -1,10 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
-import toast from "react-hot-toast";
 import { Store } from "@/store";
 import { authLogout, resetOrder, resetCart, resetFavourite } from "@/reducer";
 import { ApiError } from "./helpers";
-import { data } from "react-router-dom";
 import { toaster } from "./utils";
 
 // Flag to track if the token is being refreshed
@@ -39,7 +37,7 @@ makeRequest.interceptors.response.use(
   },
   async (error) => {
     const status = error.response ? error.response.status : null;
-
+ console.log(status, error  )
     if (
       error?.response?.data?.message ===
       "Error verifying your token. Please try again later. TokenExpiredError: jwt expired"

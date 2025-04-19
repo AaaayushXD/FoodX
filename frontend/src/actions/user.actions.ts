@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as userAction from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
-import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 export interface SigninTypes {
   email: string;
@@ -12,8 +12,10 @@ export interface SigninTypes {
 
 const signUpAction = createAsyncThunk(
   "auth/signUp",
-  async (data: Auth.ValidationType, thunkApi) => {
-    console.log(data);
+  async (
+    { data, navigate }: { data: Auth.ValidationType; navigate: Function },
+    thunkApi
+  ) => {
     try {
       const response = await userAction.signUp({ ...data });
       if (response?.message) {
@@ -21,7 +23,15 @@ const signUpAction = createAsyncThunk(
           title: response?.message,
         });
       }
-      return response.data;
+      const user = response.data;
+      Cookies.set("accessToken", user.accessToken);
+      Cookies.set("refreshToken", user.refreshToken);
+      localStorage?.setItem("verifyType", "otp");
+      if (!data?.isVerified) {
+        response.data;
+        navigate("/email-verification");
+        return;
+      }
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -37,7 +47,7 @@ const signUpAction = createAsyncThunk(
 
 const signInAction = createAsyncThunk(
   "auth/signIn",
-  async (data: SigninTypes, { rejectWithValue }) => {
+  async (data: SigninTypes & { navigate: Function }, { rejectWithValue }) => {
     try {
       const response = await userAction.signIn(
         data.email,
@@ -52,8 +62,11 @@ const signInAction = createAsyncThunk(
           message: "You are logged in successfully",
         });
       }
+      if (response?.success) {
+        data?.navigate("/");
+      }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ApiError) {
         toaster({
           title: error?.message,
@@ -72,11 +85,23 @@ const signInAction = createAsyncThunk(
 
 const verifyAction = createAsyncThunk(
   "auth/signUp",
-  async ({ otp, uid }: { otp: number; uid: string }, thunkApi) => {
+  async (
+    { otp, uid, type }: { otp: string; uid: string; type: "otp" | "reset" },
+    thunkApi
+  ) => {
     try {
-      const response = await userAction.verifyNewUser(otp, uid);
-      return response;
+      const response = await userAction.verifyNewUser(otp, uid, type);
+      localStorage.removeItem("time");
+      return response.data;
     } catch (error) {
+      if (error instanceof ApiError) {
+        toaster({
+          className: "bg-red-50",
+          icon: "error",
+          message: error?.message,
+          title: "Error",
+        });
+      }
       return thunkApi.rejectWithValue(
         `Error while action to sign up new user -> ${error}`
       );
@@ -100,6 +125,15 @@ const updateUserAction = createAsyncThunk<
     }
     return response.data;
   } catch (error) {
+    if (error instanceof ApiError) {
+      toaster({
+        className: "bg-red-50",
+        icon: "error",
+        message: error?.message,
+        title: "Error",
+      });
+    }
+
     return thunkApi.rejectWithValue(
       `Error while action to update user -> ${error}`
     );

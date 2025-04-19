@@ -26,8 +26,6 @@ export const PopularProducts = () => {
     refetchOnWindowFocus: false,
   });
 
-  console.log("kfdj;", data, error);
-
   return (
     <div className="w-full h-full text-[var(--dark-text)] relative group/popular flex flex-col gap-6 rounded items-start justify-center ">
       <h1 className="sm:text-[25px]  text-[18px] tracking-wide font-semibold    ">

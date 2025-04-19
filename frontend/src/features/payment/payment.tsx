@@ -4,12 +4,14 @@ import { MoonLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { TimePicker } from "@/features";
-import { addOrder, resetCart } from "@/reducer";
-import { addOrder as orderAdd } from "@/services";
+import { resetCart } from "@/reducer";
+import { addOrder as orderAdd, resendOtp } from "@/services";
 import { addRevenue, addNotification, removeProductFromCart } from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
 import { RippleButton } from "@/commons";
+import { VerificationContainer } from "@/pages";
+import { Modal } from "@/commons";
 
 export const Payment: React.FC = () => {
   const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();
@@ -18,6 +20,7 @@ export const Payment: React.FC = () => {
 
   const navigate = useNavigate();
   const { auth, cart } = useAppSelector();
+  const [isUserVeried, setIsUserVerified] = useState<boolean>(true);
 
   const handlePaymentSelection = (paymentMethod: Model.PaymentMethod) => {
     setPayementMethod(paymentMethod);
@@ -36,13 +39,29 @@ export const Payment: React.FC = () => {
       });
       return;
     }
+
     try {
+      if (!auth?.userInfo?.isVerified) {
+        await resendOtp();
+        toaster({
+          className: "bg-yellow-50",
+          icon: "warning",
+          title: "Account Verification Required",
+          message:
+            "To proceed with your order, please verify your account. Check your email for the verification link.",
+        });
+
+        localStorage?.setItem("verifyType", "otp");
+        return setIsUserVerified(false);
+      }
       setLoading(true);
       const response = await orderAdd({
-        uid: auth?.userInfo?.uid,
+        uid: auth?.userInfo?.uid as string,
         products: cart?.products,
         orderRequest: dayjs().toISOString(),
         status: "pending",
+        note: note,
+        
       });
       if (response?.message)
         toaster({
@@ -73,7 +92,9 @@ export const Payment: React.FC = () => {
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
-          title: error?.message,
+          icon: "error",
+          className: "bg-red-50",
+          message: error?.message,
         });
       }
     } finally {
@@ -163,6 +184,13 @@ export const Payment: React.FC = () => {
       <div className="mt-5 text-[var(--dark-secondary-text)] text-center">
         <small>All payments are processed securely through online.</small>
       </div>
+      {!isUserVeried && (
+        <Modal
+          children={<VerificationContainer />}
+          close={isUserVeried}
+          closeModal={() => setIsUserVerified(!isUserVeried)}
+        />
+      )}
     </div>
   );
 };

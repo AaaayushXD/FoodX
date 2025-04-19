@@ -3,6 +3,7 @@ import { loginUser } from "./login/loginUser";
 import { editUser } from "./edit/editUser";
 import { registerUser } from "./register/registerUser";
 import { logoutUser } from "./logout/logoutUser";
+import { verifyNewUser } from "./verify/verifyUser";
 
 // Define the initial state
 const initialState: Auth.authState = {
@@ -21,7 +22,7 @@ const authSlice = createSlice({
   extraReducers: (buidler) => {
     loginUser(buidler);
     editUser(buidler);
-    registerUser(buidler);
+    verifyNewUser(buidler);
   },
 });
 

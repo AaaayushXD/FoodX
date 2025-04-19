@@ -104,7 +104,7 @@ export const routes: Routes = {
       </ErrorBoundary>
     ),
   },
-  favourite: {
+  "/favourite": {
     accessToAnyOne: false,
     element: <FavouritePage />,
     requiresAuth: true,

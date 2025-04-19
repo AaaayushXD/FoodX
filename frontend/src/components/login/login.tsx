@@ -7,7 +7,7 @@ import { AuthFooter, AuthNavbar } from "@/components";
 import { useAppDispatch } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import { validateEmail } from "../register/registerHandler";
-import { checkPassword, checkPasswordValidation } from "@/helpers";
+import {  checkPasswordValidation } from "@/helpers";
 
 //Login container
 export const LoginContainer: React.FC = () => {
@@ -49,7 +49,7 @@ export const LoginContainer: React.FC = () => {
     if (error)
       try {
         setLoading(true);
-        await dispatch(signInAction({ email, password, userRole: "customer" }));
+        await dispatch(signInAction({ email, password, userRole: "customer" ,navigate: navigate}));
       } catch (error) {
         throw new Error("Error while loging" + error);
       }
