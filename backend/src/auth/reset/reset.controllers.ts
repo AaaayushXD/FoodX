@@ -25,7 +25,7 @@ export const resetPasswordController = asyncHandler(
     const response: API.ApiResponse = {
       status: 200,
       success: true,
-      data: [],
+      data: user.userData.uid || [],
       message: "Password reset email sent successfully.",
     };
     res.status(200).json(response);
