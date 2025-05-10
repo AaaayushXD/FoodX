@@ -1,5 +1,6 @@
 import { Filter, QuerySnapshot } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
+import logger from "../../../utils/logger/logger.js";
 const USER_COLLECTIONS = ["admin", "chef", "customer"];
 export const doesUserExist = async (
   email?: string,
@@ -42,6 +43,7 @@ export const doesUserExist = async (
     }
     return false;
   } catch (error) {
+    logger.error(`Error while checking user existence in database: ${error}`);
     throw new Error(
       `Failed to check user existence across roles: ${error instanceof Error ? error.message : String(error)}`
     );

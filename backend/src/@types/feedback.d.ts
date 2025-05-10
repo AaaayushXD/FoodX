@@ -1,6 +1,6 @@
 declare namespace Feedback {
   interface FeedbackInfo {
-    userId: string;
+    uid: string;
     productId: string;
     rating: number;
     message: string;

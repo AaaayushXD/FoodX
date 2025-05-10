@@ -1,25 +1,25 @@
 import { Request, Response } from "express";
-import { getUserWithIdFromDatabase } from "../../actions/user/get/getUserWithId.js";
 import { asyncHandler } from "../../helpers/asyncHandler/asyncHandler.js";
 import { redisClient } from "../../utils/cache/cache.js";
 import { APIError } from "../../helpers/error/ApiError.js";
 import { updateUserDataInFirestore } from "../../actions/user/update/updateUser.js";
 import { VerifyOtpSchemaType } from "../../utils/validate/auth/verifyOtpSchema.js";
 import { findUserInDatabase } from "../../actions/user/get/findUser.js";
+import { generateHashedPassword } from "../../utils/hashing/generateHashedPassword.js";
 
 export const verifyOtp = asyncHandler(
   async (req: Request<{}, {}, VerifyOtpSchemaType>, res: Response) => {
     const { code, uid, type, newPassword } = req.body;
     let response: API.ApiResponse;
 
-    const data = await redisClient.get(`${type}:${uid}`);
+    const user = await findUserInDatabase(uid);
+    if (!user) throw new APIError("User not found.", 404);
+    const redisGetKey = type === "otp" ? `otp:${uid}` : `reset:${user?.email}`;
 
+    const data = await redisClient.get(`${redisGetKey}`);
     if (!data) {
       throw new APIError("OTP not found.", 404);
     }
-
-    const user = await findUserInDatabase(uid);
-    if (!user) throw new APIError("User not found.", 404);
 
     if (!data || +data !== +code) throw new APIError("Invalid otp.", 500);
 
@@ -37,11 +37,12 @@ export const verifyOtp = asyncHandler(
       return res.status(200).json(response);
     } else if (type === "reset") {
       if (!newPassword) throw new APIError("New password is required.", 400);
+      const hasedPassword = await generateHashedPassword(newPassword as string);
       await updateUserDataInFirestore(
         user.uid,
         user.role,
         "password",
-        newPassword
+        hasedPassword
       );
       redisClient.del(`reset:${uid}`);
 

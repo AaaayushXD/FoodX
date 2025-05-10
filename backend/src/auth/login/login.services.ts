@@ -1,10 +1,10 @@
 import { getUserWithEmailFromDatabase } from "../../actions/user/get/getUserWithEmail.js";
 import { APIError } from "../../helpers/error/ApiError.js";
 import { verifyPassword } from "../../utils/hashing/verifyPassword.js";
+import logger from "../../utils/logger/logger.js";
 
 export const login = async ({ email, password, role }: Auth.Login) => {
   try {
-    console.log(email, password, role);
     const user = await getUserWithEmailFromDatabase(role, email);
     if (!user || !user.uid)
       throw new APIError(
@@ -19,6 +19,7 @@ export const login = async ({ email, password, role }: Auth.Login) => {
 
     return user;
   } catch (error) {
+    logger.error(`Error logging in user with email ${email}: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError("Error logging in user. " + error, 500);
   }

@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 import { findProductInDatabase } from "../../products/get/findProduct.js";
 import { updateProductStockInFirestore } from "../../products/update/updateProductStock.js";
 import { updateTotalSold } from "../../products/update/updateSoldProduct.js";
@@ -60,6 +61,7 @@ export const updateOrderStatusInDatabase = async (
 
     return order;
   } catch (error) {
+    logger.error("Error while updating order in firestore: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Error updating orders in database. " + error, 500);
   }

@@ -1,5 +1,6 @@
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { paginateFnc } from "../../../helpers/paginate/paginate.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getUsersFromDatabase = async (
   path: "customer" | "admin" | "chef",
@@ -46,6 +47,7 @@ export const getUsersFromDatabase = async (
       length: totalLength,
     };
   } catch (error) {
+    logger.error("Error while fetching users in database: " + error);
     throw new APIError("Error fetching users from database.", 500);
   }
 };

@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { redisClient } from "../../utils/cache/cache.js";
 import { asyncHandler } from "../../helpers/asyncHandler/asyncHandler.js";
 import { getPopularProductsFromDatabase } from "../../actions/products/get/getPopularProducts.js";
@@ -31,7 +31,6 @@ const getPopularProducts = asyncHandler(async (_: Request, res: Response) => {
 const searchProduct = asyncHandler(
   async (req: Request<{}, {}, {}, { search: string }>, res: Response) => {
     const search = req.query.search;
-    console.log(search);
     if (!search) throw new APIError("No search query provided.", 400);
 
     const products = await searchProductInDatabase(search);
@@ -80,7 +79,6 @@ const getSpecialProducts = asyncHandler(async (_: Request, res: Response) => {
 const getProductByTag = asyncHandler(
   async (req: Request<{ tag: string }>, res: Response) => {
     const tag = req.params.tag;
-    console.log(tag);
     if (!tag) throw new APIError("No tag was provided.", 400);
     const products = await getProductByTagFromDatabase(tag, "products");
     await redisClient.set(`product:${tag}`, JSON.stringify(products), {
@@ -228,16 +226,16 @@ const deleteProductsInBulk = asyncHandler(
 const deleteProduct = asyncHandler(
   async (
     req: Request<
-      { collection: Product.Collection["name"] },
+      { id: string },
       {},
-      { id: string }
+      { collection: Product.Collection["name"] }
     >,
     res: Response
   ) => {
-    const { id } = req.body;
+    const { id } = req.params;
     if (!id) throw new APIError("No id provided.", 400);
 
-    const collection = req.params.collection;
+    const collection = req.query.collection;
     if (
       !collection ||
       (collection !== "products" && collection !== "specials")

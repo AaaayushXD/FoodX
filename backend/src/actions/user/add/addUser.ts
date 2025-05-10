@@ -3,6 +3,7 @@ import { db } from "../../../firebase/index.js";
 import { generateHashedPassword } from "../../../utils/hashing/generateHashedPassword.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { generateRandomId } from "../../../utils/random/randomId.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addUserToFirestore = async (
   user: Auth.Register,
@@ -34,6 +35,7 @@ export const addUserToFirestore = async (
     const newUser = await customerDocRef.doc(userId).get();
     return newUser.data() as User.UserInfo;
   } catch (error) {
+    logger.error("Error while adding user : " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while adding user to the database. " + error,

@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const updateTotalSold = async (
   collection: string,
@@ -14,6 +15,7 @@ export const updateTotalSold = async (
       updatedAt: FieldValue.serverTimestamp(),
     });
   } catch (error) {
+    logger.error("Error while updating total sold: " + error);
     throw new APIError("Unable to update total orders. " + error, 500);
   }
 };

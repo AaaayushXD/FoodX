@@ -13,7 +13,6 @@ const addNewBanner = asyncHandler(
     const { title, image, link, type, description } = req.body;
     let response: API.ApiResponse;
 
-    console.log(title, image, type, link, description);
     const { collection } = await addBannerToFirestore(
       title,
       image,

@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addTicketToFirestore = async (ticket: Ticket.TicketData) => {
   if (!ticket) throw new APIError("No data to update the database.", 404);
@@ -19,6 +20,7 @@ export const addTicketToFirestore = async (ticket: Ticket.TicketData) => {
         })
       );
   } catch (error) {
+    logger.error("Error while adding ticket: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while adding ticket to the database. " + error,

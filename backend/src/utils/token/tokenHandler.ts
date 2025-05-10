@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { getUserWithIdFromDatabase } from "../../actions/user/get/getUserWithId.js";
 import { updateUserDataInFirestore } from "../../actions/user/update/updateUser.js";
 import { APIError } from "../../helpers/error/ApiError.js";
+import logger from "../logger/logger.js";
 
 const getAccessToken = async (uid: string, role: User.RoleType) => {
   try {
@@ -14,6 +15,7 @@ const getAccessToken = async (uid: string, role: User.RoleType) => {
       { expiresIn: Number(process.env.ACCESS_TOKEN_EXPIRY) }
     );
   } catch (error) {
+    logger.error("Error generating access token: ", error);
     throw new APIError("Error while generating access token. " + error, 500);
   }
 };
@@ -29,6 +31,7 @@ const getRefreshtoken = async (uid: string, role: User.RoleType) => {
       { expiresIn: Number(process.env.REFRESH_TOKEN_EXPIRY) }
     );
   } catch (error) {
+    logger.error("Error generating refresh token: ", error);
     throw new APIError("Error while generating refresh token. " + error, 500);
   }
 };
@@ -54,6 +57,7 @@ const generateAccessAndRefreshToken = async (
 
     return { accessToken, refreshToken };
   } catch (error) {
+    logger.error("Error generating tokens: ", error);
     throw new APIError("Error generating tokens. " + error, 500);
   }
 };
@@ -73,6 +77,7 @@ const verifyToken = async (
     ) as User.DecodeToken;
     return decodedToken;
   } catch (error) {
+    logger.error("Error verifying token: ", error);
     throw new APIError(
       "Error verifying your token. Please try again later. " + error,
       500

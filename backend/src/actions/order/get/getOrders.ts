@@ -1,5 +1,6 @@
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { paginateFnc } from "../../../helpers/paginate/paginate.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getOrdersFromDatabase = async (
   pageSize: number,
@@ -47,6 +48,7 @@ export const getOrdersFromDatabase = async (
       length: totalLength,
     };
   } catch (error) {
+    logger.error("Error while fetching orders in firestore: " + error);
     throw new APIError("Error fetching orders from database. " + error, 500);
   }
 };

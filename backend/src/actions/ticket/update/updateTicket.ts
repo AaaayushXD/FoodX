@@ -3,6 +3,7 @@ import { db } from "../../../firebase/index.js";
 import { getTicketByIdFromFirestore } from "../get/getTicketById.js";
 import { TicketStatusSchemaType } from "../../../utils/validate/ticket/ticketStatusSchema.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 export const updateTicketInFirestore = async (
   id: string,
   newData: TicketStatusSchemaType
@@ -17,6 +18,7 @@ export const updateTicketInFirestore = async (
       updatedAt: FieldValue.serverTimestamp(),
     });
   } catch (error) {
+    logger.error("Error while updating ticket: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to update ticket data. " + error, 500);
   }

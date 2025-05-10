@@ -2,6 +2,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import type { Express } from "express";
 import { verifySocketUser } from "../../middlewares/socket/socket.middlewares.js";
+import logger from "../logger/logger.js";
 
 export const userSocketMap: Record<string, string> = {};
 
@@ -21,6 +22,7 @@ export const initializeSocket = (app: Express) => {
   io.on("connection", (socket) => {
     const user = socket.user;
     if (!user) {
+      logger.error("Socket connection failed: User not authenticated");
       console.error("Socket connection failed: User not authenticated");
       socket.disconnect();
       return;

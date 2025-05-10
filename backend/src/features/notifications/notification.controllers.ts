@@ -67,8 +67,8 @@ const fetchNotifications = asyncHandler(
 );
 
 const deleteNotification = asyncHandler(
-  async (req: Request<{}, {}, { id: string }>, res: Response) => {
-    const { id } = req.body;
+  async (req: Request<{ id: string }>, res: Response) => {
+    const { id } = req.params;
     if (!id) throw new APIError("Notification ID is required.", 400);
 
     await deleteNotificationFromDatabase(id);

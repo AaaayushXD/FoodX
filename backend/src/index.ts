@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { rootRouter } from "./routes/root.routes.js";
 import { initializeSocket } from "./utils/socket/index.js";
 import errorHandler from "./middlewares/error/errorHandler.js";
+import logger from "./utils/logger/logger.js";
 dotenv.config();
 
 const app = express();
@@ -33,7 +34,7 @@ app.use("/assets", (_, res) => {
 const { io, server } = initializeSocket(app);
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });
 
 //route handling

@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const removeItemFromCart = async (uid: string, productId: string) => {
   try {
@@ -19,6 +20,7 @@ export const removeItemFromCart = async (uid: string, productId: string) => {
       }
     }
   } catch (error) {
+    logger.error(`Error removing product from cart for user: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while removing item from carts. " + error,

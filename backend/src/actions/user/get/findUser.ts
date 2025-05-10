@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const findUserInDatabase = async (id: string) => {
   const collections = ["customer", "admin", "chef"];
@@ -43,6 +44,7 @@ export const findUserByEmailInDatabase = async (email: string) => {
     }
     return null;
   } catch (error) {
+    logger.error("Error while finding user using email in database: " + error);
     throw new APIError("Error finding user using email in database.", 500);
   }
 };

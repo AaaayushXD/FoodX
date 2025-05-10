@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addCartInFirestore = async (uid: string, productId: string) => {
   try {
@@ -26,6 +27,7 @@ export const addCartInFirestore = async (uid: string, productId: string) => {
       }
     }
   } catch (error) {
+    logger.error(`Error adding product to cart for user: ${error}`);
     throw new APIError(
       "Something went wrong while adding products in cart. " + error,
       500

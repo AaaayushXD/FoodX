@@ -29,7 +29,7 @@ notificationRouter.post(
 );
 
 notificationRouter.delete(
-  "/remove",
+  "/remove/:id",
   verifyRoles(["admin", "chef", "customer"]),
   deleteNotification
 );

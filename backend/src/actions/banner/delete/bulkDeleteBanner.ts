@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const bulkDeleteBannersFromDatabase = async (
   id: string[],
@@ -17,6 +18,9 @@ export const bulkDeleteBannersFromDatabase = async (
     await batch.commit();
     return collection;
   } catch (error) {
+    logger.error(
+      `Error bulk deleting banners with ids: ${error}`
+    );
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Unable to bulk delete banners from database. " + error,

@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getProductByTagFromDatabase = async (
   tagId: string,
@@ -18,6 +19,7 @@ export const getProductByTagFromDatabase = async (
     });
     return products;
   } catch (error) {
+    logger.error("Error while getting products by tag: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to get products  by tag. " + error, 500);
   }

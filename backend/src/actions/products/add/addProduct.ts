@@ -2,6 +2,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { generateRandomId } from "../../../utils/random/randomId.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addProductToFirestore = async (
   product: Product.ProductData,
@@ -44,6 +45,7 @@ export const addProductToFirestore = async (
         })
       );
   } catch (error) {
+    logger.error(": Error while adding product: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while adding product to the database.",

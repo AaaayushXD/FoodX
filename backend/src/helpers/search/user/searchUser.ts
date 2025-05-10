@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger/logger.js";
 import { APIError } from "../../error/ApiError.js";
 import { searchItemInDatabase } from "../product/searchProduct.js";
 
@@ -35,13 +36,13 @@ export const searchUserInDatabase = async (query: string) => {
     ];
 
     searchResult.sort((a, b) => {
-
       return a.fullName.localeCompare(b.fullName);
     });
     searchResult = searchResult.slice(0, 9);
 
     return searchResult;
   } catch (error) {
+    logger.error(`Error while searching user based on username: ${error}`);
     throw new APIError(
       "Error while searching user based on username. " + error,
       500

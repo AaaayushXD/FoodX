@@ -3,6 +3,7 @@ import { APIError } from "../../helpers/error/ApiError.js";
 import { oneSignalClient } from "./index.js";
 import { ORDERSTATUS } from "../../helpers/messages/email/orderStatus.message.js";
 import { OTPEMAIL } from "../../helpers/messages/email/otp.messages.js";
+import logger from "../logger/logger.js";
 
 export const sendOTPEmail = async (email: string, otp: string) => {
   try {
@@ -15,6 +16,7 @@ export const sendOTPEmail = async (email: string, otp: string) => {
 
     await oneSignalClient.createNotification(notification);
   } catch (error) {
+    logger.error("Error sending OTP email: ", error);
     throw new APIError("Failed to send OTP email" + error, 500);
   }
 };
@@ -35,6 +37,7 @@ export const sendOrderStatusEmail = async (
 
     await oneSignalClient.createNotification(notification);
   } catch (error) {
+    logger.error("Error sending Order Status email: ", error);
     throw new APIError("Failed to send Order Status email" + error, 500);
   }
 };

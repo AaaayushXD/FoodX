@@ -30,6 +30,7 @@ export const paginateFnc = async (
   productId?: string
 ) => {
   let query = db.collection(collection).orderBy(orderBy, sort);
+  console.log(productId)
   if (uid) {
     query = query.where("uid", "==", uid);
   }

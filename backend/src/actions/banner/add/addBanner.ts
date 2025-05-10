@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addBannerToFirestore = async (
   title: string,
@@ -29,6 +30,7 @@ export const addBannerToFirestore = async (
       );
     return { banner, collection };
   } catch (error) {
+    logger.error(`Error adding banner: ${error}`);
     throw new APIError("Unable to add banner in database. " + error, 500);
   }
 };

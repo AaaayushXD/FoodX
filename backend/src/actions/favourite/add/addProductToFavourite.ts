@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addProductInFavourite = async (uid: string, productId: string) => {
   try {
@@ -26,6 +27,7 @@ export const addProductInFavourite = async (uid: string, productId: string) => {
       }
     }
   } catch (error) {
+    logger.error(`Error adding product to favourites for user: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while adding product in firestore. " + error,

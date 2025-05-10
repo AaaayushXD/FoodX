@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const updateFeedbackInDatabase = async (
   id: string,
@@ -29,6 +30,7 @@ export const updateFeedbackInDatabase = async (
     const doc = await docRef.get();
     return doc.data() as Feedback.FeedbackDetail;
   } catch (error) {
+    logger.error("Error while updating feedback in firestore: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while updating feedback. " + error,

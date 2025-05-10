@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const updateCategoryInDatabase = async (
   id: string,
@@ -16,6 +17,7 @@ export const updateCategoryInDatabase = async (
     });
     return category;
   } catch (error) {
+    logger.error(`Error updating category: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Unable to update category data in database. " + error,

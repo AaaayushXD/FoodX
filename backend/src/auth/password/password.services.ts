@@ -1,9 +1,9 @@
 import { getUserWithIdFromDatabase } from "../../actions/user/get/getUserWithId.js";
 import { updateUserDataInFirestore } from "../../actions/user/update/updateUser.js";
-import { updateUser } from "../../features/users/user.controllers.js";
 import { APIError } from "../../helpers/error/ApiError.js";
 import { generateHashedPassword } from "../../utils/hashing/generateHashedPassword.js";
 import { verifyPassword } from "../../utils/hashing/verifyPassword.js";
+import logger from "../../utils/logger/logger.js";
 
 export const ChangePasswordService = async ({
   newPassword,
@@ -30,6 +30,7 @@ export const ChangePasswordService = async ({
 
     await updateUserDataInFirestore(uid, role, "password", hashedPassword);
   } catch (error) {
+    logger.error(`Error changing password for user: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError("Error while changing password. Please try again.", 500);
   }

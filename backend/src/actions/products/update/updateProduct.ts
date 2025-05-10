@@ -2,6 +2,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { getProductById } from "../get/getProductById.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const updateProductInDatabase = async (
   collection: Product.Collection["name"],
@@ -18,6 +19,7 @@ export const updateProductInDatabase = async (
       updatedAt: FieldValue.serverTimestamp(),
     });
   } catch (error) {
+    logger.error("Error while updating product: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to update product data.", 400);
   }

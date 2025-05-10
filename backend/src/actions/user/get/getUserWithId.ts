@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getUserWithIdFromDatabase = async (
   path: User.RoleType,
@@ -16,6 +17,9 @@ export const getUserWithIdFromDatabase = async (
 
     return userData;
   } catch (error) {
+    logger.error(
+      "Error while getting user with their id in database: " + error
+    );
     if (error instanceof APIError) throw error;
     throw new APIError("Error getting user with their id. " + error, 500);
   }

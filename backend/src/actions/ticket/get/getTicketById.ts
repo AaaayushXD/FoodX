@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getTicketByIdFromFirestore = async (id: string) => {
   const ticketRef = db.collection("ticket");
@@ -15,6 +16,7 @@ export const getTicketByIdFromFirestore = async (id: string) => {
 
     return { tickets, doc: doc.id };
   } catch (error) {
+    logger.error("Error while getting ticket: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("No ticket found. " + error, 404);
   }

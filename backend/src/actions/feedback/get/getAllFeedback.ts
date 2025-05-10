@@ -1,5 +1,6 @@
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { paginateFnc } from "../../../helpers/paginate/paginate.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const fetchAllFeedback = async (
   pageSize: number,
@@ -22,6 +23,7 @@ export const fetchAllFeedback = async (
       null,
       null,
       null,
+      undefined,
       productId
     );
     const feedbackDoc = await query.get();
@@ -51,6 +53,7 @@ export const fetchAllFeedback = async (
       length: totalLength,
     };
   } catch (error) {
+    logger.error("Error while fetching feedback in firestore: " + error);
     throw new APIError("Error fetching feedbacks from database. " + error, 500);
   }
 };

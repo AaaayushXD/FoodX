@@ -16,7 +16,7 @@ const addFeedbacks = asyncHandler(
       message,
       productId,
       rating,
-      userId: uid,
+      uid,
       image,
     });
 

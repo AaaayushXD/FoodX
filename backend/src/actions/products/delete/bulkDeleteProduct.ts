@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const bulkDeleteProductsFromDatabase = async (
   collection: Product.Collection["name"],
@@ -16,6 +17,7 @@ export const bulkDeleteProductsFromDatabase = async (
     });
     await batch.commit();
   } catch (error) {
+    logger.error("Error while deleting products: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to bulk delete product data.", 400);
   }

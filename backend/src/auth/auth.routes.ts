@@ -42,7 +42,6 @@ authRouter.post(
 );
 authRouter.post(
   "/reset",
-  verifyRoles(["admin", "chef", "customer"]),
   rateLimiter(60, 10),
   resetPasswordController
 );

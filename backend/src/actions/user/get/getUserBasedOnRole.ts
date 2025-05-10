@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getUserBasedOnRoleFromDatabase = async (
   path: User.RoleType
@@ -12,6 +13,9 @@ export const getUserBasedOnRoleFromDatabase = async (
     const userData = userDoc.docs.map((doc) => doc.data()) as User.UserInfo[];
     return userData;
   } catch (error) {
+    logger.error(
+      "Error while getting user based on role in database: " + error
+    );
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while getting user based on role. " + error,

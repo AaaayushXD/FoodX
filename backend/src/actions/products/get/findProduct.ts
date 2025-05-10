@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const findProductInDatabase = async (id: string) => {
   const collections: ["products", "specials"] = ["products", "specials"];
@@ -19,6 +20,7 @@ export const findProductInDatabase = async (id: string) => {
     if (!foundProduct) throw new APIError("Product not found.", 404);
     return { foundProduct, collection: collectionName };
   } catch (error) {
+    logger.error("Error while finding product: " + error);
     throw new APIError("Error finding product in database. " + error, 500);
   }
 };

@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const updateUserDataInFirestore = async (
   uid: string,
@@ -22,6 +23,7 @@ export const updateUserDataInFirestore = async (
       updatedAt: FieldValue.serverTimestamp(),
     });
   } catch (error) {
+    logger.error("Error while updating user data in database: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to update data." + error, 500);
   }

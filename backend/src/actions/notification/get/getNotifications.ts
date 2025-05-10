@@ -1,5 +1,6 @@
 import { APIError } from "../../../helpers/error/ApiError.js";
 import { paginateFnc } from "../../../helpers/paginate/paginate.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getNotificationsFromDatabase = async (
   pageSize: number,
@@ -46,6 +47,7 @@ export const getNotificationsFromDatabase = async (
       length: totalLength,
     };
   } catch (error) {
+    logger.error("Error while fetching notifications in firestore: " + error);
     throw new APIError(
       "Error fetching notifications from database. " + error,
       500

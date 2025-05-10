@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getAllProductsFromDatabase = async (
   collection: Product.Collection["name"]
@@ -16,6 +17,7 @@ export const getAllProductsFromDatabase = async (
     });
     return products;
   } catch (error) {
+    logger.error("Error while getting all products: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to get product from database. " + error, 500);
   }

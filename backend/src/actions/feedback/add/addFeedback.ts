@@ -1,9 +1,10 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addFeedback = async (feedback: Feedback.FeedbackInfo) => {
-  const { userId, productId, message, rating, image } = feedback;
+  const { uid, productId, message, rating, image } = feedback;
 
   try {
     const docRef = db.collection("feedback");
@@ -11,7 +12,7 @@ export const addFeedback = async (feedback: Feedback.FeedbackInfo) => {
 
     const id = await docRef
       .add({
-        userId,
+        uid,
         productId,
         message,
         rating,
@@ -28,9 +29,10 @@ export const addFeedback = async (feedback: Feedback.FeedbackInfo) => {
     const doc = await docRef.doc(id).get();
     return doc.data() as Feedback.FeedbackDetail;
   } catch (error) {
+    logger.error("Error while adding feedback in firestore: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
-      "Something went wrong while adding product in firestore. " + error,
+      "Something went wrong while adding feedback in firestore. " + error,
       500
     );
   }

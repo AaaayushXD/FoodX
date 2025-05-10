@@ -156,7 +156,6 @@ const getUser = asyncHandler(
     req: Request<{ role: User.RoleType }, {}, {}, { userId: string }>,
     res: Response
   ) => {
-    console.log(req.params);
     const role = req.params.role;
     const userId = req.query.userId;
 

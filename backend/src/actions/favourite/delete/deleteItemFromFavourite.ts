@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const removeItemFromFavourite = async (
   uid: string,
@@ -22,6 +23,7 @@ export const removeItemFromFavourite = async (
       }
     }
   } catch (error) {
+    logger.error(`Error removing product from favourites for user: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while removing item from favourites. " + error,

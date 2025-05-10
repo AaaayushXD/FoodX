@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getCartsFromFirestore = async (uid: string) => {
   try {
@@ -22,6 +23,7 @@ export const getCartsFromFirestore = async (uid: string) => {
       return data;
     }
   } catch (error) {
+    logger.error(`Error getting cart for user ${uid}: ${error}`);
     throw new APIError(
       "Something went wrong while getting user's carts. " + error,
       500

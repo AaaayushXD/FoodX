@@ -1,4 +1,5 @@
 import { db } from "../../../firebase/index.js";
+import logger from "../../../utils/logger/logger.js";
 import { APIError } from "../../error/ApiError.js";
 
 export const searchItemInDatabase = async (
@@ -16,6 +17,9 @@ export const searchItemInDatabase = async (
       .get();
     return snapshot;
   } catch (error) {
+    logger.error(
+      `Error while searching item in database: ${error}`
+    );
     throw new APIError("Error while searching item in database. " + error, 500);
   }
 };

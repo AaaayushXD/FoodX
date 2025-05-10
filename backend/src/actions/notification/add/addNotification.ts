@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const addNotificationToDatabase = async (
   uid: string,
@@ -26,6 +27,7 @@ export const addNotificationToDatabase = async (
       );
     return notifications;
   } catch (error) {
+    logger.error("Error while adding notification in firestore: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to add notification in database. " + error, 500);
   }

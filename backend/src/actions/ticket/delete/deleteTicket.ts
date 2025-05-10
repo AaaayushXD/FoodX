@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const deleteTicketFromDatabase = async (id: string) => {
   if (!id) throw new APIError("ID is required to delete ticket.", 400);
@@ -11,6 +12,7 @@ export const deleteTicketFromDatabase = async (id: string) => {
     if (!doc.exists) throw new APIError("Ticket not found.", 404);
     doc.ref.delete();
   } catch (error) {
+    logger.error("Error while deleting ticket: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError("Unable to delete ticket from database. " + error, 500);
   }

@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getUserWithPhoneNumberFromDatabase = async (
   path: User.RoleType,
@@ -18,6 +19,9 @@ export const getUserWithPhoneNumberFromDatabase = async (
 
     return userData;
   } catch (error) {
+    logger.error(
+      "Error while getting user with phone number in database: " + error
+    );
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while fetching user with phone Number. " + error,

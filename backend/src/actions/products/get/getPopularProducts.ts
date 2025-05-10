@@ -1,5 +1,6 @@
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getPopularProductsFromDatabase = async () => {
   try {
@@ -32,6 +33,7 @@ export const getPopularProductsFromDatabase = async () => {
 
     return result;
   } catch (error) {
+    logger.error("Error while getting popular products: " + error);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Error getting popular product from database. " + error,

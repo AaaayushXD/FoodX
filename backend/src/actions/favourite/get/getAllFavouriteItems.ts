@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../../../firebase/index.js";
 import { APIError } from "../../../helpers/error/ApiError.js";
+import logger from "../../../utils/logger/logger.js";
 
 export const getFavouritesFromFirestore = async (uid: string) => {
   try {
@@ -22,6 +23,7 @@ export const getFavouritesFromFirestore = async (uid: string) => {
       return data;
     }
   } catch (error) {
+    logger.error(`Error getting favourite for user: ${error}`);
     if (error instanceof APIError) throw error;
     throw new APIError(
       "Something went wrong while getting user's favourite. " + error,

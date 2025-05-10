@@ -1,5 +1,6 @@
 import fs from "fs";
 import { storage } from "../../firebase/index.js";
+import logger from "../logger/logger.js";
 
 const uploadImageToFirebase = async (
   folderName: string,
@@ -22,6 +23,7 @@ const uploadImageToFirebase = async (
     return publicUrl;
   } catch (error) {
     fs.unlinkSync(filePath);
+    logger.error("Error uploading image to Firebase: ", error);
     throw new Error("Unable to upload image. " + error);
   }
 };
