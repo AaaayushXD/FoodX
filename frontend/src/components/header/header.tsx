@@ -123,7 +123,7 @@ const DesktopNavbar = () => {
           <Icons.heart className="size-5 sm:size-6" />
         </button>
         <div ref={profileRef} className="">
-          {auth.userInfo?.avatar && (
+          {auth.userInfo?.isVerified && (
             <div className="relative w-full">
               <div
                 onClick={() => navigate(`profile`)}
@@ -133,7 +133,11 @@ const DesktopNavbar = () => {
                   className=" rounded-full object-cover size-full "
                   lowResSrc={Avatar}
                   highResSrc={
-                    import.meta.env.VITE_URI + "assets/" + auth.userInfo.avatar
+                    auth?.userInfo?.avatar
+                      ? import.meta.env.VITE_URI +
+                        "assets/" +
+                        auth.userInfo.avatar
+                      : Avatar
                   }
                   alt="avatar"
                 />
@@ -187,7 +191,7 @@ const MobileNav = () => {
     <div className="w-full lg:hidden flex items-center justify-between  py-3">
       <div></div>
       <div ref={profileRef} className="">
-        {auth.userInfo?.avatar && (
+        {auth.userInfo?.isVerified && (
           <div className="relative w-full">
             <div
               onClick={() => navigate(`profile`)}
@@ -197,7 +201,11 @@ const MobileNav = () => {
                 className=" rounded-full object-cover size-full "
                 lowResSrc={Avatar}
                 highResSrc={
-                  import.meta.env.VITE_URI + "assets/" + auth.userInfo.avatar
+                  auth?.userInfo?.avatar
+                    ? import.meta.env.VITE_URI +
+                      "assets/" +
+                      auth.userInfo.avatar
+                    : Avatar
                 }
                 alt="avatar"
               />

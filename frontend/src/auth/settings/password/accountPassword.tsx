@@ -30,6 +30,7 @@ export function PasswordChange() {
       updatedAt: "",
       firstName: "",
       lastName: "",
+      isVerified: ""
     };
     checkPassword(
       { password, confirmPassword },
@@ -43,7 +44,7 @@ export function PasswordChange() {
 
   return (
     <div className="flex flex-col items-center   w-full justify-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-xl p-8 max-w-md w-full">
+      <div className="bg-white  rounded-xl p-8 max-w-md w-full">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Change Your Password
         </h1>
@@ -51,7 +52,7 @@ export function PasswordChange() {
         <form
           onSubmit={(e) => handlePassword(e)}
           autoComplete="off"
-          className="flex flex-col gap-6"
+          className="flex max-w-xl w-full flex-col gap-6"
         >
           {/* New Password Field */}
           <div className="relative w-full">

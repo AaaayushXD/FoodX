@@ -1,13 +1,12 @@
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { RecentCard } from "../card/order/recent_orderCard";
 import { useGetRecentOrder } from "../../hooks/useOrders";
 import Empty from "../../assets/empty.png";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useAppSelector } from "../../hooks/useActions";
 import { Icons } from "../../utils";
 import { useViewPort } from "@/hooks";
+import { Skeleton } from "@/helpers";
 
 export const RecentOrder = () => {
   const store = useAppSelector();
@@ -62,38 +61,17 @@ export const RecentOrder = () => {
         ) : (
           <div className="flex w-full gap-4 ">
             <Skeleton
-              height={230}
-              width={330}
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
-            />
-            <Skeleton
-              height={230}
-              width={330}
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
-            />
-            <Skeleton
-              height={230}
-              width={330}
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
-            />
-            <Skeleton
-              height={230}
-              width={330}
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
+              children={{
+                className: "w-[300px] rounded-xl h-[180px]",
+              }}
+              className="w-full flex gap-5"
+              count={5}
             />
           </div>
         )}
       </div>
       {data?.length > 0 && (
-        <div className="absolute z-50 px-1 flex justify-between invisible w-full duration-200 -translate-x-5 opacity-0 group-hover/recent:visible group-hover/recent:opacity-100 top-[8rem] sm:top-36">
+        <div className="absolute z-50 px-1 flex justify-between  w-full duration-200 right-0 gap-40  group-hover/recent:visible group-hover/recent:opacity-100 top-[8rem] sm:top-36">
           <button
             onClick={() => {
               recentCardReference.current?.scrollBy({
@@ -103,7 +81,7 @@ export const RecentOrder = () => {
             }}
             className=" p-2 hover:bg-[#68656541] duration-150 text-[var(--dark-text)] rounded-full "
           >
-            <Icons.chevronLeft className="sm:size-6 size-5 " />
+            <Icons.chevronLeft className=" text-gray-800 size-5 " />
           </button>
           <button
             onClick={() => {
@@ -114,7 +92,7 @@ export const RecentOrder = () => {
             }}
             className="  p-2 hover:bg-[#68656541] duration-150  text-[var(--dark-text)] rounded-full "
           >
-            <Icons.chevronRight className="sm:size-6 size-5 " />
+            <Icons.chevronRight className=" text-gray-800 size-5 " />
           </button>
         </div>
       )}

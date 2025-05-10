@@ -2,7 +2,7 @@ import { Icons } from "@/utils";
 import { StarRating } from "../star/starReview";
 import React, { useState } from "react";
 import { AddProductReview } from "@/features";
-import { RippleButton } from "@/commons";
+import { Portal, RippleButton } from "@/commons";
 
 export const AverageReview = React.memo(
   ({
@@ -95,14 +95,16 @@ export const AverageReview = React.memo(
               );
             })}
           </div>
-          {openRating && (
-            <AddProductReview
-              action="add"
-              openReview={openRating}
-              productId={productId}
-              setOpenReview={() => setOpenRating(!openRating)}
-            />
-          )}
+          <Portal isOpen={openRating} onClose={() => setOpenRating(false)}>
+            <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
+              <AddProductReview
+                action="add"
+                openReview={openRating}
+                productId={productId as string}
+                setOpenReview={() => setOpenRating(!openRating)}
+              />
+            </div>
+          </Portal>
         </div>
       </div>
     );

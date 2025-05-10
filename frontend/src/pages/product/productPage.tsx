@@ -10,7 +10,6 @@ import { Icons, toaster } from "@/utils";
 import { NotificationLoader, PopularProduct } from "@/components";
 import { useEffect, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
-import { motion } from "framer-motion";
 import {
   addProductToCart,
   getPopularProducts,
@@ -18,13 +17,13 @@ import {
   removeProductFromCart,
 } from "@/services";
 import toast from "react-hot-toast";
-import { ApiError, handleShare, Styles } from "@/helpers";
+import { ApiError, handleShare } from "@/helpers";
 import ProductReview from "@/components/review/productReview";
 import React from "react";
 import { AddProductReview } from "@/features";
 import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
-import { RippleButton } from "@/commons";
+import { Portal, RippleButton } from "@/commons";
 
 export const ProductPage = () => {
   const [openReview, setOpenReview] = React.useState<boolean>(false);
@@ -106,7 +105,7 @@ export const ProductPage = () => {
       </div>
 
       {/* product details */}
-      <div className="w-full z-[1]  mt-[-50px] md:mt-[-80px] px-3 sm:px-16 ">
+      <div className="w-full  z-[1]  mt-[-50px] md:mt-[-80px] px-3 sm:px-16 ">
         <div className=" w-full  gap-10  p-3 sm:px-10 sm:py-10 rounded-t-2xl flex flex-col items-center justify-center    bg-white">
           <ProductDetails {...(data?.data?.data as Ui.SpecialProducts)} />
           {/* Recommended Products */}
@@ -115,14 +114,16 @@ export const ProductPage = () => {
             <ProductReview productId={productId as string} />
           </ErrorBoundary>
 
-          {openReview && (
-            <AddProductReview
-              action="add"
-              openReview={openReview}
-              setOpenReview={setOpenReview}
-              productId={productId as string}
-            />
-          )}
+          {/* <Portal isOpen={openReview} onClose={() => setOpenReview(false)}>
+            <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
+              <AddProductReview
+                action="add" 
+                openReview={openReview}
+                setOpenReview={setOpenReview}
+                productId={productId as string}
+              />
+            </div>
+          </Portal> */}
         </div>
       </div>
     </div>

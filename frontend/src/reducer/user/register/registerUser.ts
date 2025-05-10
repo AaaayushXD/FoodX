@@ -8,10 +8,12 @@ export function registerUser<T extends ActionReducerMapBuilder<Auth.authState>>(
   });
   builder.addCase(
     signUpAction.fulfilled,
-    (state, action: PayloadAction<any>) => {
+    (state, action: PayloadAction<Auth.User | undefined>) => {
+      console.log(action.payload);
       state.loading = false;
       state.success = true;
-      state.userInfo = action.payload;
+      state.error = null;
+      state.userInfo = action.payload || {};
     }
   );
   builder.addCase(

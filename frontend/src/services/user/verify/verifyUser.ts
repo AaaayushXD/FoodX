@@ -6,7 +6,7 @@ export const verifyNewUser = async (
   otp: string ,
   uid: string,
   type: "reset" | "otp"
-): Promise<Api.Response<{ isVeried: boolean }>> => {
+): Promise<Api.Response<{userInfo: Auth.User}>> => {
   try {
     const response = (await makeRequest({
       method: "post",

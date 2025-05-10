@@ -57,7 +57,8 @@ declare namespace Model {
     products: Ui.Product[];
     orderRequest: string;
     orderFullfilled?: string;
-    status: OrderStatus["status"];
+    status: OrderStatus,
+    role?: Auth.role,
     updateAt?: string;
     note?: string;
   }

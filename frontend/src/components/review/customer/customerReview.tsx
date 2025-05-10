@@ -6,7 +6,7 @@ import { delete_productFeedback, getUserById } from "@/services";
 import { useAppSelector } from "@/hooks";
 import { ApiError, Image } from "@/helpers";
 import EmptyImage from "@/assets/empty.png";
-import { Delete } from "@/commons";
+import { Delete, Portal } from "@/commons";
 import { Icons, toaster } from "@/utils";
 import toast from "react-hot-toast";
 import { AddProductReview } from "@/features";
@@ -104,14 +104,16 @@ export const CustomerReview = ({
           </div>
         )}
       </div>
-      {open && (
-        <AddProductReview
-          action="update"
-          openReview={open}
-          productId={review.productId}
-          setOpenReview={() => setOpen(!open)}
-        />
-      )}
+      <Portal isOpen={open} onClose={() => setOpen(false)}>
+        <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
+          <AddProductReview
+            action="update"
+            openReview={open}
+            productId={review.productId}
+            setOpenReview={() => setOpen(!open)}
+          />
+        </div>
+      </Portal>
       {isDelete && (
         <Delete
           closeModal={() => setIsDelete(!isDelete)}

@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
 import { addProductToCart, removeProductFromCart } from "@/services";
 import { removeCart, addToCart } from "@/reducer";
 import { Icons } from "@/utils";
+import { Image } from "@/helpers";
+import defaultImage from "@/assets/placeholder.svg";
 
 interface RecentCardProp {
   item: Model.UserOrder;
@@ -32,11 +34,11 @@ export const RecentCard: React.FC<RecentCardProp> = ({ item }) => {
   return (
     <div className="sm:w-[350px]  bg-[var(--light-foreground)] rounded-l-lg h-full border-[1px] border-[var(--dark-border)] rounded-lg flex items-center justify-center">
       <div className="sm:w-[300px] h-[150px] w-[200px] rounded-l-lg     ">
-        <img
-          src={item.products[0].image}
-          loading="lazy"
+        <Image
+          highResSrc={item.products[0].image}
           className=" rounded-l-lg w-full h-full object-cover  "
-        ></img>
+          lowResSrc={defaultImage}
+        ></Image>
       </div>
       <div className="flex py-3 flex-col w-full items-start gap-2 justify-between h-full">
         <p className="sm:text-[14px] px-2 text-xs text-gray-400 ">

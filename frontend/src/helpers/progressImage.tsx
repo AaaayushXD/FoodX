@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export const Image = ({
   lowResSrc,
@@ -15,7 +15,12 @@ export const Image = ({
 }) => {
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+ 
+  console.log(error, loaded)
+  useEffect(() => {
+    setError(false);
 
+  }, [lowResSrc, highResSrc]);
   return (
     <img
       draggable={draggabe}
@@ -23,10 +28,16 @@ export const Image = ({
       className={`${className} transition-opacity duration-500 ${
         loaded ? "opacity-100" : "opacity-50 blur-sm"
       }`}
-      src={error ? lowResSrc : loaded ? highResSrc.trim() : lowResSrc || highResSrc}
+      src={
+        error ? lowResSrc : loaded ? highResSrc.trim() : lowResSrc || highResSrc
+      }
       alt={alt}
-      onLoad={() => setLoaded(true)}
-      onError={() => setError(true)}
+      onLoad={() => {
+        setLoaded(true);
+      }}
+      onError={() => {
+        setError(true);
+      }}
     />
   );
 };

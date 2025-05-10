@@ -7,3 +7,4 @@ export * from "./upload/userUpload";
 export * from "./logout/logoutUser";
 export * from "./search/searchUser";
 export * from "./get/getUser";
+export * from "./forget/forgetPassword";

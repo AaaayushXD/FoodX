@@ -2,18 +2,16 @@ import { ApiError } from "@/helpers";
 import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
-export const logoutUser = async ({
-  role,
-  uid,
+export const forgetPassword = async ({
+  email,
 }: {
-  uid: Auth.User["uid"];
-  role: Auth.role;
+  email: string;
 }): Promise<Api.Response<[]>> => {
   try {
     const response = await makeRequest({
       method: "post",
-      url: "/auth/logout",
-      data: { role, uid },
+      url: "/auth/reset",
+      data: { email },
     });
     return response.data;
   } catch (error) {

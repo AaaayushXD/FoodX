@@ -56,12 +56,12 @@ export const Payment: React.FC = () => {
       }
       setLoading(true);
       const response = await orderAdd({
+        role: auth?.userInfo?.role,
         uid: auth?.userInfo?.uid as string,
         products: cart?.products,
         orderRequest: dayjs().toISOString(),
         status: "pending",
         note: note,
-        
       });
       if (response?.message)
         toaster({

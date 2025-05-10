@@ -26,16 +26,20 @@ const signUpAction = createAsyncThunk(
       const user = response.data;
       Cookies.set("accessToken", user.accessToken);
       Cookies.set("refreshToken", user.refreshToken);
+
+      console.log(user);
       localStorage?.setItem("verifyType", "otp");
       if (!data?.isVerified) {
-        response.data;
         navigate("/email-verification");
-        return;
+        return response.data;
       }
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
-          title: error?.message,
+          title: "Error",
+          icon: "error",
+          className: "bg-red-100",
+          message: error?.message,
         });
       }
       return thunkApi.rejectWithValue(
@@ -84,7 +88,7 @@ const signInAction = createAsyncThunk(
 );
 
 const verifyAction = createAsyncThunk(
-  "auth/signUp",
+  "auth/verify",
   async (
     { otp, uid, type }: { otp: string; uid: string; type: "otp" | "reset" },
     thunkApi
@@ -92,7 +96,8 @@ const verifyAction = createAsyncThunk(
     try {
       const response = await userAction.verifyNewUser(otp, uid, type);
       localStorage.removeItem("time");
-      return response.data;
+   
+      return response.data.userInfo;
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({

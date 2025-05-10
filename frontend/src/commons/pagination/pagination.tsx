@@ -107,7 +107,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               handlePageDirection("prev");
             }}
           >
-            <Icons.arrowLeft />
+            <Icons.chevronLeft />
           </button>
         </div>
 
@@ -116,7 +116,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             className ? className : ""
           }`}
         >
-          <button className="px-3 text-sm sm:text-[15px] bg-red-500 hover:bg-red-600 py-1 duration-150 rounded text-[var(--dark-text)] hover:text-[var(--dark-text)]  text-[18px]  hover:bg-[var(--light-background)]">
+          <button className="px-3 text-sm sm:text-[15px] text-white bg-red-500 hover:bg-red-600 py-1 duration-150 rounded text-[var(--dark-text)] hover:text-[var(--dark-text)]  text-[18px]  hover:bg-[var(--light-background)]">
             {currentPage}{" "}
           </button>{" "}
           <p className="  text-sm sm:text-[15px]">of</p>

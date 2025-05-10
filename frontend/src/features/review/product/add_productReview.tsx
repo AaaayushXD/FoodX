@@ -49,21 +49,20 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       icon: "loading",
     });
     try {
+      let uploadedImage;
       if (originalFile) {
-        const response = await userUpload(originalFile as File, "reviews");
-
-        setData((prev) => ({
-          ...prev,
-          image: `${response?.data?.folderName}/${response?.data?.filename}`,
-        }));
+        const response = await userUpload(originalFile, "reviews");
+        uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
+
       const response = await add_productFeedback({
         message: data.message as string,
         productId: productId,
         rating: data?.rating as number,
         uid: auth?.userInfo?.uid as string,
-        image: data?.image,
+        image: uploadedImage,
       });
+
       queryClient.invalidateQueries(["product:review"] as any);
       toaster({
         className: "bg-green-50 ",
@@ -108,20 +107,24 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       icon: "loading",
     });
     try {
+      let uploadedImage;
       if (originalFile) {
-        const response = await userUpload(originalFile as File, "reviews");
-        setData((prev) => ({
-          ...prev,
-          image: `${response?.data?.folderName}/${response?.data?.filename}`,
-        }));
+        const response = await userUpload(originalFile, "reviews");
+        uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
-      Object.keys(data).forEach(async (key) => {
+
+      const updatedData = {...data};
+      if (uploadedImage) {
+        updatedData.image = uploadedImage;
+      }
+
+      Object.keys(updatedData).forEach(async (key) => {
         const typedKey = key as keyof Ui.FeedbackInfo;
-        if (data[typedKey] !== "") {
+        if (updatedData[typedKey] !== "") {
           const response = await update_productFeedback(
             productId,
             key as keyof Model.FeedbackDetail,
-            data[typedKey],
+            updatedData[typedKey],
             auth?.userInfo?.uid
           );
           queryClient.invalidateQueries(["product:review"] as any);

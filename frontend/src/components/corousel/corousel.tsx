@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Image from "@/assets/placeholder.svg";
 
 interface CarouselProp {
   props: Ui.Banner[];
@@ -69,8 +70,12 @@ export const Carousel: React.FC<CarouselProp> = ({
           ref={imageRef}
           style={{
             backgroundImage: `url(${
-              import.meta.env.VITE_URI + "assets/" + props[currentSlide].image
-            })`,
+              import.meta.env.VITE_URI + "assets/" + props[currentSlide]?.image
+            }), url('${Image}')`,
+          }}
+          onError={(e) => {
+            const target = e.target as HTMLDivElement;
+            target.style.backgroundImage = `url('${Image}')`;
           }}
         ></div>
       </a>

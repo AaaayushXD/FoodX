@@ -14,10 +14,9 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
   const [originalAvatar, setOriginalAvatar] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event?.target.files && event?.target.files[0];
-    const loading = toaster({ title: "Loading...", icon: "loading" });
+
     try {
       setOriginalAvatar(file as File);
       setPreviewAvatar(URL.createObjectURL(file as File));
@@ -27,8 +26,6 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
           title: error.message,
         });
       }
-    } finally {
-      toast.dismiss();
     }
   };
 
@@ -260,9 +257,14 @@ export const AvatarUpdate: React.FC<Auth.User> = (user) => {
 
       {/* Edit Button */}
       <button
-        onClick={() =>
-          edit ? UpdateUserProfile() && setEdit(!edit) : setEdit(!edit)
-        }
+        onClick={async () => {
+          if (edit) {
+            await UpdateUserProfile();
+            setEdit(!edit);
+          } else {
+            setEdit(!edit);
+          }
+        }}
         className="mt-3 flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-lg shadow-md transition hover:bg-blue-600"
       >
         <span>{edit ? "Save Changes" : "Edit Profile"}</span>

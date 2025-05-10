@@ -21,7 +21,7 @@ export const App: React.FC = () => {
   }, [auth]);
 
   const queryClient = new QueryClient();
-
+  console.log(auth);
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
@@ -51,7 +51,7 @@ export const App: React.FC = () => {
               <Route
                 key={pathName}
                 element={
-                  <PrivateRoute userRole={[auth.userInfo.role as Auth.role]} />
+                  <PrivateRoute userRole={[auth?.userInfo?.role as Auth.role]} />
                 }
               >
                 <Route path={pathName} element={config.element} />
