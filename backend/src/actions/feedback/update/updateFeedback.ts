@@ -17,7 +17,7 @@ export const updateFeedbackInDatabase = async (
 
     const feedbackData = feedbackDoc.data() as Feedback.FeedbackDetail;
 
-    if (feedbackData.userId !== uid)
+    if (feedbackData.uid !== uid)
       throw new APIError(
         "You are not authorized to update this feedback.",
         403
