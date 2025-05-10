@@ -1,13 +1,18 @@
 services:
   backend:
+    image: aayush112/foodx-backend
     build:
       context: ./
-      target: node-20
     env_file:
       - .env
     ports:
-      - ${PORT}:${PORT}
+      - "${PORT}:${PORT}"
     command: >
       sh -c "npm install && npm run start"
     volumes:
-      node_vol:
+      - .:/app
+      - /app/node_modules
+      - foodx-images:/app/uploads
+
+volumes:
+  foodx-images:
