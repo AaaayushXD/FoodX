@@ -81,7 +81,7 @@ export const RecentTicketCard: React.FC<TicketProp> = ({
         await addNotification({
           message: messages[newStatus].message,
           title: messages[newStatus].title,
-          userId: uid as string,
+          uid: uid as string,
         });
       }
       if (t_id === id) {

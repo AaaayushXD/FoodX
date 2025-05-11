@@ -3,8 +3,9 @@ import { useThemeContext } from "@/context";
 import { NotificationPage } from "@/features";
 import { useAppSelector } from "@/hooks";
 import { Icons } from "@/utils";
+import { Image } from "@/utils/Image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-
+import Img from "@/assets/logo/avatar.png"
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openNotification, setOpenNotification] = useState<boolean>(false);
@@ -91,8 +92,9 @@ export const Navbar = () => {
               className=" relative  cursor-pointer  "
             >
               {" "}
-              <img
-                src={user.userInfo?.avatar}
+              <Image
+                highResSrc={user.userInfo?.avatar as string}
+                lowResSrc={Img}
                 className="w-10 hover:ring-[var(--dark-border)] hover:ring-4 duration-150 h-10 rounded-full"
                 alt=""
               />
@@ -103,7 +105,7 @@ export const Navbar = () => {
                     : "invisible -translate-y-2 opacity-0 z-[-1]"
                 } `}
               >
-                <Profile user={user} />
+                <Profile user={user.userInfo} />
               </div>
             </div>
           ) : (

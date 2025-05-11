@@ -14,6 +14,7 @@ declare namespace Prop {
     status: Common.OrderStatus;
     orderRequest: string;
     uid: string;
+
   }
 
   interface CardAnalyticsProp {

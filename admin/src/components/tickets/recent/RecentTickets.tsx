@@ -3,8 +3,6 @@ import { Loader } from "@/common";
 import TicketLogo from "@/assets/tickets.png";
 import { Empty } from "../../../common/empty/Empty";
 import { getTickets } from "../../../services/ticket";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
 import { useQuery } from "react-query";
 import { RecentTicketCard } from "../../card/ticket/recentTicket";
 import { Icons } from "@/utils";

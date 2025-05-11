@@ -3,7 +3,7 @@ import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
 export const addNotification = async ({
-  userId,
+  uid,
   message,
   title,
 }: Action.AddNotification) => {
@@ -11,7 +11,7 @@ export const addNotification = async ({
     const response = await makeRequest({
       method: "post",
       url: "notification/add",
-      data: { userId, message, title },
+      data: { uid, message, title },
     });
     return response.data.data;
   } catch (error) {

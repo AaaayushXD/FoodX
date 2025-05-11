@@ -42,7 +42,7 @@ export const UpdateStatus: React.FC<StatusChangerProp> = ({
     >
       {updateStatus.map((status, index) => (
         <button
-          className={`w-[150px] flex items-center tracking-wider gap-3 justify-start py-1.5 px-5 duration-150 hover:bg-[var(--light-background)] rounded-lg `}
+          className={`w-fit flex items-center tracking-wider gap-3 justify-start py-1.5 px-5 duration-150 hover:bg-[var(--light-background)] rounded-lg `}
           onClick={() => statusFn(status as Common.OrderStatus)}
           key={index}
         >

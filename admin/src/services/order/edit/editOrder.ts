@@ -6,7 +6,8 @@ export const updateOrderStatus = async (data: {
   id: string;
   status: string;
   price: number;
-  userId: string;
+  role: Auth.UserRole;
+  uid: string;
 }): Promise<Api.Response<Model.Revenue>> => {
   try {
     const response = await makeRequest({
@@ -15,7 +16,8 @@ export const updateOrderStatus = async (data: {
         id: data.id,
         status: data.status,
         price: data.price,
-        userId: data.userId,
+        uid: data.uid,
+        role: data.role,
       },
       url: "orders/update",
     });

@@ -70,7 +70,7 @@ const MainPage = () => {
           <MobileSlider />
         </div>
         <div className="w-full h-full overflow-auto  flex flex-col items-center justify-end bg-[var(--light-foreground)] ">
-          <Navbar open />
+          <Navbar  />
           <div className="w-full h-[200vh] overflow-y-auto overflow-x-hidden 2xl:justify-between  flex flex-col items-center bg-[var(--light-foreground)]  ">
             <Outlet />
             <Footer />

@@ -6,7 +6,8 @@ import { addNotification } from "../../../services/notification";
 import Avatar from "../../../assets/logo/avatar.png";
 import { UpdateStatus } from "@/features";
 import { toaster } from "@/utils";
-import { ApiError } from "@/helpers";
+import { ApiError, getUserByUid } from "@/helpers";
+import { Image } from "@/utils/Image";
 
 // interface OrderCardProps {
 //   orderId: string;
@@ -24,6 +25,7 @@ export const OrderCard: React.FC<Prop.RecentOrderProp> = ({
   status,
   orderRequest,
   uid,
+ 
 }) => {
   const [isChangeStatus, setIsChangeStatus] = useState<boolean>(false);
   const [id, setId] = useState<string>();
@@ -43,13 +45,14 @@ export const OrderCard: React.FC<Prop.RecentOrderProp> = ({
       icon: "loading",
       message: "Please wait...",
     });
-
+   const user = await getUserByUid(uid as string)
     try {
       const response = await updateOrderStatus({
         id: id as string,
         status: newStatus!,
         price: id === orderId ? price : 0,
-        userId: uid as string,
+        uid: uid as string,
+        role: user?.role as Auth.UserRole,
       });
       if (response?.message)
         toaster({
@@ -85,9 +88,9 @@ export const OrderCard: React.FC<Prop.RecentOrderProp> = ({
     <div className="flex items-center justify-between flex-shrink-0 w-full h-full gap-5 p-3 border border-[var(--dark-border)] rounded-md min-w-[500px]">
       <div className="flex w-full items-center justify-start gap-3">
         <div className="w-[40px] h-[40px] ">
-          <img
-            src={image.includes("assets") ? Avatar : image}
-            loading="lazy"
+          <Image
+            highResSrc={image}
+            lowResSrc={Avatar}
             className="w-full max-w-[50px] rounded-full max-h-[50px]  h-full"
             alt="order"
           />

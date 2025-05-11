@@ -16,10 +16,19 @@ export type ToasterProp = {
   message?: string;
   title?: string;
   icon?: IconType;
-  className?: string;
+  className?:
+    | "bg-red-50"
+    | "bg-green-50"
+    | "bg-blue-50"
+    | "bg-yellow-50"
+    | "bg-purple-50"
+    | "bg-pink-50"
+    | "bg-gray-50"
+    | "bg-white"
+    | string;
 };
 
-let activeToast: string[] = [];
+const activeToast: string[] = [];
 
 const actionIcon: Record<IconType, JSX.Element> = {
   success: <Icons.check className="size-5 sm:size-6 text-green-600 " />,
@@ -63,7 +72,7 @@ export const toaster = ({
             {message && <p className="mt-1 text-sm text-gray-500">{message}</p>}
           </div>
         </div>
-        <div className="w-[50px] p-1 rounded-r-lg flex items-center justify-center border-l h-full hover:bg-slate-100 bg-white">
+        <div className="w-[50px] p-1 rounded-r-lg flex items-center justify-center border-l h-full  ">
           <button
             onClick={() => toast.dismiss(toastId)}
             className="w-full text-black"
@@ -73,7 +82,7 @@ export const toaster = ({
         </div>
       </div>
     ),
-    { position: "bottom-right", duration: 5000 } // Auto-close after 5s
+    { position: "bottom-right", duration: icon === "loading" ? Infinity : 5000 } // Auto-close after 5s
   );
   activeToast.push(toastId);
   return toastId; // Return toast ID to close it programmatically

@@ -1,4 +1,5 @@
-
+import { Image } from "@/utils/Image";
+import Img from "@/assets/logo/avatar.png"
 
 interface CustomerCardProp {
   prop: Auth.User;
@@ -10,11 +11,12 @@ export const CustomerCard: React.FC<CustomerCardProp> = ({ prop, index }) => {
     <div className="flex items-center justify-between w-full gap-2 px-2 py-1 border-[1px] border-[var(--dark-border)] rounded-lg">
       <div className="w-full flex items-center justify-start gap-3">
         <div className="w-[50px] h-[50px] ">
-          <img
+          <Image
             className="w-full h-full rounded-full"
-            src={prop.avatar}
+            highResSrc={prop.avatar as string}
+            lowResSrc={Img}
             alt="img"
-          ></img>
+          ></Image>
         </div>
         <div className="flex flex-col items-start justify-center gap-2 pl-2 pr-3">
           <div className="flex flex-col gap-0.5">

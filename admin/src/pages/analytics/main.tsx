@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Overview from "./reports/Overview";
-import Logs from "./logs/logAnaltyics";
 import ProductAnalytics from "./insights";
 
 const Analytics: React.FC = () => {
@@ -64,7 +63,7 @@ const Analytics: React.FC = () => {
         {/* content */}
         {currentPage === "Overview" && <Overview />}
         {currentPage === "Analytics" && <ProductAnalytics />}
-        {currentPage === "Logs" && <Logs />}
+        {/* {currentPage === "Logs" && <Logs />} */}
       </div>
       {/* <MonthlyAnalytics />
       <PieChartAnalytics />

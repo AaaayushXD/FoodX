@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 import { makeRequest } from "@/makeRequest";
 import toast from "react-hot-toast";
 import { authLogout } from "@/reducer";
+import Img from "@/assets/logo/avatar.png"
+import { Image } from "@/utils/Image";
 
 interface Prop {
   user: Auth.User;
@@ -43,7 +45,12 @@ const Profile: React.FC<Prop> = ({ user }: Prop) => {
           className="flex items-center justify-start gap-3 cursor-pointer w-full hover:bg-[#8080807c] p-1.5 rounded-md"
         >
           <div>
-            <img src={user.avatar} className="w-20 h-14 rounded-full" alt="" />
+            <Image
+              highResSrc={user?.avatar as string}
+              lowResSrc={Img}
+              className="w-20 h-14 rounded-full"
+              alt=""  
+            />
           </div>
           <div className="flex flex-col items-baseline justify-center gap-1 w-full">
             <div className="flex justify-between w-full">

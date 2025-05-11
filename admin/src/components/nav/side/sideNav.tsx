@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import collegeLogo from "@/assets/logo/texas.png";
+import Img from "@/assets/logo/avatar.png"
 import {
   LayoutDashboard,
   ListOrdered,
@@ -28,6 +29,7 @@ import { NotificationPage } from "../../../features/notification/order/orderNoti
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../../context/themeContenxt";
 import Profile from "@/common/popUp/AuthProfile";
+import { Image } from "@/utils/Image";
 
 interface DesktopSliderProp {
   closeFn?: () => void;
@@ -80,10 +82,10 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
             }}
             className="items-center cursor-pointer justify-center hidden xl:flex "
           >
-            <img
+            <Image
               className=" xl:w-full max-w-[200px]"
-              src={collegeLogo}
-              alt=""
+              highResSrc={collegeLogo}
+              alt="logo"
             />
           </div>
 
@@ -95,7 +97,12 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
               }}
               className="w-[200px] cursor-pointer"
             >
-              <img className="w-full h-full " src={collegeLogo} alt="" />
+              <Image
+                className="w-full h-full "
+                highResSrc={collegeLogo}
+            
+                alt="logo"
+              />
             </div>
             <button onClick={closeFn} className="hover:text-red-600">
               <X className="size-9 text-[var(--dark-text)] " />
@@ -320,7 +327,7 @@ export const MobileSlider: React.FC = () => {
           onClick={() => navigate("/admin")}
           className="w-[150px] cursor-pointer"
         >
-          <img className="w-full h-full" src={collegeLogo} alt="" />
+          <Image className="w-full h-full" highResSrc={collegeLogo} alt="" />
         </div>
       </div>
       <div className="flex  items-center justify-around gap-3">
@@ -371,10 +378,11 @@ export const MobileSlider: React.FC = () => {
                 className=" relative  cursor-pointer  "
               >
                 {" "}
-                <img
-                  src={user.avatar}
+                <Image
+                  lowResSrc={Img}
+                  highResSrc={user?.avatar as string}
                   className="w-10 hover:ring-[var(--dark-border)] hover:ring-4 duration-150 h-10 rounded-full"
-                  alt=""
+                  alt="avatar"
                 />
                 <div
                   className={`absolute duration-150 right-[-5px] top-12 ${
