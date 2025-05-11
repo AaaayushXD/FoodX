@@ -56,11 +56,16 @@ declare namespace Ui {
   interface Product {
     id: string;
     image: string;
+    coverImg?: string;
+    description?: string;
+    rating?: string;
+    discount?: number;
+    cookingTime?: string;
     name: string;
     price: number | string;
     order?: number;
     revenue?: number;
-    rating?: number;
+    rating?: string;
     quantity: number | string;
     tag?: string;
     tagId: string;

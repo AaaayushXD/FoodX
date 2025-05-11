@@ -300,6 +300,7 @@ const AllCategories = () => {
         </div>
       </div>
       <CategoryTable
+        
         totalData={initialCategory?.length}
         selectedData={bulkSelectedCategory?.map((category) => category.id)}
         loading={loading || specialLoading || normalLoading}

@@ -1,6 +1,7 @@
 import { Table } from "@/common";
+import { Image } from "@/utils/Image";
 import React from "react";
-
+import Avatar from "@/assets/logo/avatar.png";
 interface CustomerTableProp {
   users: Auth.User[];
   selectedData?: Array<any>;
@@ -34,10 +35,11 @@ export const CustomerTable: React.FC<CustomerTableProp> = ({
       render: (value: Auth.User) => (
         <div className="w-[280px] text-[var(--dark-text)] flex items-center justify-start gap-3 ">
           <div className="w-[50px] h-[50px]">
-            <img
+            <Image
               className="w-full h-full rounded-full"
-              src={value.avatar}
-              alt=""
+              highResSrc={value.avatar as string  }
+              lowResSrc={Avatar}
+              alt="avatar"
             />
           </div>
           <div className="flex flex-col">

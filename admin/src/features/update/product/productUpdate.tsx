@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { storeImageInFirebase } from "@/firebase/storage";
 import toast from "react-hot-toast";
 import { addLogs, updateProduct, uploadImage } from "@/services";
 import { Selector } from "@/common";
 import { useAppSelector } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import { ApiError } from "@/helpers";
+import { Image } from "@/utils/Image";
 
 const UpdateCategoryOption: { label: string; value: string }[] = [
   { label: "Product Name", value: "name" },
@@ -106,9 +106,9 @@ export const UpdateFood: React.FC<updateProductProp> = ({
           newData ? (
             <div className="w-full   overflow-hidden transition-all hover:bg-[var(--light-background)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px]">
               {" "}
-              <img
-                className="w-full h-[230px] object-fill"
-                src={(import.meta.env.VITE_URI + "assets/" + newData) as string}
+              <Image
+                className="w-full h-[230px] object-cover"
+                highResSrc={(import.meta.env.VITE_API_URL_ASSETS + newData) as string}
               />
             </div>
           ) : (

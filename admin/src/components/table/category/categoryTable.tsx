@@ -1,6 +1,7 @@
 import React from "react";
-
+import Img from "@/assets/placeholder.svg"
 import {Table} from "@/common";
+import { Image } from "@/utils/Image";
 
 interface CustomerTableProp {
   totalData?: number;
@@ -29,10 +30,11 @@ export const CategoryTable: React.FC<CustomerTableProp> = ({
       render: (value: Ui.Category) => (
         <div className="w-[150px] text-[var(--dark-text)] flex items-center justify-start gap-3 ">
           <div className="w-[40px] h-[40px]">
-            <img
+            <Image
               className="w-full h-full rounded-full"
-              src={value.image}
-              alt=""
+              lowResSrc={Img}
+              highResSrc={value.image as string}
+              alt={value?.name as string}
             />
           </div>
           <span> {value.name}</span>

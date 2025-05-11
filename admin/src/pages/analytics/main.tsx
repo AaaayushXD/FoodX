@@ -36,7 +36,7 @@ const Analytics: React.FC = () => {
           Analytics
           <span></span>
         </p>
-        <p
+        {/* <p
           className={`relative cursor-pointer ${
             currentPage === "Logs"
               ? "text-[var(--primary-color)] font-semibold"
@@ -46,7 +46,7 @@ const Analytics: React.FC = () => {
         >
           Logs
           <span></span>
-        </p>
+        </p> */}
         <div
           className={` duration-150 ${
             currentPage === "Overview"

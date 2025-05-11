@@ -1,5 +1,7 @@
 import { Table } from "@/common";
+import { Image } from "@/utils/Image";
 import React from "react";
+import Img from "@/assets/placeholder.svg"
 
 
 interface FoodTableProp {
@@ -33,10 +35,11 @@ export const FoodTable: React.FC<FoodTableProp> = ({
       render: (value: Ui.Product) => (
         <div className="w-[200px] text-[var(--dark-text)] tracking-wide  flex items-center justify-start gap-3 ">
           <div className="w-[50px] h-[48px]">
-            <img
+            <Image
               className="w-full h-full rounded-full"
-              src={value.image}
-              alt=""
+              highResSrc={import.meta.env.VITE_API_URL_ASSETS + value.image as string}
+              alt={value?.name as string}
+              lowResSrc={Img}
             />
           </div>
           <span> {value.name}</span>

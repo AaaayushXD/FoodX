@@ -5,9 +5,9 @@ import { FoodTable } from "@/components";
 import { Modal, Button, DeleteButton, Delete } from "@/common";
 import { UpdateFood, UploadFood } from "@/features";
 import toast from "react-hot-toast";
-import { debounce } from "@/helpers";
+import { ApiError, debounce } from "@/helpers";
 import { useNormalProuducts, useSpecialProducts } from "@/hooks";
-import { Icons } from "@/utils";
+import { Icons, toaster } from "@/utils";
 
 export const AllProductAnalytics = () => {
   const { data: specialProducts, isLoading: specialLoading } =
@@ -42,7 +42,7 @@ export const AllProductAnalytics = () => {
   useEffect(() => {
     if (!specialLoading && !normalLoading) {
       setFetchedProducts([
-        ...(normalProducts as Ui.Product[]),
+        ...(normalProducts as unknown as Ui.Product[]),
         ...(specialProducts as Ui.Product[]),
       ]);
     }
@@ -121,7 +121,7 @@ export const AllProductAnalytics = () => {
   const handleChange = async (value: string) => {
     if (value.length <= 0)
       return setFetchedProducts([
-        ...(normalProducts as Ui.Product[]),
+        ...(normalProducts as unknown as Ui.Product[]),
         ...(specialProducts as Ui.Product[]),
       ] as Ui.Product[]);
 
@@ -197,10 +197,14 @@ export const AllProductAnalytics = () => {
   };
 
   const handleDelete = async (id: string, type: "specials" | "products") => {
-    const toastLoader = toast.loading("Deleting product...");
+    const toastLoader = toaster({
+      icon: "loading",
+      title: "Deleting product...",
+      className: "bg-blue-50",
+    });
     try {
       await deleteProduct({ id: id, type: type });
-      toast.dismiss(toastLoader);
+ 
       toast.success("Successfully deleted");
       await addLogs({
         action: "delete",
@@ -212,12 +216,19 @@ export const AllProductAnalytics = () => {
       );
       setFetchedProducts(refreshProducts);
     } catch (error) {
-      toast.dismiss(toastLoader);
-      toast.error("Error while deleting...");
+      if (error instanceof ApiError ) {
+        toaster({
+          icon: "error",
+          title: error?.message,
+          className: "bg-red-50",
+        });
+      }
+    } 
+    finally {
+      setIsDelete(false);
 
-      throw new Error("Error while deleting product" + error);
-    }
-    setIsDelete(false);
+      toast.dismiss(toastLoader);
+ }
   };
 
   const handleBulkSelected = (id: string, isChecked: boolean) => {

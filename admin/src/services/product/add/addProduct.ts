@@ -8,8 +8,8 @@ export const addProducts = async (
   try {
     const response = await makeRequest({
       method: "post",
-      url: "products/add-product",
-      data: { ...data },
+      url: `products/add/${data?.collection}`,
+      data: { ...data.product },
     });
     return response.data;
   } catch (error) {

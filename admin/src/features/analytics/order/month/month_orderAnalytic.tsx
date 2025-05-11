@@ -174,13 +174,13 @@ export const MonthlyAnalytics: React.FC = () => {
               />
             ))
           ) : (
-            <div className="w-full grid grid-cols-3 gap-3 ">
+            <div className="w-full flex  gap-3 ">
               <Skeleton
                 children={{
-                  className: "w-full h-[120px] rounded-lg",
+                  className: "w-full h-[150px] rounded-lg",
                 }}
-                className="w-full flex items-center justify-evenly gap-5"
-                count={5}
+                className="w-full flex lg:flex-row flex-col items-center justify-evenly gap-5"
+                count={4}
               />
             </div>
           )}
