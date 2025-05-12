@@ -16,6 +16,7 @@ declare namespace Ui {
     id: string;
     name: string;
     image: string;
+    bannerImage?: string;
     item: number;
     order: number;
     revenue: number;

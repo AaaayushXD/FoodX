@@ -5,6 +5,7 @@ import axios from "axios";
 export const addCategory = async (data: {
   image: Ui.Category["image"];
   name: Ui.Category["name"];
+  bannerImage?: Ui.Category["bannerImage"];
 }): Promise<Api.Response<Ui.Category[]>> => {
   try {
     const response = await makeRequest({

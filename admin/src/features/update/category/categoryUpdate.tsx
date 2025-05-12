@@ -5,6 +5,7 @@ import { UploadIcon } from "lucide-react";
 import { Selector } from "@/common";
 import { toaster } from "@/utils";
 import { ApiError } from "@/helpers";
+import { MoonLoader } from "react-spinners";
 
 interface UpdateCategoryType {
   label: string;
@@ -23,6 +24,7 @@ const UpdateCategoryOption: UpdateCategoryType[] = [
 export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
   const [newData, setNewData] = useState<string>("");
   const [field, setField] = useState<"image" | "name">("name");
+  const [isUploading, setIsUploading] = useState(false);
   const fileRef = useRef<HTMLImageElement>();
 
   const handleSubmit = async (event: FormEvent) => {
@@ -61,11 +63,9 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
     try {
+      setIsUploading(true);
       const image = event.target.files[0];
       const response = await uploadImage(image, "categories");
-      // const imageUrl = await storeImageInFirebase(image, {
-      //   folder: "categories",
-      // });
       setNewData(`${response?.data?.folderName}/${response?.data?.filename}`);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -76,8 +76,41 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
           title: "Error",
         });
       }
+    } finally {
+      setIsUploading(false);
     }
   };
+
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+
+    if (file && file.type.startsWith("image/")) {
+      setIsUploading(true);
+      try {
+        const response = await uploadImage(file, "categories");
+        setNewData(`${response?.data?.folderName}/${response?.data?.filename}`);
+      } catch (error) {
+        if (error instanceof ApiError) {
+          toaster({
+            className: "bg-red-50",
+            icon: "error",
+            message: error?.message,
+            title: "Error",
+          });
+        }
+      } finally {
+        setIsUploading(false);
+      }
+    } else {
+      toast.error("Only image files are allowed");
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="flex flex-col items-start justify-center gap-5">
       <h3 className=" h-12 sticky  text-[var(--dark-text)] overflow-hidden  text-center  w-full border-b-[1px]  border-[var(--dark-border)] text-[20px]">
@@ -95,8 +128,7 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
 
         {field === "image" ? (
           newData ? (
-            <div className="w-full   overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
-              {" "}
+            <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
               <img
                 className="w-full h-[230px] object-fill"
                 src={`${import.meta.env.VITE_URI}assets/${newData}`}
@@ -104,23 +136,43 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
             </div>
           ) : (
             <div
-              onClick={() => fileRef.current?.click()}
-              className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px]  rounded border-[var(--dark-border)] stroke-[1px] py-20"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => !isUploading && fileRef.current?.click()}
+              className={`w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20 ${
+                isUploading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
               <input
                 ref={fileRef as any}
                 onChange={(event: ChangeEvent<any>) => handleChange(event)}
                 type="file"
                 className="hidden"
+                disabled={isUploading}
+                accept="image/*"
               />
               <div className="flex flex-col items-center justify-center w-full gap-1 bottom-10">
-                <UploadIcon className="size-7 text-[var(--dark-text)] " />
-                <span className="text-sm text-[var(--dark-text)] ">
-                  Upload a file or drag and drop
-                </span>
-                <span className="text-[var(--dark-secondary-text)] text-sm ">
-                  jpg,png upto 10 mb
-                </span>
+                {isUploading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <MoonLoader size={24} color="var(--dark-text)" />
+                    <span className="text-sm text-[var(--dark-text)]">
+                      Uploading image...
+                    </span>
+                    <span className="text-xs text-[var(--dark-secondary-text)]">
+                      Please wait while we process your image
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <UploadIcon className="size-7 text-[var(--dark-text)]" />
+                    <span className="text-sm text-[var(--dark-text)]">
+                      Upload a file or drag and drop
+                    </span>
+                    <span className="text-[var(--dark-secondary-text)] text-sm">
+                      jpg,png upto 10 mb
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           )

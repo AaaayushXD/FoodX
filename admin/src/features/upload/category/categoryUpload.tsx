@@ -1,11 +1,11 @@
 import { UploadIcon } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { addCategory, addLogs, uploadImage } from "@/services";
+import { addCategory,  uploadImage } from "@/services";
 import { useMutation, useQueryClient } from "react-query";
-import { MoonLoader } from "react-spinners";
 import { toaster } from "@/utils";
 import { ApiError } from "@/helpers";
+import { Image } from "@/utils/Image";
 
 interface CategoryModal {
   closeModal: () => void;
@@ -14,16 +14,25 @@ interface CategoryModal {
 export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [bannerImageLoading, setBannerImageLoading] = useState<boolean>(false);
   const reference = useRef<HTMLDivElement>();
-  // const [Scroll, setScroll] = useState<boolean>(false);
-  const [categoryName, setCategoryName] = useState<string>("");
-  const [imageURL, setImageURL] = useState<string>("");
+  const [data, setData] = useState<{
+    name: string;
+    image: string;
+    bannerImage: string;
+  }>({
+    name: "",
+    image: "",
+    bannerImage: ""
+  })
 
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const bannerFileRef = useRef<HTMLInputElement | null>(null);
 
   const handleSave = async (event: FormEvent) => {
     event.preventDefault();
-    if (!categoryName && !imageURL)
+    if (!data.name || !data.image || !data.bannerImage)
       return toaster({
         icon: "error",
         className: "bg-red-50",
@@ -39,21 +48,23 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
     try {
       setLoading(true);
       const response = await addCategory({
-        name: categoryName,
-        image: imageURL,
+        name: data.name,
+        image: data.image,
+        bannerImage: data.bannerImage
       });
-      await addLogs({
-        action: "create",
-        date: new Date(),
-        detail: `Category : ${categoryName} `,
-      });
-
       toaster({
         icon: "success",
         className: "bg-green-50",
         message: response?.message,
         title: "Category successfully added!",
       });
+      setData({
+        name: "",
+        image: "",
+        bannerImage: "",
+      });
+      closeModal();
+
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -66,31 +77,33 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
     } finally {
       toast.dismiss(toastLoader);
       setLoading(false);
-      closeModal();
-      setCategoryName("");
-      setImageURL("");
     }
   };
 
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>, type: 'image' | 'bannerImg') => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
 
     if (file && file.type.startsWith("image/")) {
-      setLoading(true);
-      // const compressedImage = await compressImage(file, {
-      //   maxHeight: 150,
-      //   maxWidth: 150,
-      //   quality: 0.6,
-      // });
-      // const imageURL = URL.createObjectURL(compressedImage as Blob);
-      const response = await uploadImage(file, "categories");
-      setImageURL(`${response?.data?.folderName}/${response?.data?.filename}`);
-
-      // storeImageInFirebase(response.data, {
-      //   folder: "categories",
-      // }).then((url) => setImageURL(url));
-      setLoading(false);
+      type === 'image' ? setImageLoading(true) : setBannerImageLoading(true);
+      try {
+        const response = await uploadImage(file, "categories");
+        setData({
+          ...data,
+          [type]: `${response?.data?.folderName}/${response?.data?.filename}`,
+        });
+      } catch (error) {
+        if (error instanceof ApiError) {
+          toaster({
+            icon: "error",
+            className: "bg-red-50",
+            message: error?.message,
+            title: "Error",
+          });
+        }
+      } finally {
+        type === 'image' ? setImageLoading(false) : setBannerImageLoading(false);
+      }
     } else {
       toast.error("Only image files are allowed");
     }
@@ -100,28 +113,15 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
     event.preventDefault();
   };
 
-  const handleImage = async (event: ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
+  const handleImage = async (event: ChangeEvent<HTMLInputElement>, type: 'image' | 'bannerImg') => {
+    type === 'image' ? setImageLoading(true) : setBannerImageLoading(true);
     try {
       if (event.target.files) {
-        // const compressedImage = await compressImage(
-        //   event.target.files[0],
-        //   { maxHeight: 150, maxWidth: 150, quality: 0.7 }
-        // );
-
         const response = await uploadImage(event.target.files[0], "categories");
-        setImageURL(
-          `${response?.data?.folderName}/${response?.data?.filename}`
-        );
-
-        // setImageURL(URL.createObjectURL(compressedImage as Blob));
-        // storeImageInFirebase(compressedImage as File, {
-        //   folder: "categories",
-        // })
-        //   .then((res) => {
-        //     setImageURL(res);
-        //   })
-        //   .finally(() => setLoading(false));
+        setData({
+          ...data,
+          [type]: `${response?.data?.folderName}/${response?.data?.filename}`,
+        });
       }
     } catch (error) {
       if (error instanceof ApiError) {
@@ -133,7 +133,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
         });
       }
     } finally {
-      setLoading(false);
+      type === 'image' ? setImageLoading(false) : setBannerImageLoading(false);
     }
   };
 
@@ -171,54 +171,120 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
             </label>
             <input
               required
-              onChange={(e) => setCategoryName(e.target.value)}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
               type="text"
               placeholder="Pizza"
               className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded"
             />
           </div>
-          {/* second row */}
-          {imageURL ? (
-            <div className="w-full   overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
-              {" "}
-              <img
-                className="w-full h-[230px] object-fill"
-                src={`${import.meta.env.VITE_URI}assets/${imageURL} `}
-              />
+          
+          {/* Image Upload Section */}
+          <div className="w-full flex justify-between gap-4">
+            <div className=" w-full flex-col gap-2">
+              <label className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]">
+                Category Image
+              </label>
+              {data.image ? (
+                <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
+                  <Image
+                    className="w-full h-[230px] object-fill"
+                    highResSrc={`${import.meta.env.VITE_API_URL_ASSETS}${data.image}`}
+                  />
+                </div>
+              ) : (
+                <div
+                  onDrop={(e) => handleDrop(e, 'image')}
+                  onDragOver={handleDragOver}
+                  onClick={() => fileRef.current?.click()}
+                  className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
+                >
+                  <input
+                    required
+                    ref={fileRef as any}
+                    onChange={(event) => handleImage(event, 'image')}
+                    type="file"
+                    className="hidden"
+                  />
+                  {imageLoading ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(---light-background)] bg-opacity-50">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary-color)]"></div>
+                        <p className="text-[var(--dark-text)] text-sm animate-pulse">Uploading image...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full flex flex-col items-center bottom-10 justify-center gap-1">
+                      <UploadIcon className="size-7 text-[var(--dark-text)]" />
+                      <span className="text-sm text-[var(--dark-text)]">
+                        Upload a file or drag and drop
+                      </span>
+                      <span className="text-[var(--dark-secondary-text)] text-sm">
+                        jpg,png upto 10 mb
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          ) : (
-            <div
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onClick={() => fileRef.current?.click()}
-              className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
-            >
-              <input
-                required
-                ref={fileRef as any}
-                onChange={(event) => handleImage(event)}
-                type="file"
-                className="hidden"
-              />
-              <div className=" w-full flex flex-col items-center bottom-10 justify-center gap-1">
-                <UploadIcon className="size-7 text-[var(--dark-text)] " />
-                <span className="text-sm text-[var(--dark-text)] ">
-                  Upload a file or drag and drop
-                </span>
-                <span className="text-[var(--dark-secondary-text)] text-sm ">
-                  jpg,png upto 10 mb
-                </span>
-              </div>
+
+            {/* Banner Image Upload */}
+            <div className="flex w-full flex-col gap-2">
+              <label className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]">
+                Banner Image
+              </label>
+              {data.bannerImage ? (
+                <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
+                  <Image
+                    className="w-full h-[230px] object-fill"
+                    highResSrc={`${import.meta.env.VITE_API_URL_ASSETS}${data.bannerImage}`}
+                  />
+                </div>
+              ) : (
+                <div
+                  onDrop={(e) => handleDrop(e, 'bannerImg')}
+                  onDragOver={handleDragOver}
+                  onClick={() => bannerFileRef.current?.click()}
+                  className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
+                >
+                  <input
+                    required
+                    ref={bannerFileRef as any}
+                    onChange={(event) => handleImage(event, 'bannerImg')}
+                    type="file"
+                    className="hidden"
+                  />
+                  {bannerImageLoading ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[var(---light-background)] bg-opacity-50">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary-color)]"></div>
+                        <p className="text-[var(--dark-text)] text-sm animate-pulse">Uploading banner...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full flex flex-col items-center bottom-10 justify-center gap-1">
+                      <UploadIcon className="size-7 text-[var(--dark-text)]" />
+                      <span className="text-sm text-[var(--dark-text)]">
+                        Upload banner or drag and drop
+                      </span>
+                      <span className="text-[var(--dark-secondary-text)] text-sm">
+                        jpg,png upto 10 mb
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
-          {/* Third Row */}
+          </div>
+
+          {/* Submit Button */}
           <button
-            disabled={loading}
+            disabled={loading || imageLoading || bannerImageLoading}
             type="submit"
-            className="w-full text-white transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] "
+            className={`w-full text-white transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] ${
+              (loading || imageLoading || bannerImageLoading) ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             Save
-            {loading && <MoonLoader size={18} color="white" />}
           </button>
         </form>
       </div>
