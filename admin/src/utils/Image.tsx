@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
+import Img from "@/assets/placeholder.svg"
 
 export const Image = ({
-  lowResSrc,
+  lowResSrc = Img,
   highResSrc,
   alt,
   className,

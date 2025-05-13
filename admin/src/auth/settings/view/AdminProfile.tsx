@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 import avatar from "@/assets/logo/avatar.png";
 import { AppDispatch, RootState } from "@/store";
-import { storeImageInFirebase } from "@/firebase/storage";
 import {Modal} from "@/common";
 import { updateUserAction } from "@/actions/userAction";
 import Skeleton from "react-loading-skeleton";
@@ -12,6 +11,9 @@ import ReAuth from "../../reAuth/reAuth";
 import { AccountDisable } from "../disable/accountDisable";
 import { AccountDelete } from "../delete/accountDelete";
 import toast from "react-hot-toast";
+import { Image } from "@/utils/Image";
+import Img from "@/assets/logo/avatar.png"
+import { uploadImage } from "@/services";
 
 export const AdminProfile = () => {
   const authUser = useSelector(
@@ -112,10 +114,11 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
       <div className="flex gap-5">
         <div className=" relative group/editable max-w-[80px] max-h-[80px] overflow-hidden rounded-full">
           {edit ? (
-            <img src={updateAvatar} alt="" />
+            <Image highResSrc={updateAvatar} alt="" className={`w-[80px] h-[80px]`} />
           ) : (
-            <img
-              src={props?.avatar}
+                <Image
+                  lowResSrc={Img}
+              highResSrc={props?.avatar}
               alt="user profile"
               className={`w-[80px] h-[80px]`}
             />
@@ -133,10 +136,8 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
                 if (event.target.files) {
                   const file = event.target.files[0];
                   setLoading(true);
-                  const imageUrl = await storeImageInFirebase(file, {
-                    folder: "users",
-                  });
-                  setUpdateAvatar(imageUrl as string);
+                  const imageUrl = await uploadImage(file, "users");
+                  setUpdateAvatar(`${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`);
                   setLoading(false);
                 }
               }}

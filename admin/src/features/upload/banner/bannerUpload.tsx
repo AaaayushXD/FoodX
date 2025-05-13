@@ -1,8 +1,7 @@
-import { UploadIcon } from "lucide-react";
+import { UploadIcon, X } from "lucide-react";
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { storeImageInFirebase } from "@/firebase/storage";
 import toast from "react-hot-toast";
-import { addLogs, addBanner } from "@/services";
+import { addBanner, uploadImage } from "@/services";
 import { Selector } from "@/common";
 import { useMutation, useQueryClient } from "react-query";
 import { MoonLoader } from "react-spinners";
@@ -11,12 +10,15 @@ import { toaster } from "@/utils";
 interface UploadBannerProp {
   closeModal: () => void;
 }
+
 const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
   const reference = useRef<HTMLDivElement>();
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const [link, setLink] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const [banner, setBanner] = useState<"banners" | "sponsors">("banners");
 
@@ -26,7 +28,11 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!image && !name) return toast.error("All files are required");
+    if (!image && !name)
+      return toaster({
+        icon: "error",
+        message: "All files are required",
+      });
     const toastLoader = toaster({
       icon: "loading",
       message: "Please wait...",
@@ -40,11 +46,8 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
           path: "banners",
           link: link as string,
         });
-        await addLogs({
-          action: "create",
-          date: new Date(),
-          detail: `Banner : ${name} `,
-        });
+
+        closeModal();
         setImage("");
         setName("");
       }
@@ -55,21 +58,12 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
           path: "sponsors",
           link: link as string,
         });
-        await addLogs({
-          action: "create",
-          date: new Date(),
-          detail: `sponsor : ${name} `,
-        });
       }
       queryClient.invalidateQueries({ queryKey: "banners" });
     } catch (error) {
       throw new Error("Error while uploading banners");
     } finally {
       setLoading(false);
-      setImage("");
-      setName("");
-      setLink("");
-      closeModal();
       toast.dismiss(toastLoader);
     }
   };
@@ -80,23 +74,50 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setIsDragging(false);
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith("image/")) {
-      setLoading(true);
-      const imageURL = URL.createObjectURL(file);
-      setImage(imageURL);
-
-      storeImageInFirebase(file, {
-        folder: (banner as "banners") || "sponsors",
-      }).then((url) => setImage(url));
+      handleImageUpload(file);
     } else {
       toast.error("Only image files are allowed");
     }
-    setLoading(false);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    setLoading(true);
+    setUploadProgress(0);
+    const imageURL = URL.createObjectURL(file);
+    setImage(imageURL);
+
+    try {
+      const imageUrl = await uploadImage(file, "banners", (progress) => {
+        setUploadProgress(progress);
+      });
+      setImage(`${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`);
+    } catch (error) {
+      toast.error("Failed to upload image");
+      setImage("");
+    } finally {
+      setLoading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const removeImage = () => {
+    setImage("");
+    if (fileRef.current) {
+      fileRef.current.value = "";
+    }
   };
 
   return (
@@ -105,14 +126,14 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
         ref={reference as any}
         className="w-full relative text-[var(--dark-text)] overflow-auto h-full flex-col gap-5 items-center justify-center flex"
       >
-        <h3 className=" h-12 sticky  text-[var(--dark-text)] overflow-hidden border-[var(--dark-border)]  text-center  w-full border-b-[1px]  text-[20px]">
+        <h3 className="h-12 sticky text-[var(--dark-text)] overflow-hidden border-[var(--dark-border)] text-center w-full border-b-[1px] text-[20px]">
           Add an banner
         </h3>
 
         <form
           onSubmit={(event) => mutate(event)}
           action=""
-          className="sm:w-[600px]   w-full px-5 min-w-full py-7 gap-5 flex flex-col items-start justify-center"
+          className="sm:w-[600px] w-full px-5 min-w-full py-7 gap-5 flex flex-col items-start justify-center"
         >
           {/* First Row */}
           <Selector
@@ -122,7 +143,7 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
             ]}
             setField={(value) => setBanner(value as "banners" | "sponsors")}
           />
-          <div className=" w-full flex flex-col items-baseline justify-center gap-0.5">
+          <div className="w-full flex flex-col items-baseline justify-center gap-0.5">
             <label
               className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
               htmlFor=""
@@ -140,7 +161,7 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
               className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded"
             />
           </div>
-          <div className=" w-full flex flex-col items-baseline justify-center gap-0.5">
+          <div className="w-full flex flex-col items-baseline justify-center gap-0.5">
             <label
               className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
               htmlFor=""
@@ -158,58 +179,88 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
               className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded"
             />
           </div>
-          {/* Third Row */}
+          {/* Image Upload Container */}
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            onClick={() => (image ? "" : fileRef.current?.click())}
-            className="w-full h-[400px] transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)]  stroke-[1px] py-20"
+            onDragLeave={handleDragLeave}
+            onClick={() =>
+              !image && !loading ? fileRef.current?.click() : null
+            }
+            className={`w-full h-[200px] transition-all relative border-dotted border-[2.5px] rounded ${
+              isDragging
+                ? "border-[var(--primary-color)] bg-[var(--primary-light)]"
+                : "border-[var(--dark-border)]"
+            } ${
+              !image && !loading
+                ? "hover:bg-[var(--light-foreground)] cursor-pointer"
+                : ""
+            }`}
           >
             <input
               required
               onChange={async (event: ChangeEvent<HTMLInputElement>) => {
                 const image = event.target.files && event.target.files[0];
-                setLoading(true);
-                // const compressedImg = await compressImage(image as File, {
-                //   maxHeight: 600,
-                //   maxWidth: 1440,
-                //   quality: 0.85,
-                // });
-
-                setImage(URL.createObjectURL(image as File));
-                storeImageInFirebase(image as File, {
-                  folder: "banners",
-                })
-                  .then((response) => {
-                    setImage(response);
-                  })
-                  .finally(() => setLoading(false));
+                if (image) {
+                  handleImageUpload(image);
+                }
               }}
               ref={fileRef as any}
               type="file"
+              accept="image/*"
               className="hidden"
             />
             {image ? (
-              <div className="w-full h-full absolute top-0">
-                {" "}
-                <img className="w-full h-full  " src={image as string} />
+              <div className="w-full h-full relative">
+                <img
+                  className="w-full h-full object-contain"
+                  src={image}
+                  alt="Uploaded banner"
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeImage();
+                  }}
+                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
               </div>
             ) : (
-              <div className="absolute  w-full flex flex-col items-center bottom-24 justify-center gap-1">
-                <UploadIcon className="size-7 text-[var(--dark-text)] " />
-                <span className="text-sm text-[var(--dark-text)] ">
-                  Upload a file or drag and drop
-                </span>
-                <span className="text-[var(--dark-secondary-text)] text-sm ">
-                  jpg,png upto 10 mb
-                </span>
+              <div className="absolute w-full h-full flex flex-col items-center justify-center gap-1">
+                {loading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <MoonLoader size={24} color="var(--primary-color)" />
+                    <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[var(--primary-color)] transition-all duration-300"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                    <span className="text-sm text-[var(--dark-text)]">
+                      Uploading... {uploadProgress}%
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <UploadIcon className="size-7 text-[var(--dark-text)]" />
+                    <span className="text-sm text-[var(--dark-text)]">
+                      Upload a file or drag and drop
+                    </span>
+                    <span className="text-[var(--dark-secondary-text)] text-sm">
+                      jpg, png upto 10 mb
+                    </span>
+                  </>
+                )}
               </div>
             )}
           </div>
           <button
             disabled={loading}
             type="submit"
-            className="w-full tracking-wide text-[16px] flex justify-center items-center gap-3 text-white dark:text-[var(--dark-text)] transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] "
+            className="w-full tracking-wide text-[16px] flex justify-center items-center gap-3 text-white dark:text-[var(--dark-text)] transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Save
             {loading && <MoonLoader size={18} color="white" />}

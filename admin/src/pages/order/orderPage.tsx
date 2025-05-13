@@ -78,12 +78,12 @@ const OrderList = () => {
           ) as string,
           products: order.products as Ui.Product[],
           rank: 1,
-          status: order.status,
+          status: order?.status,
         },
         ...prev.map((o) => ({ ...o, rank: o.rank! + 1 })),
       ]);
       const audio = new Audio(Bell);
-      audio.play();
+      audio?.play();
       customToast({
         orderId: order.orderId,
         products: order.products,

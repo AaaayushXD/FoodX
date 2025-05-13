@@ -13,6 +13,7 @@ export const SearchCustomer = (customers: Auth.User[], value: string) => {
 };
 export const getUserByUid = async (uid: string): Promise<Auth.User | null> => {
   try {
+    // Try to get customer data first
     const customerData = (await getUser("customer", uid)) as {
       data: { data: Auth.User };
       statusText: string;
@@ -21,16 +22,13 @@ export const getUserByUid = async (uid: string): Promise<Auth.User | null> => {
       return customerData.data.data;
     }
 
-    // If chef name is not found, try to get the admin's full name
+    // If customer not found, try to get chef data
     const chefData = await getUser("chef", uid);
     if (chefData?.data?.data && chefData?.data?.data?.fullName) {
-      return chefData!.data.data;
+      return chefData.data.data;
     }
-    // If customer name is not found, try to get the admin's full name
-    const adminData = await getUser("admin", uid);
-    if (adminData?.data?.data && adminData?.data.data?.fullName) {
-      return adminData!.data.data;
-    }
+
+    // If neither customer nor chef found, return null
     return null;
   } catch (error) {
     return null;

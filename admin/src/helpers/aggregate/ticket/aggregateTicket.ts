@@ -14,7 +14,7 @@ export const aggregateTickets = async(tickets: Ui.TicketType[],queryClient: Quer
       );
     }
   });
-  console.log(userPromises)
+ 
   const aggregatePromiseResolveUser = await Promise.all(userPromises);
   
 

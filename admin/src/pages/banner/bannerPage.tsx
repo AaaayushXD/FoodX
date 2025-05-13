@@ -4,6 +4,7 @@ import { debounce, SearchBanner } from "@/helpers";
 import { ApiError } from "@/helpers/error/apiError";
 import { bulkDeleteBanner, deleteBanner, getBanners } from "@/services";
 import { Icons } from "@/utils/icons/useIcons";
+import { Image } from "@/utils/Image";
 import { toaster } from "@/utils/toast";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
@@ -62,8 +63,12 @@ const FoodPage: React.FC = () => {
       },
       render: (item: Ui.BannerModel) => (
         <div className="w-[200px] flex items-center justify-start">
-          {" "}
-          <img className="w-[180px] h-[50px] " src={item.image} alt="" />
+         
+          <Image
+            highResSrc={item?.image}
+            className="w-[180px] h-[50px] "
+            alt=""
+          />
         </div>
       ),
     },

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+  import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { UpdateStatus } from "@/features";
 import { addNotification, updateOrderStatus } from "@/services";
-import { Icons } from "@/utils";
+import { Icons, toaster } from "@/utils";
 import { Table } from "@/common";
+import { getUserByUid } from "@/helpers";
 
 interface orderTableProp {
   totalData: number;
@@ -43,8 +44,12 @@ export const OrderTable: React.FC<orderTableProp> = ({
 
   const statusChangeFn = async (newStatus: Common.OrderStatus) => {
     if (!newStatus && !id) return toast.error("Order doesn't exist");
-    const toastLoader = toast.loading("Updating status...");
+    const toastLoader = toaster({
+      title: "Updating status...",
+      icon: "loading",
+    });
     const order = initialOrder?.find((od) => od.id === id);
+    const user = await getUserByUid(order?.uid as string);
     try {
       await updateOrderStatus({
         id: id as string,
@@ -54,7 +59,8 @@ export const OrderTable: React.FC<orderTableProp> = ({
             orderAcc + Number(order?.price) * Number(order.quantity),
           0
         ) as number,
-        userId: order?.uid as string,
+        uid: order?.uid as string,
+        role: user?.role as Auth.UserRole,
       });
 
       if (
@@ -64,7 +70,8 @@ export const OrderTable: React.FC<orderTableProp> = ({
         await addNotification({
           message: message[newStatus],
           title: "Order " + newStatus,
-          userId: order?.uid as string,
+          uid: order?.uid as string,
+        
         });
       }
       const refreshProducts = orders?.map((order) => {
@@ -76,10 +83,16 @@ export const OrderTable: React.FC<orderTableProp> = ({
       }) as Ui.OrderModal[];
       setInitialOrder(refreshProducts);
       toast.dismiss(toastLoader);
-      toast.success("Succussfully updated");
+      toaster({
+        title: "Succussfully updated",
+        icon: "success",
+      });
     } catch (error) {
       toast.dismiss(toastLoader);
-      toast.error("Error while updating status");
+      toaster({
+        title: "Error while updating status",
+        icon: "error",
+      });
       throw new Error("Error while updating status" + error);
     }
     setIsChangeStatus(false);

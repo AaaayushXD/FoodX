@@ -4,7 +4,8 @@ import axios from "axios";
 
 export const uploadImage = async (
   image: File,
-  assetsType: Common.AssetsType
+  assetsType: Common.AssetsType,
+  onProgress?: (progress: number) => void
 ): Promise<
   Api.Response<{ filename: string; folderName: Common.AssetsType }>
 > => {
@@ -15,7 +16,16 @@ export const uploadImage = async (
     const response = await makeRequest({
       method: "post",
       url: `/images/upload`,
+      
       data: data,
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.total) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          onProgress?.(percentCompleted);
+        }
+      },
     });
     return response.data;
   } catch (error) {
