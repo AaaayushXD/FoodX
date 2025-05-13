@@ -28,7 +28,7 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
         currentLastDoc: pageParam?.currentLastDoc || null,
         pageSize: 5,
         direction: "next",
-        sort: "asc",
+        sort: "desc",
       });
 
       setTotalData(response?.data.length);

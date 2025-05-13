@@ -38,7 +38,7 @@ export const checkPassword = (
   }
 
   const passkey =
-    registerValue.password?.trim() && registerValue.confirmPassword.trim();
+    registerValue.password?.trim() && registerValue?.confirmPassword && registerValue.confirmPassword.trim();
 
   if (registerValue.password !== registerValue.confirmPassword) {
     error.password = "Password does not match";
@@ -52,31 +52,31 @@ export const checkPassword = (
   const digit = new RegExp("(?=.*\\d)");
   const special = new RegExp("(?=.*[!@#$%^&*])");
 
-  if (!lowerCase.test(passkey)) {
+  if (!lowerCase.test(passkey as string)) {
     error.password = "Must contain a lowercase character.";
     error.confirmPassword = "Must contain a lowercase character.";
     return;
   }
 
-  if (!upperCase.test(passkey)) {
+  if (!upperCase.test(passkey as string)) {
     error.password = "Must contain an uppercase character.";
     error.confirmPassword = "Must contain an uppercase character.";
   }
 
-  if (!digit.test(passkey)) {
+  if (!digit.test(passkey as string)) {
     error.password = "Must contain a digit.";
     error.confirmPassword = "Must contain a digit.";
     return;
   }
-  if (!special.test(passkey)) {
+  if (!special.test(passkey as string)) {
     error.password = "Must contain a special character [! @ # $ % ^ & *].";
     error.confirmPassword =
       "Must contain a special character [! @ # $ % ^ & *].";
     return;
   }
   if (
-    registerValue.password.length < 8 &&
-    registerValue.confirmPassword.length < 8
+   registerValue?.password &&  registerValue?.password.length < 8 &&
+    registerValue?.confirmPassword &&  registerValue.confirmPassword.length < 8
   ) {
     error.password = "Password atleast contains 8 characters";
     error.confirmPassword = "Password atleast contains 8 characters";

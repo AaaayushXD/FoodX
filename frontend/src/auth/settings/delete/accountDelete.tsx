@@ -36,7 +36,7 @@ export const AccountDelete = () => {
       toast.error("Failed to delete account. Try again later.");
     }
     setLoading(false);
-  };
+  };  
 
   return (
     <div className="w-full flex flex-col items-center  pb-20  px-2 pt-5 sm:p-6 bg-white justify-center">
