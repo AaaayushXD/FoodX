@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { aggregateTickets } from "@/helpers";
+import { aggregateTickets, ApiError } from "@/helpers";
 import { Modal, Button, Table } from "@/common";
 import { addNotification, getTickets, updateTicket } from "@/services";
 import toast from "react-hot-toast";
 import { useQueryClient } from "react-query";
-import { Icons } from "@/utils";
+import { Icons, toaster } from "@/utils";
 import { TicketView } from "@/components";
 
 export const TicketAdminPage = () => {
@@ -84,7 +84,7 @@ export const TicketAdminPage = () => {
                 ? "bg-[var(--pending)] "
                 : item.status === "progress"
                 ? "bg-[var(--preparing)] "
-                : item.status === "rejected"
+                : item.status === "cancelled"
                 ? "bg-[var(--cancelled)]"
                 : item.status === "resolved"
                 ? "bg-[var(--completed)] "
@@ -125,34 +125,53 @@ export const TicketAdminPage = () => {
         message: "Your issue has been resolved. Thanks for your patience!",
         title: "Ticket Resolved",
       },
-      rejected: {
+      cancelled: {
         message:
           "Unfortunately, your ticket was rejected. Please contact support for details.",
         title: "Ticket Rejected",
       },
     };
-    const loading = toast.loading("Updating...");
+    const toastLoader = toaster({
+      icon:"loading",
+      message: "Updating...",
+ 
+    });
     try {
-      await updateTicket({ id: id as string, newStatus: newStatus });
+      const response = await updateTicket({ id: id as string, newStatus: newStatus });
+      toaster({
+        icon: "success",
+        message: response.message,
+        className: "bg-green-50",
+      })
       const { message, title } = messages[newStatus];
       const findTicket = tickets?.find((ticket) => ticket.id === id);
+
       await addNotification({
         message: message,
         title: title,
         uid: findTicket?.uid as string,
       });
-    } catch (error) {
-      toast.error("Something went wrong, please try after 2 mins");
-    }
-    const updateTickets = tickets?.map((ticket) => {
-      if (ticket.id === id) {
-        return { ...ticket, status: newStatus };
-      } else {
-        return ticket; // Always return the ticket, modified or not
+      const updateTickets = tickets?.map((ticket) => {
+        if (ticket.id === id) {
+          return { ...ticket, status: newStatus };
+        } else {
+          return ticket; // Always return the ticket, modified or not
+        }
+      });
+      setTickets(updateTickets as Ui.TicketType[]);
+    } catch (error) { 
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error.message,
+          className: "bg-red-50",
+        })
       }
-    });
-    setTickets(updateTickets as Ui.TicketType[]);
-    toast.dismiss(loading);
+    }
+   finally {
+    toast.dismiss(toastLoader);
+   }
+   
   };
 
   const fetchTickets = async ({
@@ -188,7 +207,7 @@ export const TicketAdminPage = () => {
       setTickets(allTicket);
     } catch (error) {
       setTickets([]);
-      console.log(`Error while fetching tickets => admin-ticket` + error);
+      
     }
     setLoading(false);
   };
@@ -314,8 +333,8 @@ export const TicketAdminPage = () => {
               id: "sarojgtkxwkhabar",
             },
             {
-              label: "Rejected",
-              value: "rejected",
+              label: "Cancelled",
+              value: "cancelled",
               id: "kirangt3owijf",
             },
           ]}
@@ -418,7 +437,7 @@ export const TicketStautusChanger: React.FC<StatusChangerProp> = ({
                 ? "bg-[var(--pending)] "
                 : status === "progress"
                 ? "bg-[var(--preparing)] "
-                : status === "rejected"
+                : status === "cancelled"
                 ? "bg-[var(--cancelled)]"
                 : status === "resolved"
                 ? "bg-[var(--completed)] "

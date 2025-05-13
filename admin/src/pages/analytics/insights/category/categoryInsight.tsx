@@ -2,7 +2,12 @@ import { DeleteButton, Button, Modal, Delete } from "@/common";
 import { CategoryTable } from "@/components";
 import { UploadCategory } from "@/features";
 import { UpdateCategory } from "@/features";
-import { aggregateCategories, debounce, SearchCategory } from "@/helpers";
+import {
+  aggregateCategories,
+  ApiError,
+  debounce,
+  SearchCategory,
+} from "@/helpers";
 import {
   useAllCategory,
   useAppDipsatch,
@@ -46,7 +51,7 @@ const AllCategories = () => {
       const allCategory = await aggregateCategories(
         queryClient,
         data as Ui.Category[],
-        normalProducts as Ui.Product[],
+        normalProducts as unknown as Ui.Product[],
         specialProducts as Ui.Product[]
       );
       allCategory?.forEach((data) => dispatch(categoryAdd(data.name)));
@@ -96,7 +101,7 @@ const AllCategories = () => {
       const AllCategoriesId = bulkSelectedCategory?.map(
         (category) => category.id
       );
-      await bulkDeleteOfCategory(AllCategoriesId as string[]);
+      const response = await bulkDeleteOfCategory(AllCategoriesId as string[]);
       await addLogs({
         action: "delete",
         date: new Date(),
@@ -107,9 +112,18 @@ const AllCategories = () => {
         return !AllCategoriesId.includes(category.id as string);
       });
       setInitialCategory(refreshCategory);
-      toast.success("Successfully deleted");
+      toaster({
+        message: response.message,
+        icon: "success",
+      });
     } catch (error) {
-      throw new Error("Error deleting products:" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          message: error.message,
+          icon: "error",
+          className: "bg-red-50",
+        });
+      }
     }
   };
 
@@ -129,7 +143,7 @@ const AllCategories = () => {
     if (!id) return toast.error("Category not exist");
     const toastLoader = toast.loading("Deleting category...");
     try {
-      toast.dismiss(toastLoader);
+     
       await deleteCategory("bnw");
       toast.success("Successfully deleted");
       await addLogs({
@@ -300,7 +314,6 @@ const AllCategories = () => {
         </div>
       </div>
       <CategoryTable
-        
         totalData={initialCategory?.length}
         selectedData={bulkSelectedCategory?.map((category) => category.id)}
         loading={loading || specialLoading || normalLoading}

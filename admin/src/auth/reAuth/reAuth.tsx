@@ -1,30 +1,24 @@
-import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
-import ClipLoader from "react-spinners/HashLoader";
+import { ChangeEvent, FormEvent } from "react";
 
 import toast from "react-hot-toast";
-import { reAuthUser } from "../../firebase/utils";
+// import { reAuthUser } from "@/firebase/utils";
+import { useHooks } from "@/hooks/useHooks";
+import { Icons } from "@/utils";
 
 interface ReAuthProp {
   isVerified: () => void;
 }
 
-const ReAuth: React.FC<ReAuthProp> = ({ isVerified }) => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [show, setShow] = useState<boolean>(false);
-  const [passwordType, setPasswordType] = useState<"password" | "text">(
-    "password"
-  );
-
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const showPassword = () => {
-    setShow((show) => !show);
-    setPasswordType(passwordType === "text" ? "password" : "text");
-  };
+export const ReAuth: React.FC<ReAuthProp> = ({ isVerified }) => {
+  const {
+    email,
+    password,
+    setPassword,
+    setShow,
+    setEmail,
+    show,
+    setLoading,
+  } = useHooks<any, "reAuth">("reAuth");
 
   const HandleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,7 +26,7 @@ const ReAuth: React.FC<ReAuthProp> = ({ isVerified }) => {
       return toast.error("Email or Password are required.");
     setLoading(true);
     try {
-      await reAuthUser(email, password);
+      // await reAuthUser(email, password);
       isVerified();
     } catch (error) {
       toast.error("Invalid Email or Password");
@@ -41,92 +35,109 @@ const ReAuth: React.FC<ReAuthProp> = ({ isVerified }) => {
     setLoading(false);
   };
   return (
-    <div className={`w-full  flex justify-center items-center z-30`}>
-      <div className="flex items-center justify-center max-w-[800px] min-w-[400px] w-[600px] px-3 py-8">
-        <div className="w-full h-full bg-[var(--light-foreground)] flex flex-col gap-8 rounded-lg shadow-sm relative">
-          <div className="w-full flex flex-col items-center gap-3 px-3   text-[30px] font-bold text-[var(--primary-color)] tracking-wide text-center">
-            <h1 className="md:hidden">ReAuthenticate</h1>
-            <h1 className="hidden md:block">ReAuthenticate</h1>
-          </div>
-          <div className="px-3 py-4">
-            <form className="flex flex-col gap-3 p-2" onSubmit={HandleSubmit}>
-              <div className="relative flex flex-col gap-2">
-                <label
-                  htmlFor="logEmail"
-                  className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="off"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="border-[var(--dark-border)]  border-[1px] bg-[var(--light-foreground)] rounded-md h-[40px] outline-none px-5 py-4 text-[var(--dark-text)] text-md"
-                />
-              </div>
-              <div className="relative flex flex-col gap-2">
-                <label
-                  htmlFor="logPassword"
-                  className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
-                >
-                  Password
-                </label>
-                <input
-                  type={passwordType}
-                  name="password"
-                  autoComplete="off"
-                  maxLength={25}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="border-[var(--dark-border)]  border-[1px] bg-[var(--light-foreground)] rounded-md h-[40px] outline-none px-5 py-4 text-[var(--dark-text)] text-md"
-                />
+ 
+      <div className="bg-[var(--light-foreground)] flex flex-col items-center rounded-xl p-8 w-full">
+        <h1 className="text-2xl w-full  font-bold text-[var(--dark-secondary-text)] max-w-md  text-center mb-6">
+          Security Check
+        </h1>
 
-                {show ? (
-                  <div
-                    className="text-[var(--dark-secondary-text)] absolute top-[37px] right-[10px] cursor-pointer"
-                    onClick={showPassword}
-                  >
-                    <Eye size={23} />
-                  </div>
-                ) : (
-                  <div
-                    className="text-[var(--dark-secondary-text)] absolute top-[37px] right-[10px] cursor-pointer"
-                    onClick={showPassword}
-                  >
-                    <EyeOff size={23} />
-                  </div>
-                )}
-              </div>
-
-              <p
-                onClick={() => navigate("/forgot-password")}
-                className="text-[var(--dark-secondary-text)] text-sm cursor-pointer hover:underline select-none"
-              >
-                Forgot Password?
-              </p>
+        <form
+          onSubmit={(e) => HandleSubmit(e)}
+          autoComplete="off"
+          className="flex w-full flex-col gap-6"
+        >
+          {/* New Password Field */}
+          <div className="relative w-full">
+            <label
+              className="text-sm font-medium text-gray-700"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <div className="relative">
+              <input
+                autoComplete={"off"}
+                aria-autocomplete={"none"}
+                type={show ? "text" : "password"}
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                className="w-full border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm transition duration-300 pr-10"
+                placeholder="Enter Email"
+              />
+              {/* Toggle Password Visibility */}
               <button
-                className="h-[40px] rounded-md bg-[var(--primary-color)] hover:bg-[var(--primary-light)] text-white text-xl font-bold tracking-wide transition-colors duration-500 ease-in-out mt-5 "
-                type="submit"
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center"
+                onClick={() => setShow(!show)}
               >
-                {!loading ? (
-                  "Submit"
+                {show ? (
+                  <Icons.eyeClose size={20} />
                 ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    Sending <ClipLoader color="white" size={"20px"} />
-                  </div>
+                  <Icons.eyeOpen size={20} />
                 )}
               </button>
-            </form>
+            </div>
+            {/* Password Strength Indicator */}
           </div>
-        </div>
+
+          {/* Confirm Password Field */}
+          <div className="relative w-full">
+            <label
+              className="text-sm font-medium text-gray-700"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={show ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm transition duration-300 pr-10"
+                placeholder="Enter Password"
+              />
+              {/* Toggle Password Visibility */}
+              <button
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center"
+                onClick={() => setShow(!show)}
+              >
+                {show ? (
+                  <Icons.eyeClose size={20} />
+                ) : (
+                  <Icons.eyeOpen size={20} />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`h-12 w-full rounded-lg font-bold text-lg shadow-md transition-all duration-300 
+           
+                 bg-blue-600 hover:bg-blue-700 text-white
+             
+            
+              `}
+          >
+            Submit
+          </button>
+        </form>
       </div>
-    </div>
+  
   );
 };
 
-export default ReAuth;
-
+// export const ReAuthContainer = () => {
+//   return (
+//     <div className="w-[100vw] h-[80vh] bg-[#00000041] flex justify-center items-center px-5 z-30">
+//       <ReAuth />
+//     </div>
+//   );
+// };

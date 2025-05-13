@@ -1,10 +1,9 @@
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { storeImageInFirebase } from "@/firebase/storage";
-import toast from "react-hot-toast";
 import { Selector } from "@/common";
-import { updateRole, updateUser, addLogs, uploadImage } from "@/services";
+import { updateRole, updateUser,  uploadImage } from "@/services";
 import { Icons, toaster } from "@/utils";
 import { ApiError } from "@/helpers";
+import toast from "react-hot-toast";
 
 interface UpdateCategoryType {
   label: string;
@@ -47,46 +46,47 @@ export const UpdateCustomer: React.FC<UpdateCustomerProp> = ({
   closeModal,
 }) => {
   const [newData, setNewData] = useState<string>("");
-  const [field, setField] = useState<"avatar" | "fullName" | "role">(
-    "fullName"
-  );
+  const [field, setField] = useState<"avatar" | "fullName" | "role">("fullName");
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
   const fileRef = useRef<HTMLImageElement>();
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!customerInfo.id && !newData && !field)
-      return toast.error(`All field required`);
-    const toastLoader = toast.loading("Updating user role...");
+    if (!customerInfo.id && !newData && !field) {
+      toaster({
+        icon: "error",
+        message: "All field required",
+        title: "Error",
+      })
+      return;
+    }
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Updating user role...",
+    });
     try {
       if (field == "role") {
         const response = await updateRole({
-          id: customerInfo.id as string,
+          uid: customerInfo.id as string,
           role: customerInfo.role as string,
           newRole: newData,
         });
-        await addLogs({
-          action: "update",
-          date: new Date(),
-          detail: `${customerInfo.fullName} was update from ${customerInfo.role} to ${newData} by me. `,
-        });
+        setNewData("");
         toaster({
           className: "bg-green-50",
           icon: "success",
           message: response?.message,
           title: "User role updated!",
         });
+        return;
       }
-      await updateUser({
-        id: customerInfo.id as string,
+     const response =   await updateUser({
+        uid: customerInfo.id as string,
         role: customerInfo.role as "admin" | "customer" | "chef",
         field: field,
         newData: newData,
       });
-      const response = await addLogs({
-        action: "update",
-        date: new Date(),
-        detail: `${customerInfo.fullName} was updated of ${field} : ${newData} by me. `,
-      });
+      setNewData("");
       toaster({
         className: "bg-green-50",
         icon: "success",
@@ -106,12 +106,13 @@ export const UpdateCustomer: React.FC<UpdateCustomerProp> = ({
       toast.dismiss(toastLoader);
       setField("fullName");
       closeModal();
-      setNewData("");
+  
     }
   };
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
+    setIsImageLoading(true);
     const loading = toaster({
       icon: "loading",
       message: "Please wait...",
@@ -131,6 +132,7 @@ export const UpdateCustomer: React.FC<UpdateCustomerProp> = ({
       }
     } finally {
       toast.dismiss(loading);
+      setIsImageLoading(false);
     }
   };
   return (
@@ -152,32 +154,43 @@ export const UpdateCustomer: React.FC<UpdateCustomerProp> = ({
 
         {field === "avatar" ? (
           newData ? (
-            <div className="w-full    overflow-hidden transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--light-foreground)] stroke-[1px]">
-              {" "}
+            <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--light-foreground)] stroke-[1px]">
               <img
                 className="w-full h-[230px] object-fill"
-                src={`${import.meta.env.VITE_URI}assets/${newData}`}
+                src={`${import.meta.env.VITE_API_URL_ASSETS}/${newData}`}
               />
             </div>
           ) : (
             <div
-              onClick={() => fileRef.current?.click()}
-              className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
+              onClick={() => !isImageLoading && fileRef.current?.click()}
+              className={`w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20 ${
+                isImageLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
               <input
                 ref={fileRef as any}
                 onChange={(event: ChangeEvent<any>) => handleChange(event)}
                 type="file"
                 className="hidden"
+                disabled={isImageLoading}
               />
               <div className="flex flex-col items-center justify-center w-full gap-1 bottom-10">
-                <Icons.upload className="size-7 text-[var(--dark-text)] " />
-                <span className="text-sm text-[var(--dark-text)] ">
-                  Upload a file or drag and drop
-                </span>
-                <span className="text-[var(--dark-secondary-text)] text-sm ">
-                  jpg,png upto 10 mb
-                </span>
+                {isImageLoading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary-color)]"></div>
+                    <span className="text-sm text-[var(--dark-text)]">Uploading...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Icons.upload className="size-7 text-[var(--dark-text)] " />
+                    <span className="text-sm text-[var(--dark-text)] ">
+                      Upload a file or drag and drop
+                    </span>
+                    <span className="text-[var(--dark-secondary-text)] text-sm ">
+                      jpg,png upto 10 mb
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           )

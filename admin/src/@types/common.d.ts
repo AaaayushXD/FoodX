@@ -1,6 +1,6 @@
 declare namespace Common {
   type ImageFolder = "users" | "products" | "banners" | "categories";
-  type TicketStatus = "pending" | "progress" | "resolved" | "rejected";
+  type TicketStatus = "pending" | "progress" | "resolved" | "cancelled";
   type LogAction =
     | "login"
     | "register"

@@ -3,17 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 import avatar from "@/assets/logo/avatar.png";
 import { AppDispatch, RootState } from "@/store";
-import {Modal} from "@/common";
+import { Modal } from "@/common";
 import { updateUserAction } from "@/actions/userAction";
 import Skeleton from "react-loading-skeleton";
 import { PasswordChange } from "../password/accountPassword";
-import ReAuth from "../../reAuth/reAuth";
-import { AccountDisable } from "../disable/accountDisable";
-import { AccountDelete } from "../delete/accountDelete";
-import toast from "react-hot-toast";
 import { Image } from "@/utils/Image";
-import Img from "@/assets/logo/avatar.png"
+import Img from "@/assets/logo/avatar.png";
 import { uploadImage } from "@/services";
+import { ApiError } from "@/helpers";
+import { toaster } from "@/utils";
+import { AccountDelete } from "../delete/accountDelete";
 
 export const AdminProfile = () => {
   const authUser = useSelector(
@@ -87,7 +86,7 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
   const [updateAvatar, setUpdateAvatar] = useState<string>(avatar);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
-
+  console.log(props?.avatar, updateAvatar);
   const UpdateUserProfile = async () => {
     setLoading(true);
     try {
@@ -114,11 +113,15 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
       <div className="flex gap-5">
         <div className=" relative group/editable max-w-[80px] max-h-[80px] overflow-hidden rounded-full">
           {edit ? (
-            <Image highResSrc={updateAvatar} alt="" className={`w-[80px] h-[80px]`} />
+            <Image
+              highResSrc={import.meta.env.VITE_API_URL_ASSETS + updateAvatar}
+              alt=""
+              className={`w-[80px] h-[80px]`}
+            />
           ) : (
-                <Image
-                  lowResSrc={Img}
-              highResSrc={props?.avatar}
+            <Image
+              lowResSrc={Img}
+              highResSrc={import.meta.env.VITE_API_URL_ASSETS + props?.avatar}
               alt="user profile"
               className={`w-[80px] h-[80px]`}
             />
@@ -137,7 +140,9 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
                   const file = event.target.files[0];
                   setLoading(true);
                   const imageUrl = await uploadImage(file, "users");
-                  setUpdateAvatar(`${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`);
+                  setUpdateAvatar(
+                    `${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`
+                  );
                   setLoading(false);
                 }
               }}
@@ -185,7 +190,6 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
   );
 };
 
-
 const PersonlInformation: React.FC<Auth.User> = ({
   fullName,
   email,
@@ -207,20 +211,21 @@ const PersonlInformation: React.FC<Auth.User> = ({
   const dispatch = useDispatch<AppDispatch>();
   const handleSubmit = async () => {
     setLoading(true);
-    const toastLoader = toast.loading("Updating..., Please wait!");
     try {
       await dispatch(
         updateUserAction({
-          fullName: `${update.firstName} ${update.lastName}`,
-          phoneNumber: parseInt(JSON.stringify(update.phoneNumber)),
+          firstName: update?.firstName,
+          lastName: update?.lastName,
+          phoneNumber: update?.phoneNumber,
         })
       );
-      toast.dismiss(toastLoader);
-      toast.success("User update successfully!");
     } catch (error) {
-      toast.dismiss(toastLoader);
-      toast.error("Failed to update user account!");
-      throw new Error("Error while updating account " + error);
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error.message,
+        });
+      }
     }
     setLoading(false);
   };
@@ -330,7 +335,7 @@ const PersonlInformation: React.FC<Auth.User> = ({
                   onChange={(event) =>
                     setUpdate((prev) => ({
                       ...prev,
-                      phoneNumber: parseInt(event.target.value),
+                      phoneNumber: event.target.value,
                     }))
                   }
                   className="px-2 py-1.5 rounded border-[1px] border-[var(--dark-border)] text-[var(--dark-text)] bg-[var(--light-foreground)]  outline-none"
@@ -364,9 +369,8 @@ const PersonlInformation: React.FC<Auth.User> = ({
 
 const ChangePasswordComponent = () => {
   const [isChangePassword, setIsChangePassword] = useState<boolean>(true);
-  const [isDisable, setIsDisable] = useState<boolean>(true);
   const [isDelete, setIsDelete] = useState<boolean>(true);
-  const [isVerified, setIsVerified] = useState<boolean>(false);
+
   return (
     <div className=" relative  w-full grow flex-col gap-8 flex items-center justify-center px-5 py-7 text-[var(--dark-text)]">
       <div className="flex items-center justify-between w-full gap-5 px-3 py-5  border-b border-b-[var(--dark-border)]">
@@ -384,20 +388,6 @@ const ChangePasswordComponent = () => {
           <p className="w-full text-center">Change Password</p>
         </div>
       </div>
-      <div
-        onClick={() => setIsDisable(!isDisable)}
-        className="flex items-center justify-between w-full gap-5 px-3 py-5  border-b border-b-[var(--dark-border)]"
-      >
-        <p className="flex flex-col gap-1 font-semibold tracking-wide">
-          Disable your account
-          <span className="text-sm font-normal text-[var(--dark-secondary-text)]">
-            This will temporarily disable your account.
-          </span>
-        </p>
-        <div className="border-[var(--danger-text)] border p-3 rounded text-[var(--danger-text)] hover:bg-[var(--danger-bg)] hover:text-[var(--light-text)] cursor-pointer hover:border-[var(--danger-text)] ease-in-out duration-200 transition-all">
-          <p className="w-full text-center">Disable Account</p>
-        </div>
-      </div>
       <div className="flex items-center justify-between w-full gap-5 px-3 py-5  border-b border-b-[var(--dark-border)]">
         <p className="flex flex-col gap-1 font-semibold tracking-wide">
           Delete your account
@@ -413,30 +403,19 @@ const ChangePasswordComponent = () => {
           <p className="w-full text-center">Delete Account</p>
         </div>
       </div>
+
       <Modal
         close={isChangePassword}
         closeModal={() => setIsChangePassword(true)}
       >
-        {isVerified ? (
-          <PasswordChange />
-        ) : (
-          <ReAuth isVerified={() => setIsVerified(true)} />
-        )}
+        <PasswordChange setIsOpen={setIsChangePassword} />
       </Modal>
-      <Modal close={isDisable} closeModal={() => setIsDisable(true)}>
-        {isVerified ? (
-          <AccountDisable />
-        ) : (
-          <ReAuth isVerified={() => setIsVerified(true)} />
-        )}
-      </Modal>
-      <Modal close={isDelete} closeModal={() => setIsDelete(true)}>
-        {isVerified ? (
-          <AccountDelete />
-        ) : (
-          <ReAuth isVerified={() => setIsVerified(true)} />
-        )}
-      </Modal>
+      <Modal
+        close={isDelete}
+        closeModal={() => setIsDelete(true)}
+      >
+        <AccountDelete setIsOpen={setIsDelete} />
+      </Modal>  
     </div>
   );
 };

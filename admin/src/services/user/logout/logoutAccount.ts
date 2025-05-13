@@ -1,5 +1,5 @@
 import { makeRequest } from "@/makeRequest";
-import { addLogs } from "@/services";
+
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { authLogout } from "@/reducer";
@@ -8,7 +8,7 @@ import axios from "axios";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
 
-export const signOut = async () => {
+export const signOut = async ({ uid, role }: { uid: string, role: Auth.UserRole }) => {
   const toastLoader = toaster({
     icon: "loading",
     message: "Please wait...",
@@ -16,14 +16,17 @@ export const signOut = async () => {
   try {
     const response = await makeRequest({
       method: "post",
-      url: "users/logout",
+      url: "auth/logout",
+      data: {
+        uid: uid,
+        role: role,
+      },
     });
-    await addLogs({ action: "logout", date: new Date() });
 
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Store.dispatch(authLogout());
-    toast.dismiss(toastLoader);
+
     toaster({
       icon: "success",
       title: "User logout",
@@ -39,5 +42,7 @@ export const signOut = async () => {
       throw new ApiError(status, message, errors, false);
     }
     throw new ApiError(500);
+  } finally {
+    toast.dismiss(toastLoader);
   }
 };

@@ -1,36 +1,36 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"
-import { signOutUser } from "@/firebase/Authentication";
-import Cookies from "js-cookie";
-import { makeRequest } from "@/makeRequest";
+  import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { authLogout } from "@/reducer";
 import Img from "@/assets/logo/avatar.png"
 import { Image } from "@/utils/Image";
+
+import { signOut } from "@/services";
+import { ApiError } from "@/helpers";
+import { toaster } from "@/utils";
 
 interface Prop {
   user: Auth.User;
 }
 
 const Profile: React.FC<Prop> = ({ user }: Prop) => {
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const toastLoader = toast.loading("Logout user...");
+
     try {
-      await makeRequest.post("/users/logout");
-      await signOutUser();
-      dispatch(authLogout());
+      await signOut({uid: user?.uid as string, role: user?.role as Auth.UserRole});
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
-      toast.dismiss(toastLoader);
-      toast.success("Successfully logout");
     } catch (error) {
-      toast.dismiss(toastLoader);
-      toast.error("Error while logout user");
-      throw new Error("Unable to logged out" + error);
+    if (error instanceof ApiError) {
+      toaster({
+        icon: "error",
+        message: error.message,
+        title: "Error",
+      });
+    }
     }
   };
 

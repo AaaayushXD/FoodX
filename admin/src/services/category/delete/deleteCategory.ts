@@ -25,7 +25,7 @@ export const deleteCategory = async (id: string) => {
   try {
     const response = await makeRequest({
       method: "delete",
-      url: "categories/delete-category",
+      url: "categories/delete",
       data: { id },
     });
     return response.data.data;

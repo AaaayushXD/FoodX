@@ -14,7 +14,7 @@ export const signInAction = createAsyncThunk(
         message: response.message,
         title: "You are logged in!",
       });
-      console.log(response)
+      data?.onSuccess?.(true);
       return response.data;
     } catch (error: any) {
       if (error instanceof ApiError) {
@@ -51,7 +51,13 @@ export const updateUserAction = createAsyncThunk(
   async (data: Store.UpdateProfileInfo, thunkApi) => {
     try {
       const response = await updateAccount({ ...data });
-      return response;
+      toaster({
+        icon: "success",
+        message: response.message,
+        className: "bg-green-50",
+      });
+      return response.data;
+
     } catch (error) {
       return thunkApi.rejectWithValue(
         `Error while action to update user -> ${error}`

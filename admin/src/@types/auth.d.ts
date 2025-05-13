@@ -43,16 +43,26 @@ declare namespace Auth {
   }
 
   interface User {
-    id?: string;
+    isVerified?: boolean
     uid?: string;
     avatar?: string;
     fullName?: string;
     email?: string;
-    phoneNumber?: number;
-    role?: UserRole;
-    totalSpent?: number;
-    totalOrder?: number;
+    phoneNumber?: string;
+    role?: role;
     refreshToken?: string;
+    totalOrder?: number;
+    totalSpent?: number;
+    createdAt?: Common.TimeStamp;
+    updatedAt?: Common.TimeStamp;
+  }
+
+  interface ValidationType extends Partial<Omit<User, "fullName">> {
+    firstName?: string;
+    lastName?: string;
+    password: string;
+    confirmPassword?: string;
+    oldPassword?: string;
   }
 
   interface DeleteUser {

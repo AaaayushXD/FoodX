@@ -2,13 +2,13 @@ import { ApiError } from "@/helpers";
 import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
-export const deleteAccount = async () => {
+export const deleteAccount = async (): Promise<Api.Response<Auth.User>> => {
   try {
     const response = await makeRequest({
       method: "delete",
       url: "users/delete-account",
     });
-    return response.status;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status as number;

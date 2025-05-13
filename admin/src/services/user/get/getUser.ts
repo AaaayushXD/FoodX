@@ -50,6 +50,5 @@ export const getUser = async (role: Auth.UserRole, userId: string) => {
 
       throw new ApiError(status, message, errors, false);
     }
-    throw new ApiError(500);
   }
 };

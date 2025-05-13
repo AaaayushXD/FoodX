@@ -8,12 +8,13 @@ export const aggregateOrders = (
  },
  users?: Auth.User[]
 ) => {
- const totalOrder = orders?.map(async (order, index): Promise<Ui.OrderModal> => {
-   const user = users?.find((user) => user.uid === order.uid);
+  const totalOrder = orders?.map(async (order, index): Promise<Ui.OrderModal> => {
+  
+   const user = users?.find((user) => user?.uid === order?.uid);
 
    return {
-     id: order.orderId,
-     uid: order.uid,
+     id: order?.orderId,
+     uid: order?.uid,
      name: user?.fullName || "User",
      phoneNumber: user?.phoneNumber,
      image: user?.avatar as string,

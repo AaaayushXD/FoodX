@@ -35,7 +35,7 @@ declare namespace Ui {
   }
 
   interface OrderModal extends Omit<Order, "orderId"> {
-    phoneNumber?: number;
+    phoneNumber?: string;
     image: string;
     id?: string;
     rank?: number;

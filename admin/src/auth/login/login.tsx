@@ -33,12 +33,22 @@ const LoginContainer: React.FC<LoginProp> = ({ role }) => {
     event.preventDefault();
     setDataSend(true);
     try {
-      dispatch(signInAction({ email, password, role }));
+      dispatch(
+        signInAction({
+          email,
+          password,
+          role,
+          onSuccess: (isLoggedIn) => {
+            if (isLoggedIn) {
+              setEmail("");
+              setPassword("");
+            }
+          },
+        })
+      );
     } catch (error) {
       throw new Error(`Error occuring while sending form : ${error}`);
     } finally {
-      setPassword("");
-      setEmail("");
       setDataSend(false);
     }
   };
@@ -155,4 +165,3 @@ export const Login: React.FC<LoginProp> = ({ role }) => {
     </div>
   );
 };
-

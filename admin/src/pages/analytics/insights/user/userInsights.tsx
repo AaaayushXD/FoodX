@@ -3,14 +3,14 @@ import { CustomerTable } from "@/components";
 import {
   bulkDeleteOfCustomer,
   getUsers,
-  addLogs,
-  searchUser,
+    searchUser,
+  deleteUser,
 } from "@/services";
 import toast from "react-hot-toast";
 import { UpdateCustomer, handleDownloadCustomerCSV } from "@/features";
-import { debounce } from "@/helpers";
+import { ApiError, debounce } from "@/helpers";
 import { Button, DeleteButton, Delete, Modal } from "@/common";
-import { Icons } from "@/utils";
+import { Icons, toaster } from "@/utils";
 
 const AllCustomers = () => {
   const [totalData, setTotalData] = useState<number>();
@@ -132,7 +132,10 @@ const AllCustomers = () => {
   };
 
   const handleSelectedDelete = async () => {
-    const toastLoader = toast.loading("Deleting customer...");
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Deleting customer...",
+    });
     try {
       const { customer, admin, chef } = bulkSelectedCustomer.reduce<{
         customer: string[];
@@ -161,13 +164,7 @@ const AllCustomers = () => {
       if (chef.length > 0) {
         await bulkDeleteOfCustomer({ role: "chef", ids: [...chef] });
       }
-      await addLogs({
-        action: "delete",
-        date: new Date(),
-        detail: `bulk delete : customer :  ${JSON.stringify(
-          customer
-        )}, chef : ${JSON.stringify(chef)}, admin: ${JSON.stringify(admin)} `,
-      });
+ 
       if (!admin && !customer) return toast.error("Please select the customer");
       toast.dismiss(toastLoader);
       const refreshCategory = initialCustomer.filter((user) => {
@@ -178,39 +175,58 @@ const AllCustomers = () => {
       });
 
       setInitialCustomer(refreshCategory);
-      toast.success("Successfully deleted");
+      toaster({
+        icon: "success",
+        message: "Successfully deleted",
+      });
     } catch (error) {
       toast.dismiss(toastLoader);
       toast.error("Error while deleting...");
       throw new Error("Error while bulk user delete" + error);
     }
-    setIsBulkDelete(false);
+    finally {
+      setIsBulkDelete(false);
+      toast.dismiss(toastLoader);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!id) return toast.error("Customer not found");
     const findCustomer = initialCustomer?.find(
-      (customer) => customer.uid === id
+      (customer) => customer.id === id
     );
-    const toastLoader = toast.loading("Deleting customer...");
+    console.log(findCustomer);
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Deleting customer...",
+    });
     try {
-      await deletUser({
+      const response = await deleteUser({
+        uid: id,
         role: findCustomer?.role as string,
-        uid: findCustomer?.uid as string,
       });
 
-      toast.dismiss(toastLoader);
-      toast.success("Succesfully deleted");
+      toaster({
+        icon: "success",
+        message: response.message,
+        className: "bg-green-50",
+      });
       const refreshCustomer = initialCustomer?.filter(
-        (data) => data.uid !== id
+        (data) => data.id !== id
       );
       setInitialCustomer(refreshCustomer);
     } catch (error) {
-      toast.dismiss(toastLoader);
-      toast.error("Error while delting user");
-      throw new Error("Error while deleting user" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error.message,
+        });
+      }
     }
-    setIsDelete(false);
+    finally {
+      toast.dismiss(toastLoader);
+      setIsDelete(false);
+   }
   };
 
   // search user

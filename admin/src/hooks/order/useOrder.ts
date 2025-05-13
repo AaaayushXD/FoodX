@@ -72,17 +72,21 @@ export const usePaginateOrders = ({
               getUserByUid(order.uid as string)
             );
           }
+        
         }
+        
       );
+      
 
       const allUser = await Promise.all(userPromises);
+     
       const aggregateOrder = aggregateOrders(
         response.data.orders,
         pagination,
         allUser
       );
-
       const aggregatePromiseOrder = await Promise.all(aggregateOrder);
+  
       setInitialOrders(aggregatePromiseOrder);
     } catch (error) {
       if (error instanceof ApiError) {

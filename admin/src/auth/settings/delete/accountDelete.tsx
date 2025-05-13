@@ -1,74 +1,110 @@
-import { Frown } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState, Store } from "../../../store";
+import { toast } from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
-import toast from "react-hot-toast";
-import { deleteAccount } from "../../../firebase/utils";
-import { authLogout } from "../../../reducer/user";
-import { deleteAccount as Account } from "../../../services/user";
+  import { useAppDipsatch, useAppSelector } from "@/hooks";
+  import { Icons, toaster } from "../../../utils";
+import { deleteAccount } from "@/services";
+import { authLogout } from "@/reducer";
+import { ApiError } from "@/helpers";
 
-export const AccountDelete = () => {
-  const [confirm, setConfirm] = useState<string>("");
+export const AccountDelete = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) => {
+  const [confirm, setConfirm] = useState("");
+  const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const user = useSelector((state: RootState) => state.root.user.userInfo);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useAppSelector();
+  const dispatch = useAppDipsatch();
+  const confirmationText = `delete foodX.com.np/${user?.userInfo.fullName}`;
 
   const handleSubmit = async () => {
-    if (confirm !== `delete foodX.com.np/${user.fullName}`)
-      return toast.error("Please write the correct!");
-    const toastLoader = toast.loading("Deleting..., Please wait!");
-    setLoading(true);
-    try {
-      await deleteAccount();
-      await Account();
-      toast.dismiss(toastLoader);
-      toast.success("Deleted successfully");
-      Store.dispatch(authLogout());
-    } catch (error) {
-      toast.dismiss(toastLoader);
-      toast.error("Error while disable account");
-      throw new Error("Error while disable account." + error);
+    if (confirm !== confirmationText) {
+      return toast.error("Incorrect confirmation text!");
     }
-    setLoading(false);
+    if (!reason.trim()) {
+      return toast.error("Please provide a reason for deletion.");
+    }
+
+    const toastLoader = toast.loading("Deleting account, please wait...");
+    setLoading(true);
+
+    try {
+      const response = await deleteAccount();
+      toaster({
+        message: response.message,
+        icon: "success",
+        className: "bg-green-50",
+      });
+      dispatch(authLogout());
+      setIsOpen(false);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toast.dismiss(toastLoader);
+        toast.error("Failed to delete account. Try again later.");
+      }
+    } finally {
+      setLoading(false);
+      toast.dismiss(toastLoader);
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-8  rounded-xl  max-w-lg mx-auto">
-      <div className="flex items-center justify-center bg-red-100 rounded-full p-7 mb-6">
-        <Frown className="size-16 text-red-500" />
+    <div className="w-full flex flex-col items-center  pb-20  px-2 pt-5 sm:p-6 bg-[var(--light-foreground)] justify-center">
+      <div className="flex items-center justify-center bg-red-100 rounded-full p-5 mb-4">
+        <Icons.frown className="size-12 text-red-500" />
       </div>
-      <p className="text-2xl  font-semibold text-[var(--dark-text)] mb-2 text-center">
-        Delete Your Account?
+      <h2 className="text-xl font-bold text-red-600 text-center mb-2">
+        Permanently Delete Your Account?
+      </h2>
+      <p className="text-sm text-[var(--dark-secondary-text)] text-center mb-4">
+        This action is irreversible. Your data will be erased permanently, and
+        you will not be able to recover your account.
       </p>
-      <p className="text-sm text-[var(--dark-secondary-text)] italic mb-6 text-center">
-        To confirm, type "delete foodX.com.np/{user.fullName}"
-      </p>
-      <input
-        type="text"
-        className="p-3 w-full max-w-md border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] mb-4 transition duration-300"
-        value={confirm}
-        onChange={(event) => setConfirm(event.target.value)}
-        placeholder="Enter confirmation text"
-      />
-      <button
-        onClick={handleSubmit}
-        className={`h-12 w-full max-w-md bg-[var(--primary-color)] hover:bg-[var(--primary-light)]  text-white text-lg font-bold rounded shadow-lg transition-all duration-300 ease-in-out ${
-          confirm !== `delete foodX.com.np/${user.fullName}`
-            ? "opacity-50 cursor-not-allowed"
-            : "opacity-100 "
-        }`}
-        disabled={confirm !== `delete foodX.com.np/${user.fullName}`}
-      >
-        {loading ? (
-          <div className="flex items-center justify-center gap-2">
-            <ClipLoader color="white" size={"20px"} />
-            <span>Sending...</span>
+      <div className="flex flex-col items-center justify-center  rounded-2xl   bg-[var(--light-foreground)] w-full">
+        <div className=" w-full  max-w-md">
+          <div className="w-full bg-yellow-100 text-yellow-800 p-3 rounded-lg flex items-center gap-2 mb-4">
+            <Icons.alertTraingle className="size-5" />
+            <span>Make sure you really want to proceed!</span>
           </div>
-        ) : (
-          "Confirm Delete"
-        )}
-      </button>
+          <p className="text-sm font-medium text-[var(--dark-secondary-text)] mb-2">
+            To confirm, type{" "}
+            <strong className="text-red-500">"{confirmationText}"</strong>
+          </p>
+          <input
+            type="text"
+            className="p-3 w-full border bg-[var(--light-background)] border-[var(--dark-border)] rounded-lg focus:ring-2 focus:ring-red-500 transition"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="Enter confirmation text"
+          />
+          <p className="text-sm font-medium text-[var(--dark-secondary-text)] mt-4 mb-2">
+            Why are you deleting your account?
+          </p>
+          <textarea
+            className="p-3 w-full border bg-[var(--light-background)] border-[var(--dark-border)] rounded-lg focus:ring-2 focus:ring-red-500 transition resize-none h-24"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Enter your reason (required)"
+          />
+        </div>
+        <button
+          onClick={handleSubmit}
+          className={`mt-5 h-12 w-full max-w-md bg-red-600 hover:bg-red-700 text-white font-bold rounded shadow-lg transition-all duration-300 ease-in-out ${
+            confirm !== confirmationText || !reason.trim()
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+          disabled={confirm !== confirmationText || !reason.trim()}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center gap-2">
+              <ClipLoader color="white" size={20} />
+              <span>Deleting...</span>
+            </div>
+          ) : (
+            "Confirm Deletion"
+          )}
+        </button>
+      </div>
     </div>
   );
 };

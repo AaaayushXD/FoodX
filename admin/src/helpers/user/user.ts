@@ -18,6 +18,7 @@ export const getUserByUid = async (uid: string): Promise<Auth.User | null> => {
       data: { data: Auth.User };
       statusText: string;
     };
+  
     if (customerData?.data?.data && customerData?.data?.data?.fullName) {
       return customerData.data.data;
     }

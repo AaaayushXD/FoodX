@@ -278,7 +278,7 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
         </div>
 
         {/* Logout Section */}
-        <Logout logout={() => signOut()} />
+        <Logout logout={() => signOut({uid: user?.userInfo?.uid as string, role: user?.userInfo?.role as Auth.UserRole})} />
       </div>
       {url && <Loader url={url} />}
     </div>

@@ -21,8 +21,8 @@ export const bulkDeleteOfCustomer = async (data: {
 export const deleteAllUser = async (users: Auth.User[]) => {
   try {
     const response = await makeRequest({
-      method: "post",
-      url: "users/delete-all",
+      method: "delete",
+      url: "users/bulk-delete",
       data: [...users],
     });
     return response.data;
@@ -37,15 +37,15 @@ export const deleteAllUser = async (users: Auth.User[]) => {
     throw new ApiError(500);
   }
 };
-export const deleteUser = async (data: { id: string; role: string }) => {
+export const deleteUser = async (data: { uid: string; role: string }) => {
   try {
     const response = await makeRequest({
-      method: "post",
+      method: "delete",
       data: {
-        uid: data.id,
+        uid: data.uid,
         role: data.role,
       },
-      url: "users/delete",
+      url: "users/delete-user",
     });
     return response.data;
   } catch (error) {
