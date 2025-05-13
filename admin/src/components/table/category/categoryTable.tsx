@@ -80,15 +80,15 @@ export const CategoryTable: React.FC<CustomerTableProp> = ({
         </div>
       ),
     },
-    {
-      fieldName: "Rank",
-      colStyle: { width: "100px", justifyContent: "start", textAlign: "start" },
-      render: (item: Ui.Category) => (
-        <div className=" w-[100px] flex  text-[var(--dark-text)] gap-2 items-center justify-start ">
-          <div className="mt-1">{item.rank}</div>
-        </div>
-      ),
-    },
+    // {
+    //   fieldName: "Rank",
+    //   colStyle: { width: "100px", justifyContent: "start", textAlign: "start" },
+    //   render: (item: Ui.Category) => (
+    //     <div className=" w-[100px] flex  text-[var(--dark-text)] gap-2 items-center justify-start ">
+    //       <div className="mt-1">{item.rank}</div>
+    //     </div>
+    //   ),
+    // },
   ];
   return (
     <Table

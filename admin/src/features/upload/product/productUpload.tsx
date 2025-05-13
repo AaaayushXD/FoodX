@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { addProducts,  getCategories, uploadImage } from "@/services";
+import { addProducts, getCategories, uploadImage } from "@/services";
 import { Selector } from "@/common";
 import { useMutation, useQueryClient } from "react-query";
 import { MoonLoader } from "react-spinners";
@@ -24,8 +24,8 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
   const reference = useRef<HTMLDivElement>();
   const [addFood, setAddFood] = useState<Action.UploadProduct>({
     product: {
-      cookingTime: "",  
-      coverImg: "",
+      cookingTime: "",
+      bannerImg: "",
       description: "",
       id: nanoid(),
       name: "",
@@ -33,7 +33,8 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
       price: "",
       quantity: "",
       tagId: "",
-      rating: "",
+      rating: "0",
+     discountPrice: 0 
     },
     collection: "products",
   });
@@ -56,13 +57,13 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
 
   const handleDrop = async (
     event: React.DragEvent<HTMLDivElement>,
-    type: "cover" | "product"
+    type: "bannerImg" | "product"
   ) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     try {
       if (file && file.type.startsWith("image/")) {
-        if (type === "cover") {
+        if (type === "bannerImg") {
           setCoverImageLoading(true);
         } else {
           setProductImageLoading(true);
@@ -74,8 +75,8 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
           ...prev,
           product: {
             ...prev.product,
-            [type === "cover"
-              ? "coverImg"
+            [type === "bannerImg"
+              ? "bannerImg"
               : "image"]: `${image?.data?.folderName}/${image?.data.filename}`,
           },
         }));
@@ -96,7 +97,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         title: "Error",
       });
     } finally {
-      if (type === "cover") {
+      if (type === "bannerImg") {
         setCoverImageLoading(false);
       } else {
         setProductImageLoading(false);
@@ -106,9 +107,9 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
 
   const handleImage = async (
     event: ChangeEvent<HTMLInputElement>,
-    type: "cover" | "product"
+    type: "bannerImg" | "product"
   ) => {
-    if (type === "cover") {
+    if (type === "bannerImg") {
       setCoverImageLoading(true);
     } else {
       setProductImageLoading(true);
@@ -122,8 +123,8 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         ...prev,
         product: {
           ...prev.product,
-          [type === "cover"
-            ? "coverImg"
+          [type === "bannerImg"
+            ? "bannerImg"
             : "image"]: `${response?.data?.folderName}/${response?.data?.filename}`,
         },
       }));
@@ -137,7 +138,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         });
       }
     } finally {
-      if (type === "cover") {
+      if (type === "bannerImg") {
         setCoverImageLoading(false);
       } else {
         setProductImageLoading(false);
@@ -169,7 +170,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         id: addFood.product.id,
         name: addFood.product.name,
         image: addFood.product.image,
-        coverImg: addFood.product.coverImg,
+        bannerImg: addFood.product.bannerImg,
         description: addFood.product.description,
         price: parseInt(addFood.product.price as string),
         quantity: parseInt(addFood.product.quantity as string),
@@ -198,7 +199,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
           price: "",
           quantity: "",
           tagId: "",
-          rating: "",
+          rating: "0",
           cookingTime: "",
         },
       }));
@@ -407,27 +408,27 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
               <label className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]">
                 Cover Image
               </label>
-              {addFood.product.coverImg ? (
+              {addFood.product.bannerImg ? (
                 <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px]">
                   <Image
                     className="w-full h-[200px] object-cover"
                     highResSrc={
                       import.meta.env.VITE_API_URL_ASSETS +
-                      addFood?.product.coverImg
+                      addFood?.product.bannerImg
                     }
                   />
                 </div>
               ) : (
                 <div
                   onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, "cover")}
+                  onDrop={(e) => handleDrop(e, "bannerImg")}
                   onClick={() => coverImageRef.current?.click()}
                   className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-16"
                 >
                   <input
                     required
                     ref={coverImageRef}
-                    onChange={(event) => handleImage(event, "cover")}
+                    onChange={(event) => handleImage(event, "bannerImg")}
                     type="file"
                     className="hidden"
                   />
@@ -506,25 +507,45 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
           </div>
 
           {/* Special Product Checkbox */}
-          <div className="flex items-center justify-center gap-4 pl-2">
-            <input
-              onChange={(event) => {
-                if (event.target.checked)
-                  setAddFood((prev) => ({ ...prev, collection: "specials" }));
-                else
-                  setAddFood((prev) => ({ ...prev, collection: "products" }));
-              }}
-              type="checkbox"
-              id="special-product"
-              value={"specials"}
-              className="w-[15px] accent-slate-900 cursor-pointer scale-[1.1] h-[15px]"
-            />
-            <label
-              htmlFor="special-product"
-              className="text-[16px] cursor-pointer text-[var(--dark-text)]"
-            >
-              Would you like to mark this as a special product?
-            </label>
+          <div className="flex  flex-col items-center justify-center gap-4 pl-2">
+            <div className="flex items-center justify-center gap-2">
+              <input
+                onChange={(event) => {
+                  if (event.target.checked)
+                    setAddFood((prev) => ({ ...prev, collection: "specials" }));
+                  else
+                    setAddFood((prev) => ({ ...prev, collection: "products" }));
+                }}
+                type="checkbox"
+                id="special-product"
+                value={"specials"}
+                className="w-[15px] accent-slate-900 cursor-pointer scale-[1.1] h-[15px]"
+              />
+              <label
+                htmlFor="special-product"
+                className="text-[16px] cursor-pointer text-[var(--dark-text)]"
+              >
+                Would you like to mark this as a special product?
+              </label>
+            </div>
+            {addFood.collection === "specials" && (
+              <div className="w-full flex flex-col items-baseline justify-center gap-0.5">
+                <input
+                  onChange={(event) =>
+                    setAddFood((prev) => ({
+                      ...prev,
+                      product: {
+                        ...prev.product,
+                        discountPrice: parseInt(event.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  placeholder="eg. 10% off"
+                  className="w-full border-[1px] border-[var(--dark-border)] placeholder:text-sm bg-[var(--light-foreground)] outline-none text-[var(--dark-text)] py-2 px-4 rounded"
+                />
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}

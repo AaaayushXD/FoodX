@@ -14,7 +14,7 @@ export const addBanner = async (data: {
       data: {
         title: data.name,
         image: data.img,
-        path: data.path,
+        type: data.path,
         link: data.link,
       },
       url: "banners/add-banner",

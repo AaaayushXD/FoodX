@@ -189,11 +189,11 @@ const AllCategories = () => {
           sortOrder == "desc" ? (b.revenue = a.revenue) : a.revenue - b.revenue
         );
       }
-      if (value === "rank") {
-        sortedCustomers = [...initialCategory]?.sort((a, b) =>
-          sortOrder == "desc" ? (b.rank = a.rank) : a.rank - b.rank
-        );
-      }
+      // if (value === "rank") {
+      //   sortedCustomers = [...initialCategory]?.sort((a, b) =>
+      //     sortOrder == "desc" ? (b.rank = a.rank) : a.rank - b.rank
+      //   );
+      // }
       if (value === undefined && sortOrder) {
         sortedCustomers = [...initialCategory].sort((b, a) =>
           sortOrder === "desc" ? a.order - b.order : b.order - a.order
@@ -241,7 +241,6 @@ const AllCategories = () => {
                 </div>
               }
               sort={[
-                { label: "Rank", value: "rank", id: "fkdhkjhefksj" },
                 { label: "Revenue", value: "revenue", id: "flksdj" },
                 {
                   label: "Orders",

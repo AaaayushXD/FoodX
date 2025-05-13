@@ -57,15 +57,16 @@ export const aggregateCategories = async (
       };
     });
 
-    const maxSold = Math.max(...allCategory.map((category) => category.order));
+    // const maxSold = Math.max(...allCategory.map((category) => category.order));
+ 
     const aggregateCategory = allCategory.map((data: Ui.Category) => ({
       id: data.id,
       name: data.name,
       image: data.image,
       item: data.item,
       order: data.order,
-      revenue: data.revenue,
-      rank: Math.round((data.order / maxSold) * 5),
+  
+      // rank: Math.round((data.order / maxSold) * 5),
     }));
 
     return aggregateCategory as Ui.Category[];

@@ -20,7 +20,7 @@ declare namespace Ui {
     item: number;
     order: number;
     revenue: number;
-    rank: number;
+
   }
 
   interface Order extends Order_Timestamps {
@@ -57,10 +57,10 @@ declare namespace Ui {
   interface Product {
     id: string;
     image: string;
-    coverImg?: string;
+    bannerImg?: string;
     description?: string;
     rating?: string;
-    discount?: number;
+    discountPrice?: number;
     cookingTime?: string;
     name: string;
     price: number | string;

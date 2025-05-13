@@ -6,6 +6,7 @@ import { Selector } from "@/common";
 import { useMutation, useQueryClient } from "react-query";
 import { MoonLoader } from "react-spinners";
 import { toaster } from "@/utils";
+import { Image } from "@/utils/Image";
 
 interface UploadBannerProp {
   closeModal: () => void;
@@ -47,9 +48,7 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
           link: link as string,
         });
 
-        closeModal();
-        setImage("");
-        setName("");
+   
       }
       if (banner === "sponsors") {
         await addBanner({
@@ -59,6 +58,9 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
           link: link as string,
         });
       }
+      closeModal();
+      setImage("");
+      setName("");
       queryClient.invalidateQueries({ queryKey: "banners" });
     } catch (error) {
       throw new Error("Error while uploading banners");
@@ -212,9 +214,9 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
             />
             {image ? (
               <div className="w-full h-full relative">
-                <img
+                <Image
                   className="w-full h-full object-contain"
-                  src={image}
+                  highResSrc={import.meta.env.VITE_API_URL_ASSETS  + image}
                   alt="Uploaded banner"
                 />
                 <button
