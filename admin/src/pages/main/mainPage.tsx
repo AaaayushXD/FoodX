@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Welcome from "@/assets/Home.png";
+
 
 
 interface WelcomePageProps {
@@ -13,15 +13,13 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ user }) => {
   const navigate = useNavigate();
   return (
     <div className="w-screen h-[100vh]">
-      <div className="flex bg-gradient-to-r from-[rgba(0,191,255,0.45)] to-[rgba(0,191,255,1)]  w-full h-[100vh] items-center justify-center">
+      <div className="flex bg-gradient-to-r from-[#59c6eb]   to-[#2f8cac]  w-full h-[100vh] items-center justify-center">
         <div
-          style={{
-            backgroundImage: `url(${Welcome})`,
-          }}
+
           className="w-full px-3 sm:pl-14 h-full justify-center bg-no-repeat bg-right bg-contain  flex flex-col items-start"
         >
           <div className="w-full flex flex-col items-start justify-center">
-            <span className="w-full trackiwn\ text-[var(--dark-secondary-text)] text-[17px]">
+            <span className="w-full font-[400] tracking-wide text-[var(--dark-text)] text-[17px]">
               Welcome to FoodX Management
             </span>
             <h1 className="lg:text-[4rem] md:text-[3rem] text-[2rem] tracking-wider font-bold text-[var(--primary-color)]">
@@ -60,7 +58,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ user }) => {
           </div>
 
           {/* Additional Resources or Quick Stats */}
-          <div className="mt-8 text-xs sm:text-sm tracking-wider flex flex-col items-start gap-1.5 text-[var(--dark-secondary-text)]">
+          <div className="mt-8 text-xs sm:text-sm tracking-wider flex flex-col items-start gap-1.5 text-[var(--dark-text)]">
             <p>Quick Tips:</p>
             <ul className="list-disc   list-inside ml-5">
               <li>Admin: Oversee orders, update menus, track revenue.</li>
