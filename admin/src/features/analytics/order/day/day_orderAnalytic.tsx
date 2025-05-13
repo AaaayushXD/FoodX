@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 import { useQuery } from "react-query";
 import { aggregateCurrentDayData } from "../productAnalytic";
-import { Skeleton } from "@/helpers";
+import Skeleton from "react-loading-skeleton";
 
 const Revenue: React.FC = () => {
   const getDailyData = async (): Promise<Analytic.CardAnalytic[] | null> => {
@@ -49,13 +49,26 @@ const Revenue: React.FC = () => {
               />
             ))
           ) : (
-            <Skeleton
-              children={{
-                className: "w-full h-[200px] rounded-lg ",
-              }}
-              className="w-full h-full flex  items-center justify-between gap-4 "
-              count={4}
-            />
+            <div className="w-full grid grid-cols-3 gap-4">
+              <Skeleton
+                height={160}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={160}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={160}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+            </div>
           )}
         </div>
       </div>

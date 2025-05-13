@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { addLogs, updateProduct, uploadImage } from "@/services";
+import {  updateProduct, uploadImage } from "@/services";
 import { Selector } from "@/common";
 import { useAppSelector } from "@/hooks";
 import { Icons, toaster } from "@/utils";
@@ -21,6 +21,10 @@ const UpdateCategoryOption: { label: string; value: string }[] = [
     label: "Quantity",
     value: "quantity",
   },
+  {
+    label:"bannerImage",
+    value:"bannerImage"
+  },
   { label: "Category", value: "category" },
 ];
 
@@ -35,11 +39,13 @@ export const UpdateFood: React.FC<updateProductProp> = ({
 }) => {
   const [newData, setNewData] = useState<string | number>();
   const [field, setField] = useState<
-    "image" | "name" | "price" | "category" | "quantity"
+    "image" | "name" | "price" | "category" | "quantity" | "bannerImage"
   >("name");
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const { category } = useAppSelector();
 
   const fileRef = useRef<HTMLImageElement>();
+  const bannerFileRef = useRef<HTMLImageElement>();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -55,11 +61,7 @@ export const UpdateFood: React.FC<updateProductProp> = ({
         id: product.id,
         newData: newData as any,
       });
-      await addLogs({
-        action: "update",
-        date: new Date(),
-        detail: `Product : ${product.id} `,
-      });
+
       toaster({
         className: "bg-green-50",
         icon: "success",
@@ -83,9 +85,28 @@ export const UpdateFood: React.FC<updateProductProp> = ({
   };
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
-    const image = event.target.files[0];
-    const imageUrl = await uploadImage(image, "products");
-    setNewData(`${imageUrl.data.folderName}/${imageUrl.data.filename}`);
+    setIsImageLoading(true);
+    const loading = toaster({
+      icon: "loading",
+      message: "Please wait...",
+    });
+    try {
+      const image = event.target.files[0];
+      const imageUrl = await uploadImage(image, "products");
+      setNewData(`${imageUrl.data.folderName}/${imageUrl.data.filename}`);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toaster({
+          className: "bg-red-50",
+          icon: "error",
+          message: error?.message,
+          title: "Error",
+        });
+      }
+    } finally {
+      toast.dismiss(loading);
+      setIsImageLoading(false);
+    }
   };
   return (
     <div className="flex z-[100] flex-col items-start justify-center gap-5">
@@ -113,23 +134,77 @@ export const UpdateFood: React.FC<updateProductProp> = ({
             </div>
           ) : (
             <div
-              onClick={() => fileRef.current?.click()}
-              className="w-full transition-all hover:bg-[var(--light-background)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
+              onClick={() => !isImageLoading && fileRef.current?.click()}
+              className={`w-full transition-all hover:bg-[var(--light-background)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20 ${
+                isImageLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
               <input
                 ref={fileRef as any}
                 onChange={(event: ChangeEvent<any>) => handleChange(event)}
                 type="file"
                 className="hidden"
+                disabled={isImageLoading}
               />
               <div className="flex flex-col items-center justify-center w-full gap-1 bottom-10">
-                <Icons.upload className="size-7 text-[var(--dark-text)] " />
-                <span className="text-sm text-[var(--dark-text)] ">
-                  Upload a file or drag and drop
-                </span>
-                <span className="text-[var(--dark-secondary-text)] text-sm ">
-                  jpg,png upto 10 mb
-                </span>
+                {isImageLoading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary-color)]"></div>
+                    <span className="text-sm text-[var(--dark-text)]">Uploading...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Icons.upload className="size-7 text-[var(--dark-text)] " />
+                    <span className="text-sm text-[var(--dark-text)] ">
+                      Upload a file or drag and drop
+                    </span>
+                    <span className="text-[var(--dark-secondary-text)] text-sm ">
+                      jpg,png upto 10 mb
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          )
+        ) : field === "bannerImage" ? (
+          newData ? (
+            <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-background)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px]">
+              <Image
+                className="w-full h-[230px] object-cover"
+                highResSrc={(import.meta.env.VITE_API_URL_ASSETS + newData) as string}
+              />
+            </div>
+          ) : (
+            <div
+              onClick={() => !isImageLoading && bannerFileRef.current?.click()}
+              className={`w-full transition-all hover:bg-[var(--light-background)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20 ${
+                isImageLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              <input
+                ref={bannerFileRef as any}
+                onChange={(event: ChangeEvent<any>) => handleChange(event)}
+                type="file"
+                className="hidden"
+                disabled={isImageLoading}
+              />
+              <div className="flex flex-col items-center justify-center w-full gap-1 bottom-10">
+                {isImageLoading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary-color)]"></div>
+                    <span className="text-sm text-[var(--dark-text)]">Uploading...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Icons.upload className="size-7 text-[var(--dark-text)] " />
+                    <span className="text-sm text-[var(--dark-text)] ">
+                      Upload a file or drag and drop
+                    </span>
+                    <span className="text-[var(--dark-secondary-text)] text-sm ">
+                      jpg,png upto 10 mb
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           )

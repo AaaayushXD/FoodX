@@ -4,8 +4,9 @@ import Bell from "@/assets/order.mp3";
 import { useSocket, Icons } from "@/utils";
 import { OrderCard } from "@/components";
 import { useAppSelector, usePaginateOrders } from "@/hooks";
-import { aggregateOrders, getUserByUid, Skeleton } from "@/helpers";
+import { aggregateOrders, getUserByUid } from "@/helpers";
 import { customToast } from "@/common/toast/toast";
+import Skeleton from "react-loading-skeleton";
 
 export const RecentOrders = () => {
   const [url, setUrl] = useState<string>();
@@ -72,7 +73,6 @@ export const RecentOrders = () => {
             initialOrders.length > 0 ? (
               initialOrders?.map((order, index) => (
                 <OrderCard
-            
                   uid={order?.uid as string}
                   image={order?.image as string}
                   orderId={order?.id as string}
@@ -95,13 +95,32 @@ export const RecentOrders = () => {
               />
             )
           ) : (
-            <Skeleton
-              children={{
-                className: "w-full rounded-md h-[60px] ",
-              }}
-              className="w-full h-full flex flex-col items-start justify-start gap-4"
-              count={5}
-            />
+            <div className="w-full">
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+            </div>
           )}
         </div>
       </div>

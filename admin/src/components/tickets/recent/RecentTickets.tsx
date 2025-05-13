@@ -6,8 +6,9 @@ import { getTickets } from "../../../services/ticket";
 import { useQuery } from "react-query";
 import { RecentTicketCard } from "../../card/ticket/recentTicket";
 import { Icons } from "@/utils";
-import { Skeleton } from "@/helpers";
+
 import { useAppSelector } from "@/hooks";
+import Skeleton from "react-loading-skeleton";
 
 export const RecentTickets = () => {
   const [url, seturl] = useState<string>();
@@ -87,13 +88,38 @@ export const RecentTickets = () => {
               />
             )
           ) : (
-            <Skeleton
-              children={{
-                className: " w-full h-[60px] rounded-md",
-              }}
-              className="w-full flex items-start justify-start gap-5 flex-col"
-              count={8}
-            />
+            <div className="w-full">
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+              <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+                />
+                          <Skeleton
+                height={100}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                count={1}
+              />
+            </div>
           )}
         </div>
       </div>

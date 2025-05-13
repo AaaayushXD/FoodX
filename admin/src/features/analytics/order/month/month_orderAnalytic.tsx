@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useAllRevenue } from "@/hooks";
 import { aggregateMonthlyData } from "../productAnalytic";
 import { Button } from "@/common";
-import { Skeleton } from "@/helpers";
+import Skeleton from "react-loading-skeleton";
 
 export const MonthlyAnalytics: React.FC = () => {
   const [totalOrder, setTotalOrder] = useState<Prop.CardAnalyticsProp[]>([]);
@@ -174,13 +174,14 @@ export const MonthlyAnalytics: React.FC = () => {
               />
             ))
           ) : (
-            <div className="w-full flex  gap-3 ">
+            <div className="w-full">
               <Skeleton
-                children={{
-                  className: "w-full h-[150px] rounded-lg",
-                }}
-                className="w-full flex lg:flex-row flex-col items-center justify-evenly gap-5"
-                count={4}
+                height={170}
+                baseColor="var(--light-background)"
+                highlightColor="var(--light-foreground)"
+                className="w-full flex gap-5"
+                containerClassName="w-full flex gap-5"
+                count={3}
               />
             </div>
           )}

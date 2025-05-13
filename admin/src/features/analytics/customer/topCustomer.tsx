@@ -5,7 +5,7 @@ import { Button, Empty } from "@/common";
 import CustomerLogo from "@/assets/customer.png";
 import { getUsers } from "@/services";
 import { useQuery } from "react-query";
-import { Skeleton } from "@/helpers";
+import Skeleton from "react-loading-skeleton";
 
 export const TopCustomers = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -96,13 +96,14 @@ export const TopCustomers = () => {
             />
           )
         ) : (
-          <Skeleton
-            children={{
-              className: "w-full h-[60px] rounded-md",
-            }}
-            className=" w-full flex flex-col items-start justify-start gap-4"
-            count={5}
-          />
+          <div className="w-full">
+            <Skeleton
+              height={100}
+              baseColor="var(--light-background)"
+              highlightColor="var(--light-foreground)"
+              count={3}
+            />
+          </div>
         )}
       </div>
     </div>

@@ -9,7 +9,7 @@ export const addProducts = async (
     const response = await makeRequest({
       method: "post",
       url: `products/add/${data?.collection}`,
-      data: { ...data.product },
+      data: { ...data.product,price:parseInt(data.product.price as string),quantity:parseInt(data.product.quantity as string) },
     });
     return response.data;
   } catch (error) {

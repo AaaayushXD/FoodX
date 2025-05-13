@@ -46,7 +46,7 @@ export const RecentTicketCard: React.FC<TicketProp> = ({
       message: "Your issue has been resolved. Thanks for your patience!",
       title: "Ticket Resolved",
     },
-    rejected: {
+    cancelled: {
       message:
         "Unfortunately, your ticket was rejected. Please contact support for details.",
       title: "Ticket Rejected",
@@ -124,7 +124,7 @@ export const RecentTicketCard: React.FC<TicketProp> = ({
       bg: "bg-gradient-to-r from-green-400/5 to-green-500/5",
       text: "text-green-600",
     },
-    rejected: {
+    cancelled: {
       bg: "bg-gradient-to-r from-red-400/5 to-red-500/5",
       text: "text-red-600",
     },
