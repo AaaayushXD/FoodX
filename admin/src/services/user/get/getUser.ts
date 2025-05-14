@@ -43,12 +43,6 @@ export const getUser = async (role: Auth.UserRole, userId: string) => {
     });
     return response;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const status = error.response?.status as number;
-      const message = error?.response?.data?.message;
-      const errors = error?.response?.data?.errors;
-
-      throw new ApiError(status, message, errors, false);
-    }
+   console.log("Error while fetching user => getUser",error)
   }
 };

@@ -5,14 +5,15 @@ import axios from "axios";
 export const verifyNewUser = async (
   otp: string ,
   uid: string,
-  type: "reset" | "otp"
+  type: "reset" | "otp",
+  accessToken?: string,
 ): Promise<Api.Response<{userInfo: Auth.User}>> => {
   try {
     const response = (await makeRequest({
       method: "post",
       url: "/auth/verify",
 
-      data: { code: otp, uid: uid, type: type },
+      data: { code: otp, uid: uid, type: type, accessToken: accessToken },
     }))
     return response?.data;
   } catch (error) {

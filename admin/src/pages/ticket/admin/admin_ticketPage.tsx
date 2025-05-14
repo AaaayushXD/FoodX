@@ -132,17 +132,19 @@ export const TicketAdminPage = () => {
       },
     };
     const toastLoader = toaster({
-      icon:"loading",
+      icon: "loading",
       message: "Updating...",
- 
     });
     try {
-      const response = await updateTicket({ id: id as string, newStatus: newStatus });
+      const response = await updateTicket({
+        id: id as string,
+        newStatus: newStatus,
+      });
       toaster({
         icon: "success",
         message: response.message,
         className: "bg-green-50",
-      })
+      });
       const { message, title } = messages[newStatus];
       const findTicket = tickets?.find((ticket) => ticket.id === id);
 
@@ -159,19 +161,17 @@ export const TicketAdminPage = () => {
         }
       });
       setTickets(updateTickets as Ui.TicketType[]);
-    } catch (error) { 
+    } catch (error) {
       if (error instanceof ApiError) {
         toaster({
           icon: "error",
           message: error.message,
           className: "bg-red-50",
-        })
+        });
       }
+    } finally {
+      toast.dismiss(toastLoader);
     }
-   finally {
-    toast.dismiss(toastLoader);
-   }
-   
   };
 
   const fetchTickets = async ({
@@ -207,7 +207,6 @@ export const TicketAdminPage = () => {
       setTickets(allTicket);
     } catch (error) {
       setTickets([]);
-      
     }
     setLoading(false);
   };

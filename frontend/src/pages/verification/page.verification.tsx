@@ -30,6 +30,8 @@ export const VerificationContainer = ({
 
   const inputs = useRef<HTMLInputElement[]>([]);
   const getVerifyType = localStorage?.getItem("verifyType") as "otp" | "reset";
+  const uid = localStorage?.getItem("uid");
+  const accessToken = localStorage?.getItem("accessToken");
   const dispatch = useAppDispatch();
 
   // Countdown timer for Resend button
@@ -95,8 +97,9 @@ export const VerificationContainer = ({
       await dispatch(
         verifyAction({
           otp: otpString,
-          uid: auth?.userInfo?.uid as string,
+          uid: uid as string || auth?.userInfo?.uid as string,
           type: getVerifyType,
+          accessToken: accessToken as string,
         })
       );
     } catch (error) {

@@ -90,13 +90,18 @@ const signInAction = createAsyncThunk(
 const verifyAction = createAsyncThunk(
   "auth/verify",
   async (
-    { otp, uid, type }: { otp: string; uid: string; type: "otp" | "reset" },
+    {
+      otp,
+      uid,
+      type,
+      accessToken
+    }: { otp: string; uid: string; type: "otp" | "reset"; accessToken?: string },
     thunkApi
   ) => {
     try {
-      const response = await userAction.verifyNewUser(otp, uid, type);
+      const response = await userAction.verifyNewUser(otp, uid, type, accessToken);
       localStorage.removeItem("time");
-   
+
       return response.data.userInfo;
     } catch (error) {
       if (error instanceof ApiError) {

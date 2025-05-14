@@ -5,11 +5,19 @@ import axios from "axios";
 export const getTickets = async (
   data: Api.FetchPaginate<keyof Ui.TicketType, Common.TicketStatus,"">
 ) => {
+  const datas = {
+    currentFirstDoc: data?.currentFirstDoc,
+    currentLastDoc: data?.currentLastDoc,
+    pageSize: data?.pageSize,
+    sort: data?.sort,
+    direction: data?.direction,
+    ticketStatus: data?.status,
+  };
   try {
     const response = await makeRequest({
       method: "post",
       url: "tickets/get-all",
-      data: { ...data },
+      data: { ...datas },
     });
     return response.data.data;
   } catch (error) {

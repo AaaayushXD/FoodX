@@ -25,6 +25,9 @@ const LoginContainer: React.FC = () => {
     try {
       const response = await forgetPassword({ email });
       localStorage?.setItem("verifyType", "reset");
+      localStorage?.setItem("uid", response?.data?.uid);
+      localStorage?.setItem("accessToken", response?.data?.accessToken);
+
       navigate("/email-verification");
       if (response?.message) {
         toaster({
