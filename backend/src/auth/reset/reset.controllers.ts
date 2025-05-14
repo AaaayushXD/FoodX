@@ -6,6 +6,7 @@ import { sendOTPEmail } from "../../utils/messaging/email.js";
 import { APIError } from "../../helpers/error/ApiError.js";
 import { isEmailValid } from "../../helpers/validator/auth.validator.js";
 import { findUserByEmailInDatabase } from "../../actions/user/get/findUser.js";
+import { generateAccessAndRefreshToken } from "../../utils/token/tokenHandler.js";
 
 export const resetPasswordController = asyncHandler(
   async (req: Request<{}, {}, { email: string }>, res: Response) => {
@@ -21,11 +22,18 @@ export const resetPasswordController = asyncHandler(
     const otp = OptGenerator();
     await redisClient.setEx(`reset:${email}`, 300, `${otp}`);
     await sendOTPEmail(email, `${otp}`);
+    const { accessToken } = await generateAccessAndRefreshToken(
+      user.userData.uid,
+      user.userData.role
+    );
 
     const response: API.ApiResponse = {
       status: 200,
       success: true,
-      data: user.userData.uid || [],
+      data: {
+        uid: user.userData.uid,
+        accessToken,
+      },
       message: "Password reset email sent successfully.",
     };
     res.status(200).json(response);

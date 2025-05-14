@@ -16,6 +16,7 @@ const addNewTicket = asyncHandler(
 
     await addTicketToFirestore({
       ...ticket,
+      status: ticket.ticketStatus,
       date: new Date(ticket.date),
     });
     response = {
@@ -86,7 +87,7 @@ const fetchTickets = asyncHandler(
       direction,
       currentFirstDoc,
       currentLastDoc,
-      status,
+      ticketStatus: status,
       userId,
     } = req.body;
     let ticketStatus = status as TicketStatusSchemaType;

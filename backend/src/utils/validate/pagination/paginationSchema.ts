@@ -11,6 +11,7 @@ export const createPaginationSchema = (
     userId?: boolean;
     sort?: boolean;
     productId?: boolean;
+    ticketStatus?: boolean;
   } = {}
 ) => {
   return z.object({
@@ -28,6 +29,9 @@ export const createPaginationSchema = (
       ? z.enum(["asc", "desc"])
       : z.enum(["asc", "desc"]).optional(),
     productId: config.productId ? z.string() : z.string().optional(),
+    ticketStatus: config.ticketStatus
+      ? z.enum(["pending", "resolved", "cancelled"])
+      : z.enum(["pending", "resolved", "cancelled"]).optional(),
   });
 };
 

@@ -11,7 +11,7 @@ export const addTicketSchema = z.object({
   description: z.string({
     required_error: "Description is required.",
   }),
-  status: ticketStatusSchema,
+  ticketStatus: ticketStatusSchema,
   category: z.string({
     required_error: "Category is required.",
   }),
