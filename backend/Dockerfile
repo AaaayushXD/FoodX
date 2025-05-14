@@ -22,9 +22,6 @@ FROM node:24-alpine3.20 AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
-
 COPY --from=builder /build/dist ./dist
 COPY --from=builder /build/package.json ./package.json
 COPY --from=builder /build/package-lock.json ./package-lock.json
