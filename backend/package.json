@@ -4,9 +4,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist/index.js",
+    "start": "node ./dist/index.js",
     "dev": "concurrently \"tsc --watch\" \"nodemon ./dist/index.js\"",
-    "build": "rimraf dist && tsc && cp .env dist/.env"
+    "build": "rimraf dist && tsc && cp .env dist/.env",
+    "build:ts": "tsc"
   },
   "keywords": [
     "FoodX"
