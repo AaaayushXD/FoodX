@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <App />
         </ThemeContextProvider>
       </PersistGate>
-      <Toaster />
+      <Toaster  />
     </Provider>
   </Suspense>
 );

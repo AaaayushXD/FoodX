@@ -33,7 +33,7 @@ export const CategoryTable: React.FC<CustomerTableProp> = ({
             <Image
               className="w-full h-full rounded-full"
               lowResSrc={Img}
-              highResSrc={value.image as string}
+              highResSrc={ import.meta.env.VITE_API_URL_ASSETS + value?.image}
               alt={value?.name as string}
             />
           </div>

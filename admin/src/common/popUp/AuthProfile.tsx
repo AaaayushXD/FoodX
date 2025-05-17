@@ -1,8 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"
-  import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import Img from "@/assets/logo/avatar.png"
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import Img from "@/assets/logo/avatar.png";
 import { Image } from "@/utils/Image";
 
 import { signOut } from "@/services";
@@ -14,23 +13,24 @@ interface Prop {
 }
 
 const Profile: React.FC<Prop> = ({ user }: Prop) => {
-
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-
     try {
-      await signOut({uid: user?.uid as string, role: user?.role as Auth.UserRole});
+      await signOut({
+        uid: user?.uid as string,
+        role: user?.role as Auth.UserRole,
+      });
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
     } catch (error) {
-    if (error instanceof ApiError) {
-      toaster({
-        icon: "error",
-        message: error.message,
-        title: "Error",
-      });
-    }
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error.message,
+          title: "Error",
+        });
+      }
     }
   };
 
@@ -46,10 +46,10 @@ const Profile: React.FC<Prop> = ({ user }: Prop) => {
         >
           <div>
             <Image
-              highResSrc={user?.avatar as string}
+              highResSrc={import.meta.env.VITE_API_URL_ASSETS + user?.avatar as string}
               lowResSrc={Img}
-              className="w-20 h-14 rounded-full"
-              alt=""  
+              className="w-10 h-10 rounded-full"
+              alt=""
             />
           </div>
           <div className="flex flex-col items-baseline justify-center gap-1 w-full">

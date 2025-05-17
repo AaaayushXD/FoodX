@@ -6,6 +6,7 @@ import { useAppSelector } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import { ApiError } from "@/helpers";
 import { Image } from "@/utils/Image";
+import { useQueryClient } from "react-query";
 
 const UpdateCategoryOption: { label: string; value: string }[] = [
   { label: "Product Name", value: "name" },
@@ -43,10 +44,10 @@ export const UpdateFood: React.FC<updateProductProp> = ({
   >("name");
   const [isImageLoading, setIsImageLoading] = useState(false);
   const { category } = useAppSelector();
-
+ 
   const fileRef = useRef<HTMLImageElement>();
   const bannerFileRef = useRef<HTMLImageElement>();
-
+ const queryClient = useQueryClient()
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!product.id) return toast.error("food id not found");
@@ -61,13 +62,15 @@ export const UpdateFood: React.FC<updateProductProp> = ({
         id: product.id,
         newData: newData as any,
       });
-
+      queryClient.invalidateQueries("specials");
       toaster({
         className: "bg-green-50",
         icon: "success",
         message: response?.message,
         title: "Product successfully updated!",
       });
+      setNewData("");
+      setField("name");
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -80,7 +83,7 @@ export const UpdateFood: React.FC<updateProductProp> = ({
     } finally {
       closeModal();
       toast.dismiss(toastLoading);
-      setNewData("");
+  
     }
   };
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -242,7 +245,7 @@ export const UpdateFood: React.FC<updateProductProp> = ({
         ) : (
           ""
         )}
-        <button className="w-full dark:text-[var(--dark-text)] text-[var(--light-text)] transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] ">
+        <button disabled={isImageLoading} type="submit" className="w-full dark:text-[var(--dark-text)] text-[var(--light-text)] transition-all rounded py-2.5 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] ">
           Submit
         </button>
       </form>

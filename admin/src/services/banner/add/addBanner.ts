@@ -9,6 +9,7 @@ export const addBanner = async (data: {
   link: string;
 }): Promise<Api.Response<null>> => {
   try {
+    console.log(data)
     const response = await makeRequest({
       method: "post",
       data: {

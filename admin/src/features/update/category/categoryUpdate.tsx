@@ -1,11 +1,13 @@
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { addLogs, updateCategory, uploadImage } from "@/services";
+import { updateCategory, uploadImage } from "@/services";
 import toast from "react-hot-toast";
 import { UploadIcon } from "lucide-react";
 import { Selector } from "@/common";
 import { toaster } from "@/utils";
 import { ApiError } from "@/helpers";
 import { MoonLoader } from "react-spinners";
+import { Image } from "@/utils/Image";
+import { useQueryClient } from "react-query";
 
 interface UpdateCategoryType {
   label: string;
@@ -21,12 +23,15 @@ const UpdateCategoryOption: UpdateCategoryType[] = [
   },
 ];
 
-export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
+export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({
+  id,
+  closeModal,
+}) => {
   const [newData, setNewData] = useState<string>("");
   const [field, setField] = useState<"image" | "name">("name");
   const [isUploading, setIsUploading] = useState(false);
   const fileRef = useRef<HTMLImageElement>();
-
+  const queryClient = useQueryClient();
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!id) return toast.error("Category id not found");
@@ -40,7 +45,10 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
         field: field as string,
         newData: newData,
       });
-      addLogs({ action: "update", date: new Date(), detail: `${id}` });
+      setNewData("");
+      setField("name");
+      queryClient?.invalidateQueries("categories-1");
+      closeModal && closeModal(false);
       toaster({
         className: "bg-green-50",
         icon: "success",
@@ -129,9 +137,9 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
         {field === "image" ? (
           newData ? (
             <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
-              <img
+              <Image
                 className="w-full h-[230px] object-fill"
-                src={`${import.meta.env.VITE_URI}assets/${newData}`}
+                highResSrc={`${import.meta.env.VITE_API_URL_ASSETS}${newData}`}
               />
             </div>
           ) : (
@@ -140,7 +148,7 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({ id }) => {
               onDragOver={handleDragOver}
               onClick={() => !isUploading && fileRef.current?.click()}
               className={`w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-20 ${
-                isUploading ? 'opacity-70 cursor-not-allowed' : ''
+                isUploading ? "opacity-70 cursor-not-allowed" : ""
               }`}
             >
               <input

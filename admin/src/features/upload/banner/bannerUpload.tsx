@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { MoonLoader } from "react-spinners";
 import { toaster } from "@/utils";
 import { Image } from "@/utils/Image";
+import { ApiError } from "@/helpers";
 
 interface UploadBannerProp {
   closeModal: () => void;
@@ -63,7 +64,13 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
       setName("");
       queryClient.invalidateQueries({ queryKey: "banners" });
     } catch (error) {
-      throw new Error("Error while uploading banners");
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error?.message,
+          className: "bg-red-500 text-white",
+        });
+      }
     } finally {
       setLoading(false);
       toast.dismiss(toastLoader);
@@ -107,8 +114,13 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
       });
       setImage(`${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`);
     } catch (error) {
-      toast.error("Failed to upload image");
-      setImage("");
+      if (error instanceof ApiError) {
+        toaster({
+          className: "bg-red-500 text-white",   
+          icon: "error",
+          message: error?.message,
+        });
+      }
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -171,7 +183,7 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
               Link
             </label>
             <input
-              required
+              
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setLink(event.target.value)
               }

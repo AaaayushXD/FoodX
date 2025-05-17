@@ -8,7 +8,7 @@ export const updateProduct = async (
   try {
     const response = await makeRequest({
       method: "put",
-      url: "products/update/products",
+      url: `products/update/${data.category}`,
       data: {
         category: data.category,
         id: data.id,

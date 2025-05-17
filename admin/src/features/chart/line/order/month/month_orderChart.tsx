@@ -91,7 +91,7 @@ export const MonthlyOrderLinechart: React.FC = () => {
       const totalCurrent = calculateTotalOrders(initialData);
       const totalPrevious = calculateTotalOrders(previousMonthData);
       if (totalPrevious === 0) {
-        setPercentageChange("N/A"); // Handle zero previous orders
+        setPercentageChange("N/A"); 
       } else {
         const percentage =
           ((totalCurrent - totalPrevious) / totalPrevious) * 100;
@@ -117,7 +117,7 @@ export const MonthlyOrderLinechart: React.FC = () => {
             className={`text-[16px]  tracking-wider  ${
               percentageChange?.includes("-") ||
               percentageChange?.includes("N/A")
-                ? "text-red-600"
+                ? "hidden"
                 : "text-[var(--green-text)]  "
             } flex justify-center items-center gap-0.5  rounded-lg`}
           >

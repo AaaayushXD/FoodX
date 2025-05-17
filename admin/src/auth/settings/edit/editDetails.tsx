@@ -2,7 +2,7 @@ import { updateUserAction } from "@/actions";
 import { ApiError } from "@/helpers";
 import { useAppDipsatch } from "@/hooks";
 import { toaster, Icons } from "@/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 
@@ -10,7 +10,6 @@ export const PersonlInformation: React.FC<Auth.User> = (user) => {
  const [edit, setEdit] = useState<boolean>(false);
 
  const [loading, setLoading] = useState<boolean>(false);
-
  const [update, setUpdate] = useState<{
    firstName: string;
    lastName: string;
@@ -20,6 +19,15 @@ export const PersonlInformation: React.FC<Auth.User> = (user) => {
    lastName: user?.fullName?.split(" ")[1] as string,
    phoneNumber: user?.phoneNumber || "98u9",
  });
+  
+ useEffect(() => {
+  setUpdate({
+    firstName: user?.fullName?.split(" ")[0] as string,
+    lastName: user?.fullName?.split(" ")[1] as string,
+    phoneNumber: user?.phoneNumber || "98u9",
+  })
+ }, [user])
+
  const dispatch = useAppDipsatch();
 
  const handleSubmit = async () => {
@@ -80,7 +88,7 @@ export const PersonlInformation: React.FC<Auth.User> = (user) => {
        </div>
      ) : (
          <div className={`grid grid-cols-2 sm:p-12 px-0 pb-24 pt-8
-        bg-white gap-x-4 gap-y-2  `}>
+        bg-[var(--light-foreground)] gap-x-4 gap-y-2  `}>
 
          <ProfileField
            value={update?.firstName as string}

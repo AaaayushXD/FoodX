@@ -65,7 +65,7 @@ const FoodPage: React.FC = () => {
         <div className="w-[200px] flex items-center justify-start">
          
           <Image
-            highResSrc={item?.image}
+            highResSrc={import.meta.env.VITE_API_URL_ASSETS + item?.image}
             className="w-[180px] h-[50px] "
             alt=""
           />

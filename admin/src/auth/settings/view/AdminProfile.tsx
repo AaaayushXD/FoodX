@@ -10,9 +10,8 @@ import { PasswordChange } from "../password/accountPassword";
 import { Image } from "@/utils/Image";
 import Img from "@/assets/logo/avatar.png";
 import { uploadImage } from "@/services";
-import { ApiError } from "@/helpers";
-import { toaster } from "@/utils";
 import { AccountDelete } from "../delete/accountDelete";
+import { PersonlInformation } from "../edit/editDetails";
 
 export const AdminProfile = () => {
   const authUser = useSelector(
@@ -190,182 +189,6 @@ const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
   );
 };
 
-const PersonlInformation: React.FC<Auth.User> = ({
-  fullName,
-  email,
-  phoneNumber,
-  role,
-}) => {
-  const firstName = fullName?.split(" ")[0];
-  const lastName = fullName?.split(" ")[1];
-
-  const [edit, setEdit] = useState<boolean>(false);
-
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const [update, setUpdate] = useState({
-    firstName,
-    lastName,
-    phoneNumber,
-  });
-  const dispatch = useDispatch<AppDispatch>();
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await dispatch(
-        updateUserAction({
-          firstName: update?.firstName,
-          lastName: update?.lastName,
-          phoneNumber: update?.phoneNumber,
-        })
-      );
-    } catch (error) {
-      if (error instanceof ApiError) {
-        toaster({
-          icon: "error",
-          message: error.message,
-        });
-      }
-    }
-    setLoading(false);
-  };
-
-  return (
-    <div className="flex-col items-center w-full lg:px-3">
-      <div className="flex  justify-between w-full pt-3 pb-4 ">
-        <p className="text-xl font-semibold tracking-wide  text-[var(--dark-text)]">
-          Personal Information
-        </p>
-
-        <div onClick={() => setEdit(!edit)} className="px-5 ">
-          {edit ? (
-            <button
-              onClick={handleSubmit}
-              disabled={
-                !update.firstName || !update.lastName || !update.phoneNumber
-              }
-            >
-              <UpdateUser />
-            </button>
-          ) : (
-            <EditProfileIcon />
-          )}
-        </div>
-      </div>
-      {loading ? (
-        <div className="w-full">
-          {" "}
-          <Skeleton
-            height={100}
-            baseColor="var(--light-background)"
-            highlightColor="var(--light-foreground)"
-            count={1}
-          />
-        </div>
-      ) : (
-        <div
-          className=" w-full grid grid-rows-3 gap-8 px-5 py-7 border border-[var(--dark-border)] rounded
-    "
-        >
-          <div
-            className={`grid  items-center grid-cols-2 grid-flow-cols gap-7 `}
-          >
-            <div className={`flex flex-col w-full gap-1 `}>
-              <p className=" tracking-wide text-[var(--dark-secondary-text)] text-sm">
-                First Name
-              </p>
-              {edit ? (
-                <input
-                  type="text"
-                  value={update.firstName}
-                  onChange={(event) =>
-                    setUpdate((prev) => ({
-                      ...prev,
-                      firstName: event.target.value,
-                    }))
-                  }
-                  className="px-2 py-1.5 rounded border-[1px] border-[var(--dark-border)] text-[var(--dark-text)] bg-[var(--light-foreground)]  outline-none"
-                />
-              ) : (
-                <p className="text-[var(--dark-text)] font-medium ">
-                  {firstName}
-                </p>
-              )}
-            </div>
-            <div className={`flex flex-col w-full gap-1 `}>
-              <p className=" tracking-wide text-[var(--dark-secondary-text)] text-sm">
-                Last Name
-              </p>
-              {edit ? (
-                <input
-                  value={update.lastName}
-                  onChange={(event) =>
-                    setUpdate((prev) => ({
-                      ...prev,
-                      lastName: event.target.value,
-                    }))
-                  }
-                  type="text"
-                  className="px-2 py-1.5 rounded border-[1px] border-[var(--dark-border)] text-[var(--dark-text)] bg-[var(--light-foreground)]  outline-none"
-                />
-              ) : (
-                <p className="text-[var(--dark-text)] font-medium ">
-                  {lastName}
-                </p>
-              )}
-            </div>
-          </div>
-          <div
-            className={` w-full flex sm:flex-row gap-10 sm:gap-0 items-center justify-between flex-col `}
-          >
-            <div className={`flex flex-col w-full gap-1`}>
-              <p className=" tracking-wide text-[var(--dark-secondary-text)] text-sm">
-                Email
-              </p>
-              <p className="text-[var(--dark-text)] font-medium ">{email}</p>
-            </div>
-            <div className={`flex flex-col w-full gap-1`}>
-              <p className=" tracking-wide text-[var(--dark-secondary-text)] text-sm">
-                Phone Number
-              </p>
-              {edit ? (
-                <input
-                  type="text"
-                  value={update.phoneNumber}
-                  onChange={(event) =>
-                    setUpdate((prev) => ({
-                      ...prev,
-                      phoneNumber: event.target.value,
-                    }))
-                  }
-                  className="px-2 py-1.5 rounded border-[1px] border-[var(--dark-border)] text-[var(--dark-text)] bg-[var(--light-foreground)]  outline-none"
-                />
-              ) : (
-                <p className="text-[var(--dark-text)] font-medium ">
-                  {phoneNumber}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className={` grid items-center grid-flow-col grid-cols-2 gap-7`}>
-            <div
-              className={`flex flex-col w-full gap-1 ${
-                loading ? "invisible" : ""
-              }`}
-            >
-              <p className=" tracking-wide text-[var(--dark-secondary-text)] text-sm">
-                Role
-              </p>
-              <p className="text-[var(--dark-text)] font-medium ">
-                {role && role?.charAt(0).toUpperCase() + role?.slice(1)}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const ChangePasswordComponent = () => {
   const [isChangePassword, setIsChangePassword] = useState<boolean>(true);
@@ -388,7 +211,7 @@ const ChangePasswordComponent = () => {
           <p className="w-full text-center">Change Password</p>
         </div>
       </div>
-      <div className="flex items-center justify-between w-full gap-5 px-3 py-5  border-b border-b-[var(--dark-border)]">
+      <div className="flex items-center justify-between w-full gap-5 px-3 py-5 ">
         <p className="flex flex-col gap-1 font-semibold tracking-wide">
           Delete your account
           <span className="text-sm font-normal text-[var(--dark-secondary-text)]">

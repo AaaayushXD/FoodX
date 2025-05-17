@@ -117,8 +117,9 @@ export const MonthlyRevenueChart: React.FC = () => {
          <p
            className={`text-[16px]  tracking-wider  ${
              percentageChange?.includes("-") ||
-             percentageChange?.includes("N/A")
-               ? "text-red-600"
+             percentageChange?.includes("N/A") ||
+             percentageChange === undefined
+               ? "text-red-600 hidden"
                : "text-[var(--green-text)]  "
            } flex justify-center items-center gap-0.5  rounded-lg`}
          >

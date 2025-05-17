@@ -32,8 +32,8 @@ export const deleteProduct = async (data: {
   try {
     const response = await makeRequest({
       method: "delete",
-      url: `products/delete/${data?.type}`,
-      data: { id: data.id },
+      url: `products/delete/${data?.id}?collection=${data?.type}`,
+      data: data.id
     });
 
     return response.data.data;

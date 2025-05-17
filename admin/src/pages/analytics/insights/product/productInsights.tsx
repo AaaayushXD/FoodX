@@ -80,12 +80,12 @@ export const AllProductAnalytics = () => {
 
     // Apply filtering
     if (filter?.typeFilter?.type === "products") {
-      filteredProducts = normalProducts as Ui.Product[];
+      filteredProducts = normalProducts as unknown as Ui.Product[]
     } else if (filter?.typeFilter?.type === "specials") {
       filteredProducts = specialProducts as Ui.Product[];
     } else if (normalProducts && specialProducts) {
       filteredProducts = [
-        ...(normalProducts as Ui.Product[]),
+        ...(normalProducts as unknown as Ui.Product[]),
         ...(specialProducts as Ui.Product[]),
       ];
     }
@@ -132,8 +132,8 @@ export const AllProductAnalytics = () => {
   const searchProducts = async (value: string) => {
     if (!specialLoading && !normalLoading) {
       const filterProducts = [
-        ...(normalProducts as Ui.Product[]),
-        ...(specialProducts as Ui.Product[]),
+        ...(normalProducts as  unknown as Ui.Product[]),
+        ...(specialProducts as  unknown as Ui.Product[]),
       ]?.filter((product) =>
         product.name.toLowerCase().includes(value.toLowerCase())
       );

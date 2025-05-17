@@ -76,7 +76,7 @@ export const WeekReveneuChart: React.FC = () => {
           <p
             className={`text-[16px]  tracking-wider  ${
               percentage?.includes("-") || percentage?.includes("N/A")
-                ? "text-red-600"
+                ? "text-red-600 hidden"
                 : "text-[var(--green-text)]  "
             } flex justify-center items-center gap-0.5  rounded-lg`}
           >

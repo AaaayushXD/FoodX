@@ -93,7 +93,7 @@ export const Navbar = () => {
             >
               {" "}
               <Image
-                highResSrc={user.userInfo?.avatar as string}
+                highResSrc={import.meta.env.VITE_API_URL_ASSETS + user.userInfo?.avatar as string}
                 lowResSrc={Img}
                 className="w-10 hover:ring-[var(--dark-border)] hover:ring-4 duration-150 h-10 rounded-full"
                 alt=""

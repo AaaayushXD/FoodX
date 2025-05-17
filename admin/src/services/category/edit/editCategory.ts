@@ -8,7 +8,7 @@ export const updateCategory = async (
   try {
     const response = await makeRequest({
       method: "put",
-      url: "categories/update-category",
+      url: "categories/update",
       data: { id: data.id, field: data.field, newData: data.newData },
     });
     return response.data.data;
