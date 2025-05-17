@@ -16,10 +16,10 @@ export const signUpSchema = z.object({
   avatar: z.string({ required_error: "Avatar is required." }),
   firstName: z
     .string({ required_error: "First name is required." })
-    .min(3, { message: "First name must be atleast 3 character long." }),
+    .min(1, { message: "First name must be atleast 1 character long." }),
   lastName: z
     .string({ required_error: "Last name is required." })
-    .min(3, { message: "Last name must be atleast 3 character long." }),
+    .min(1, { message: "Last name must be atleast 1 character long." }),
   phoneNumber: z
     .string({ required_error: "Phone number is required." })
     .min(10, { message: "Phone number must be atleast 10 character long." }),

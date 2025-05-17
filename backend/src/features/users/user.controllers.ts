@@ -45,7 +45,7 @@ const updateAccount = asyncHandler(
         user.uid,
         user.role,
         "fullName",
-        fullName
+        fullName?.trim()
       );
     }
 
@@ -86,7 +86,7 @@ const updateUser = asyncHandler(
       throw new APIError("No data provided to update.", 400);
 
     if (fullName) {
-      await updateUserDataInFirestore(uid, role, "fullName", fullName);
+      await updateUserDataInFirestore(uid, role, "fullName", fullName?.trim());
     }
 
     if (phoneNumber) {
@@ -121,8 +121,8 @@ const updateUserRole = asyncHandler(
     const newUser = await addUserToFirestore(
       {
         ...user,
-        firstName: user.fullName.split(" ")[0],
-        lastName: user.fullName.split(" ")[1],
+        firstName: user.fullName.split(" ")[0]?.trim(),
+        lastName: user.fullName.split(" ")[1]?.trim(),
       },
       newRole
     );

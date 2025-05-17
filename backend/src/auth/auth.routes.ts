@@ -14,6 +14,7 @@ import { ChangePassword } from "./password/password.controllers.js";
 import { VerifyOtpSchema } from "../utils/validate/auth/verifyOtpSchema.js";
 import { resetPasswordController } from "./reset/reset.controllers.js";
 import { resendOtpController } from "./resend/resend.controllers.js";
+import { forgotPasswordController } from "./forgot/forgot.controllers.js";
 
 const authRouter = Router();
 
@@ -40,10 +41,12 @@ authRouter.post(
   rateLimiter(60, 10),
   ChangePassword
 );
-authRouter.post(
-  "/reset",
-  rateLimiter(60, 10),
-  resetPasswordController
-);
+authRouter.post("/reset", rateLimiter(60, 10), resetPasswordController);
 authRouter.post("/resend", rateLimiter(60, 1), resendOtpController);
+authRouter.post(
+  "/forgot-password",
+  verifyRoles(["admin", "chef", "customer"]),
+  rateLimiter(60, 10),
+  forgotPasswordController
+);
 export { authRouter };

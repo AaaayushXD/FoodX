@@ -18,7 +18,7 @@ export const addUserToFirestore = async (
       throw new APIError("User already exist with this email.", 409);
     const hashedPassword = await generateHashedPassword(user.password);
     await customerDocRef.doc(userId).set({
-      fullName: `${user.firstName} ${user.lastName}`,
+      fullName: `${user.firstName?.trim()} ${user.lastName?.trim()}`,
       email: user.email,
       phoneNumber: user.phoneNumber,
       role: access,

@@ -12,6 +12,9 @@ export const ChangePasswordService = async ({
   role,
 }: Auth.ChangePassword) => {
   try {
+    if (oldPassword === newPassword) {
+      throw new APIError("New password cannot be same as old password.", 400);
+    }
     const user = await getUserWithIdFromDatabase(role, uid);
     if (!user || !user.uid)
       throw new APIError(

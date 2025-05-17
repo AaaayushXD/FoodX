@@ -10,6 +10,18 @@ export const addFeedback = async (feedback: Feedback.FeedbackInfo) => {
     const docRef = db.collection("feedback");
     if (!docRef) throw new APIError("No feedback collection found.", 404);
 
+    // Check if feedback already exists for the user and product
+    const existingFeedback = await docRef
+      .where("uid", "==", uid)
+      .where("productId", "==", productId)
+      .get();
+
+    if (!existingFeedback.empty) {
+      throw new APIError(
+        "Feedback already exists for this user and product.",
+        400
+      );
+    }
     const id = await docRef
       .add({
         uid,

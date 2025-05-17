@@ -49,7 +49,7 @@ productRouter.put(
 );
 
 productRouter.delete(
-  "/delete/:collection",
+  "/delete/:id",
   rateLimiter(60, 20),
   verifyRoles(["chef", "admin"]),
   deleteProduct

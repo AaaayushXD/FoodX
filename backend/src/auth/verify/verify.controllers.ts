@@ -5,11 +5,11 @@ import { APIError } from "../../helpers/error/ApiError.js";
 import { updateUserDataInFirestore } from "../../actions/user/update/updateUser.js";
 import { VerifyOtpSchemaType } from "../../utils/validate/auth/verifyOtpSchema.js";
 import { findUserInDatabase } from "../../actions/user/get/findUser.js";
-import { generateHashedPassword } from "../../utils/hashing/generateHashedPassword.js";
+import { generateAccessAndRefreshToken } from "../../utils/token/tokenHandler.js";
 
 export const verifyOtp = asyncHandler(
   async (req: Request<{}, {}, VerifyOtpSchemaType>, res: Response) => {
-    const { code, uid, type, newPassword } = req.body;
+    const { code, uid, type } = req.body;
     let response: API.ApiResponse;
 
     const user = await findUserInDatabase(uid);
@@ -30,29 +30,26 @@ export const verifyOtp = asyncHandler(
 
       response = {
         status: 200,
-        data: { userInfo: userFromDatabase },
+        data: { userInfo: { ...userFromDatabase, password: "" } },
         success: true,
         message: "User successfully verified.",
       };
       return res.status(200).json(response);
     } else if (type === "reset") {
-      if (!newPassword) throw new APIError("New password is required.", 400);
-      const hasedPassword = await generateHashedPassword(newPassword as string);
-      await updateUserDataInFirestore(
+      const { accessToken } = await generateAccessAndRefreshToken(
         user.uid,
-        user.role,
-        "password",
-        hasedPassword
+        user.role
       );
-      redisClient.del(`reset:${uid}`);
+      redisClient.setEx(`reset-accessToken:${user.uid}`, 300, accessToken);
+      redisClient.del(`reset:${user.email}`);
 
       const userFromDatabase = await findUserInDatabase(user.uid);
 
       response = {
         status: 200,
-        data: { userInfo: userFromDatabase },
+        data: { userInfo: { ...userFromDatabase, password: "" }, accessToken },
         success: true,
-        message: "Password successfully updated.",
+        message: "OTP verified successfully.",
       };
       return res.status(200).json(response);
     } else {
