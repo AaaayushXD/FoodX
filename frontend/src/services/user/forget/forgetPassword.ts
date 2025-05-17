@@ -7,9 +7,9 @@ export const forgetPassword = async ({
 }: {
   email: string;
   }): Promise<Api.Response<{
-    uid: string,
     accessToken: string,
-}>> => {
+    uid:string
+  }>> => {
   try {
     const response = await makeRequest({
       method: "post",

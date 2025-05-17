@@ -20,13 +20,11 @@ import toast from "react-hot-toast";
 import { ApiError, handleShare } from "@/helpers";
 import ProductReview from "@/components/review/productReview";
 import React from "react";
-import { AddProductReview } from "@/features";
 import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
-import { Portal, RippleButton } from "@/commons";
+import { RippleButton } from "@/commons";
 
 export const ProductPage = () => {
-  const [openReview, setOpenReview] = React.useState<boolean>(false);
   const { collection, productId } = useParams();
 
   const { data, isLoading, isError, error } = useQuery({
@@ -176,15 +174,18 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
     });
     try {
       if (auth.success) {
-        const response = await addProductToCart(
-          auth?.userInfo?.uid as string,
-          product?.id
-        );
+        await addProductToCart(auth?.userInfo?.uid as string, product?.id);
       }
 
       dispatch(addToCart({ ...product, quantity: 1 }));
     } catch (error) {
-      throw new Error("Error while adding product to cart " + error);
+      if (error instanceof ApiError) {
+        return toaster({
+          title: error.message,
+          icon: "error",
+          className: "bg-red-50",
+        });
+      }
     } finally {
       toast.dismiss(loading);
     }

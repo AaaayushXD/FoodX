@@ -3,17 +3,20 @@ import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
 export const verifyNewUser = async (
-  otp: string ,
-  uid: string,
+ data:{  code: string ,
+  uid?: string,
   type: "reset" | "otp",
-  accessToken?: string,
+  accessToken?: string,}
 ): Promise<Api.Response<{userInfo: Auth.User}>> => {
   try {
     const response = (await makeRequest({
       method: "post",
       url: "/auth/verify",
 
-      data: { code: otp, uid: uid, type: type, accessToken: accessToken },
+      data: { ...data },
+      headers: {
+        "Authorization": `${data?.accessToken} Bearer`
+      }
     }))
     return response?.data;
   } catch (error) {

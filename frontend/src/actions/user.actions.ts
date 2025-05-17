@@ -94,12 +94,22 @@ const verifyAction = createAsyncThunk(
       otp,
       uid,
       type,
-      accessToken
-    }: { otp: string; uid: string; type: "otp" | "reset"; accessToken?: string },
+      accessToken,
+    }: {
+      otp: string;
+      uid: string;
+      type: "otp" | "reset";
+      accessToken?: string;
+    },
     thunkApi
   ) => {
     try {
-      const response = await userAction.verifyNewUser(otp, uid, type, accessToken);
+      const response = await userAction.verifyNewUser({
+        code: otp,
+        type, 
+        accessToken,
+        uid,
+      });
       localStorage.removeItem("time");
 
       return response.data.userInfo;

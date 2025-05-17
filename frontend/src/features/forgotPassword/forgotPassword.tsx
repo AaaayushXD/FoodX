@@ -4,7 +4,6 @@ import { AuthFooter, AuthNavbar } from "@/components";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { forgetPassword } from "@/services/user";
-import { AxiosError } from "axios";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
 

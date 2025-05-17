@@ -18,6 +18,7 @@ export const Banner: React.FC = () => {
           className: "bg-red-50",
         });
       }
+      throw new ApiError(400,"Something went wrong")
     }
   };
 

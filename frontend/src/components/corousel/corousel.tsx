@@ -54,6 +54,8 @@ export const Carousel: React.FC<CarouselProp> = ({
     };
   }, [currentSlide]);
 
+  console.log(props[currentSlide]?.image)
+
   return (
     <div className="relative w-full h-full py-2 group z-1">
       <a
@@ -71,7 +73,7 @@ export const Carousel: React.FC<CarouselProp> = ({
           style={{
             backgroundImage: `url(${
               import.meta.env.VITE_URI + "assets/" + props[currentSlide]?.image
-            }), url('${Image}')`,
+            })`,
           }}
           onError={(e) => {
             const target = e.target as HTMLDivElement;

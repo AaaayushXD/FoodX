@@ -36,6 +36,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   const queryClient = useQueryClient();
 
   const handleAdd = async () => {
+    
     if (!auth?.success) {
       return toaster({
         title: "Please login!",
@@ -43,6 +44,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         icon: "error",
         message: "You have to access account to add feedback",
       });
+     
     }
     const toastLoader = toaster({
       title: "Please wait...",
@@ -199,7 +201,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   return (
     <div
-      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
+      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60  left-0 right-0 bottom-0 w-screen h-screen ${
         openReview ? "opacity-100 visible  " : "opacity-0 invisible"
       } `}
     >

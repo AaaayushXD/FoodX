@@ -16,10 +16,19 @@ export type ToasterProp = {
   message?: string;
   title?: string;
   icon?: IconType;
-  className?: string;
+  className?:
+    | "bg-red-50"
+    | "bg-green-50"
+    | "bg-blue-50"
+    | "bg-yellow-50"
+    | "bg-purple-50"
+    | "bg-pink-50"
+    | "bg-gray-50"
+    | "bg-white"
+    | string;
 };
 
-let activeToast: string[] = [];
+const activeToast: string[] = [];
 
 const actionIcon: Record<IconType, JSX.Element> = {
   success: <Icons.check className="size-5 sm:size-6 text-green-600 " />,

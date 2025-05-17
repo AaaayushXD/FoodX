@@ -15,6 +15,7 @@ import { Suspense } from "react";
 import { Loader } from "./components/loader/loader";
 import { ThemeContextProvider } from "./contexts/context.theme";
 import { BrowserRouter } from "react-router-dom";
+import { createPortal } from "react-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -29,7 +30,10 @@ root.render(
             <App />
           </ThemeContextProvider>
         </BrowserRouter>
-        <Toaster position="top-center" />
+        {createPortal(
+          <Toaster />,
+          document.body
+        )}
       </PersistGate>
     </Provider>
   </Suspense>
