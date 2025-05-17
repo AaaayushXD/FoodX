@@ -1,21 +1,22 @@
-import React from "react";
-import { TimePicker as TimePick } from "antd";
-import dayjs, { Dayjs } from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import "../../index.css";
-dayjs.extend(customParseFormat);
+import { useState } from "react";
+import { TimePicker as Component } from "rsuite";
+import "rsuite/TimePicker/styles/index.css";
 
-interface TimePickerProps {
-  onChange: (date: Dayjs, dateString: string | string[]) => void;
+interface TimePickerProp {
+  action: (value: Date) => void;
 }
-
-export const TimePicker: React.FC<TimePickerProps> = ({ onChange }) => (
-  <div className=" ">
-    <TimePick
-      onChange={onChange}
-      defaultOpenValue={dayjs("00:00:00", "h:mm:ss A")}
+export const TimePicker: React.FC<TimePickerProp> = ({ action }) => {
+  const [time, setTime] = useState<Date | null>(null);
+  return (
+    <Component
+      format="HH:mm"
+      value={time}
+      onChange={(value) => {
+        setTime(value);
+        action(value);
+      }}
+      cleanable
+      placeholder="Select Time"
     />
-  </div>
-);
-
-
+  );
+};

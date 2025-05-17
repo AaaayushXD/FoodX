@@ -1,6 +1,5 @@
-
 import { useEffect, useRef, useState } from "react";
-import { Icons } from "../../utils";
+import Image from "@/assets/placeholder.svg";
 
 interface CarouselProp {
   props: Ui.Banner[];
@@ -8,7 +7,11 @@ interface CarouselProp {
   actions?: boolean;
   link?: string;
 }
-const Carousel: React.FC<CarouselProp> = ({ props, time, actions = true }) => {
+export const Carousel: React.FC<CarouselProp> = ({
+  props,
+  time,
+  actions = true,
+}) => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
 
   const imageRef = useRef<HTMLDivElement>(null);
@@ -52,7 +55,7 @@ const Carousel: React.FC<CarouselProp> = ({ props, time, actions = true }) => {
   }, [currentSlide]);
 
   return (
-    <div className="relative w-full h-full py-8 group z-1">
+    <div className="relative w-full h-full py-2 group z-1">
       <a
         aria-label={`go to ${props[currentSlide].title}`}
         onClick={(e) => {
@@ -66,31 +69,34 @@ const Carousel: React.FC<CarouselProp> = ({ props, time, actions = true }) => {
           className="w-full h-full overflow-hidden duration-500 bg-center bg-no-repeat bg-cover rounded-xl"
           ref={imageRef}
           style={{
-            backgroundImage: `url(${props[currentSlide].image})`,
+            backgroundImage: `url(${
+              import.meta.env.VITE_URI + "assets/" + props[currentSlide]?.image
+            }), url('${Image}')`,
+          }}
+          onError={(e) => {
+            const target = e.target as HTMLDivElement;
+            target.style.backgroundImage = `url('${Image}')`;
           }}
         ></div>
       </a>
       {actions && (
-        <>
-          <div className="absolute  z-[100] cursor-pointer bg-[var(--dark-text)] text-[var(--light-text)] p-1 rounded-full group-hover:block hidden top-[50%] left-3 sm:left-8 -translate-x-0 translate-y-[-50%] hover:bg-[var(--secondary-color)]">
-            <Icons.chevronLeft
-              className="sm:size-6 size-5 hover:text-[var(--dark-text)] "
-              onClick={prevSlide}
-            />
-          </div>
-          <div className="absolute z-[100] cursor-pointer bg-[var(--dark-text)] text-[var(--light-text)] p-1 rounded-full group-hover:block hidden top-[50%] sm:right-8 right-3 -translate-x-0 translate-y-[-50%] hover:bg-[var(--secondary-color)]">
-            <Icons.chevronRight
-              className="sm:size-6 size-5 hover:text-[var(--dark-text)] "
-              onClick={nextSlide}
-            />
-          </div>
-        </>
+        <div className="flex absolute -bottom-2 right-1/2 items-center justify-start gap-2">
+          {props?.map((key, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={` size-2 duration-150 ${
+                props[currentSlide].id === key.id
+                  ? "scale-150 bg-slate-600 "
+                  : "scale-100 bg-gray-400"
+              }   rounded-full`}
+            ></button>
+          ))}
+        </div>
       )}
     </div>
   );
 };
-
-export default Carousel;
 
 {
   /* <img

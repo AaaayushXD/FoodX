@@ -1,31 +1,8 @@
-import React, { useEffect } from "react";
-import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import { getOrderByUser } from "../services";
-
-export const useAggregateUserOrder = (userOrder: Model.Order[]) => {
-  try {
-    const aggregateData = userOrder?.map((order): Model.UserOrder => {
-      order.products?.map(
-        (product) => (product.name as string) + " × " + product.quantity + ", "
-      );
-      const totalAmount = order?.products?.reduce(
-        (productQuantity, product) =>
-          productQuantity + product.quantity * product.price,
-        1
-      );
-      return {
-        id: order.orderId as string,
-        products: order.products,
-        time: dayjs(order.orderRequest).format("MM-DD-YYYY h:mm A"),
-        status: order.status as string,
-        amount: totalAmount,
-      };
-    });
-    return aggregateData;
-  } catch (error) {
-    return [];
-  }
-};
+import { useHooks } from "./useHooks";
+import { useAppSelector } from "./useActions";
+import { ApiError, useAggregateUserOrder } from "@/helpers";
 
 interface Condition {
   enable?: boolean;
@@ -41,7 +18,7 @@ export const useGetRecentOrder = (
     status,
     userId,
   }: Actions.GetOrderModal<keyof Model.Order>,
-  { enable = true }: Condition = {}
+  { enable = true }: Condition
 ) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
@@ -95,4 +72,103 @@ export const useGetRecentOrder = (
   }, [userId, filter, status]);
 
   return { data, loading, error };
+};
+
+export const useOrders = ({
+  status,
+  pageSize,
+}: {
+  status: Model.OrderStatus;
+  pageSize?: number;
+}) => {
+  const { loading, setLoading, data, setData, setTotalData, totalData } =
+    useHooks<Model.UserOrder[], "orderHistory">("orderHistory");
+
+  const [currentDoc, setCurrentDoc] = useState<{
+    currentFirstDoc: string;
+    currentLastDoc: string;
+  }>();
+  const [error, setError] = useState<string>("");
+
+  const { auth } = useAppSelector();
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
+  const getUserOrders = async ({ pageParam }) => {
+    setLoading(true);
+    setError("");
+    const isPreviousOrderExist = data?.some((order) => order.status === status);
+    if (!isPreviousOrderExist) {
+      setHasMore(true);
+      setCurrentDoc({ currentFirstDoc: "", currentLastDoc: "" });
+      setData([]);
+    }
+    try {
+      const response = await getOrderByUser({
+        status: status,
+        sort: "asc",
+        pageSize: pageSize || 5,
+        direction: "next",
+        currentFirstDoc: pageParam?.currentFirstDoc || null,
+        currentLastDoc: pageParam?.currentLastDoc || null,
+        userId: auth?.userInfo?.uid,
+      });
+
+      setCurrentDoc({
+        currentFirstDoc: response?.data.currentFirstDoc,
+        currentLastDoc: response?.data.currentLastDoc,
+      });
+
+      setTotalData(response?.data.length);
+      if (response?.data.length < 5) {
+        setHasMore(false);
+      }
+      const orderHistory = useAggregateUserOrder(response?.data.orders);
+
+      setData((prevOrders) => {
+        if (!prevOrders || prevOrders.length === 0) {
+          return orderHistory;
+        }
+
+        const updatedOrders = [
+          ...prevOrders,
+          ...orderHistory.filter(
+            (data) => !prevOrders.some((orderData) => orderData.id === data.id)
+          ),
+        ];
+
+        return updatedOrders;
+      });
+      return response?.data?.orders;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setError(error?.message);
+        // toaster({
+        //   title: error?.message,
+        //   icon: "error",
+        //   className: " bg-red-100 ",
+        // });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserOrders({
+      pageParam: {
+        currentFirstDoc: null,
+        currentLastDoc: null,
+      },
+    });
+  }, [status]);
+
+  return {
+    error,
+    loading,
+    currentDoc,
+    hasMore,
+    data,
+    totalData,
+    getUserOrders,
+  };
 };

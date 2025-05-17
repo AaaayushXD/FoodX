@@ -1,10 +1,12 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect } from "react";
-import { removeOrder, addOrder } from "../../reducer";
-
-import { useHooks } from "../../hooks/useHooks";
-import { useAppDispatch, useAppSelector } from "../../hooks/useActions";
-import { useGetRecentOrder } from "../../hooks/useOrders";
+import { removeOrder, addOrder } from "@/reducer";
+import {
+  useHooks,
+  useAppDispatch,
+  useAppSelector,
+  useGetRecentOrder,
+} from "@/hooks";
 
 export const OrderNotification = () => {
   const {
@@ -29,22 +31,22 @@ export const OrderNotification = () => {
     { enable: !store?.order?.order.length && store?.auth?.success }
   );
 
-  useEffect(() => {
-    if (data.length && !loading) {
-      data?.forEach((order) => {
-        if (order.status !== "completed") {
-          dispatch(
-            addOrder({
-              orderId: order.id,
-              products: order.products,
-              status: order.status,
-              orderRequest: order.time, // orderRequest
-            })
-          );
-        }
-      });
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (data.length && !loading) {
+  //     data?.forEach((order) => {
+  //       if (order.status !== "completed") {
+  //         dispatch(
+  //           addOrder({
+  //             orderId: order.id,
+  //             products: order.products,
+  //             status: order.status,
+  //             orderRequest: order.time, // orderRequest
+  //           })
+  //         );
+  //       }
+  //     });
+  //   }
+  // }, [loading]);
 
   useEffect(() => {
     setData(store?.order?.order);

@@ -1,21 +1,67 @@
 import React, { useState } from "react";
-import Logo from "../../assets/logo/Fx.png";
-import {AuthFooter, AuthNavbar } from "../../components"
+import Logo from "@/assets/logo/Fx.png";
+import { AuthFooter, AuthNavbar } from "@/components";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { forgetPassword } from "@/services/user";
+import { AxiosError } from "axios";
+import { ApiError } from "@/helpers";
+import { toaster } from "@/utils";
 
 const LoginContainer: React.FC = () => {
   const [email, setEmail] = useState<string>("");
 
+  const handleReset = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email) {
+      toaster({
+        className: "bg-red-500",
+        message: "Email is required",
+        icon: "error",
+        title: "Error",
+      });
+      return;
+    }
+    try {
+      const response = await forgetPassword({ email });
+      localStorage?.setItem("verifyType", "reset");
+      localStorage?.setItem("uid", response?.data?.uid);
+      localStorage?.setItem("accessToken", response?.data?.accessToken);
+
+      navigate("/email-verification");
+      if (response?.message) {
+        toaster({
+          className: "bg-green-50",
+          message: response.message,
+          icon: "success",
+          title: "Success",
+        });
+      }
+      return response.data;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toaster({
+          className: "bg-red-50",
+          message: error.message,
+          icon: "error",
+          title: "Error",
+        });
+      }
+    }
+  };
   const navigate = useNavigate();
+  const { mutate, isPending } = useMutation({
+    mutationFn: handleReset,
+    mutationKey: ["forgot-password"],
+  });
   return (
     <div className="flex items-center justify-center w-full h-full px-5 py-8">
       <div className="w-full h-full bg-[var(--light-foreground)] flex flex-col gap-8 rounded-lg shadow-sm">
         <div className="w-full px-5 py-6 text-5xl font-bold text-[var(--primary-color)] tracking-wide text-center">
-          <h1 className="md:hidden">Reset</h1>
-          <h1 className="hidden md:block">Reset Your Password</h1>
+          <h1 className="md:text-3xl text-2xl">Reset Your Password</h1>
         </div>
         <div className="px-3 py-4">
-          <form className="flex flex-col gap-4 p-2">
+          <form onSubmit={mutate} className="flex flex-col gap-4 p-2">
             <div className="relative flex flex-col gap-2">
               <label htmlFor="logEmail" className="text-sm">
                 Email
@@ -39,7 +85,7 @@ const LoginContainer: React.FC = () => {
               Have an Account?
             </p>
             <button className="h-[40px] sm:text-[16px] text-[14px] rounded-md bg-[var(--primary-color)] hover:bg-[var(--primary-light)] text-[var(--light-text)] text-md font-bold tracking-wide transition-colors duration-500 ease-in-out mt-5 ">
-              Send For Verification
+              {isPending ? "Sending..." : "Send For Verification"}
             </button>
           </form>
         </div>

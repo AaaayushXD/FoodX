@@ -3,12 +3,18 @@ declare namespace Api {
     success: boolean;
     data: T;
     message: string;
-    statusCode: number;
+    status: number;
   }
 
+  interface ApiError {
+    code: number;
+    name?: string;
+    response: Response<Response<any>>;
+  }
   // Notication actions
 
-  interface FetchNotification extends Pick<Model.Notification, "uid"> {
+  interface FetchNotification  {
+    userId?:string
     pageSize: number;
     sort: "asc" | "desc";
     currentFirstDoc: any | null;

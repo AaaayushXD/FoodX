@@ -1,2 +1,4 @@
 export * from "./profile";
-export * from "./useLogout";
+export * from "./mobile/mobileProfile"
+export * from "./info/profileInfo"
+

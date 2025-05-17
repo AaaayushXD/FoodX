@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { addToCart } from "../../reducer";
+import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
-import { FavouriteCard } from "../../components";
-import { addProductToCart } from "../../services";
-import { useAllProducts } from "../../hooks/useAllProducts";
-import { useAppDispatch, useAppSelector } from "../../hooks/useActions";
-import { Icons } from "../../utils";
+import { FavouriteCard } from "@/components";
+import { addProductToCart } from "@/services";
+import { useAllProducts } from "@/hooks/useAllProducts";
+import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
+import { Icons } from "@/utils";
 
 export const Favourite: React.FC = () => {
  const store = useAppSelector();

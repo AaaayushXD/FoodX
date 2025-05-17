@@ -1,57 +1,71 @@
-import { useQuery, useQueryClient } from "react-query";
-import {
-  getNormalProducts,
-  getSpecialProducts,
-} from "../services/product.services";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getNormalProducts, getSpecialProducts } from "@/services";
+import { useAppDispatch, useAppSelector } from "./useActions";
+import { useEffect } from "react";
+import { fetchProducts } from "@/actions";
 
-const getAllProducts = async (
-  specialProducts: Ui.Product[]
-): Promise<Ui.Product[]> => {
+export const getAllProducts = async (): Promise<Ui.Product[]> => {
   try {
-    let existProducts: Ui.Product[];
-    const normalProducts = await getNormalProducts();
-    if (!specialProducts) {
-      const unExistProducts = await getSpecialProducts();
-      existProducts = [...normalProducts.data, ...unExistProducts.data];
-    } else {
-      existProducts = [...normalProducts.data, ...specialProducts];
-    }
-    return existProducts;
+    const [normalProducts, specialProducts] = await Promise.all([
+      getNormalProducts(),
+      getSpecialProducts(),
+    ]);
+
+    const aggregateProducts = normalProducts?.data?.map((product) => {
+      return {
+        ...product,
+        collection: "products" as Common.ProductCollection,
+      };
+    });
+
+    const aggregateSpecialProducts = specialProducts?.data?.map((product) => {
+      return {
+        ...product,
+        collection: "specials" as Common.ProductCollection,
+      };
+    });
+    return [...aggregateProducts, ...aggregateSpecialProducts];
   } catch (error) {
     throw new Error("Error while fetching all products " + error);
   }
 };
 
 export const useAllProducts = () => {
-  const queryClient = useQueryClient();
-  const specialProducts = queryClient.getQueryData<Ui.Product[]>("specials");
+  const { products, isError, isLoading, lastFetched } =
+    useAppSelector().product;
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
-  return useQuery<Ui.Product[]>(
-    "all",
-    () => getAllProducts(specialProducts as Ui.Product[]),
-    {
-      staleTime: 2 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  );
+  return {
+    products,
+    isError,
+    isLoading,
+  };
 };
 
 export const specialsProductsFn = async (): Promise<Ui.Product[]> => {
   try {
-    const normalProducts = await getSpecialProducts();
+    const products = await getSpecialProducts();
 
-    const products = normalProducts.data as Ui.Product[];
-    return products;
+    const aggregateSpecialProducts = products?.data?.map((product) => {
+      return {
+        ...product,
+        collection: "specials" as Common.ProductCollection,
+      };
+    });
+    return aggregateSpecialProducts;
   } catch (error) {
     throw new Error("Error while fetching specials products");
   }
 };
 
 export const specialProducts = () => {
-  return useQuery<Ui.Product[]>("specials", specialsProductsFn, {
+  return useQuery<Ui.Product[]>({
+    queryKey: ["specials", specialsProductsFn],
     staleTime: 2 * 60 * 1000,
-    cacheTime: 2 * 60 * 1000,
+    gcTime: 2 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

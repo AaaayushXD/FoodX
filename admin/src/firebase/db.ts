@@ -6,8 +6,8 @@ import {
     updateDoc,
   } from "firebase/firestore";
   import { db } from ".";
-  import { Category } from "../models/category.model";
-  import { DbUser } from "../models/user.model";
+  import { Category } from "../@types/category.model";
+  import { DbUser } from "../@types/user.model";
   
   export const getCategory = async (docName: "bnw" | "color") => {
     try {

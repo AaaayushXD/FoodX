@@ -1,6 +1,7 @@
 declare namespace Auth {
   type role = "admin" | "chef" | "customer";
   interface User {
+    isVerified?: boolean
     uid?: string;
     avatar?: string;
     fullName?: string;
@@ -21,10 +22,10 @@ declare namespace Auth {
     success: boolean;
   }
 
-  interface ValidationType extends Omit<User, "fullName"> {
-    firstName: string;
-    lastName: string;
+  interface ValidationType extends Partial<Omit<User, "fullName">> {
+    firstName?: string;
+    lastName?: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
   }
 }

@@ -1,42 +1,35 @@
-import { Icons } from "../../utils";
-import CollegeLogo from "../../assets/logo/texas.png";
+import React from "react";
+import { Icons } from "@/utils";
 
+const links: { icon: React.ReactNode; href: string; title?: string }[] = [
+  {
+    href: "https://www.linkedin.com/company/texas-college-of-management-it/",
+    icon: (
+      <Icons.linkedin className="sm:size-5 size-4 duration-150 text-[var(--primary-color)] " />
+    ),
+    title: "Linkedin",
+  },
+  {
+    href: "https://www.facebook.com/texasintlcollege",
+    icon: (
+      <Icons.facebook className="sm:size-5 size-4 duration-150 text-[var(--primary-color)] " />
+    ),
+    title: "Facebook",
+  },
+
+  {
+    href: "https://www.instagram.com/texasinternationalcollege/",
+    icon: (
+      <Icons.instagram className="sm:size-5 size-4 duration-150 text-[var(--primary-color)] " />
+    ),
+    title: "Instagram",
+  },
+];
 export const Footer: React.FC = () => {
   return (
-    <div className="flex flex-col w-full text-white ">
-      <footer className="w-full mt-16  rounded-t  bg-[var(--primary-color)] text-white place-items-center grid px-5">
-        <div className="flex flex-col items-center justify-between w-full gap-5 p-3 border-b-4 border-b-[var(--light-border)] sm:flex-row">
-          <div className="px-5 py-3 bg-[var(--light-background)] rounded">
-            <img src={CollegeLogo} alt="logo" className="max-h-[60px] " />
-          </div>
-          <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-lg font-bold tracking-wide ">Follow us: </p>
-            <div className="flex items-center gap-9">
-              <a
-                aria-label="go to facebook"
-                target="_blank"
-                href="https://www.facebook.com/texasintlcollege"
-              >
-                <Icons.facebook className="sm:size-6 size-5 duration-150 hover:text-[var(--secondary-color)] " />
-              </a>
-              <a
-                aria-label="go to instagram"
-                href="https://www.instagram.com/texasinternationalcollege/"
-                target="_blank"
-              >
-                <Icons.instagram className="sm:size-6 size-5 duration-150 hover:text-[var(--secondary-color)] " />
-              </a>
-              <a
-                aria-label="go to linkedin"
-                href="https://www.linkedin.com/company/texas-college-of-management-it/"
-                target="_blank"
-              >
-                <Icons.linkedin className="sm:size-6 size-5 duration-150 hover:text-[var(--secondary-color)] " />
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-4  ">
+    <div className="flex  flex-col w-full text-white ">
+      <footer className="w-full mt-5    rounded-t  bg-[var(--primary-color)] text-white place-items-center sm:grid px-5">
+        <div className="w-full flex  items-start sm:items-center sm:justify-evenly justify-between flex-wrap  ">
           <div className="flex sm:col-span-1 col-span-3 flex-col gap-6 p-8 ">
             <p className="font-bold tracking-wider">Quick Contact</p>
             <div className="flex flex-col gap-5">
@@ -104,35 +97,9 @@ export const Footer: React.FC = () => {
               </a>
             </div>
           </div>
-          <div className="flex flex-col sm:col-span-1 col-span-2 gap-5 px-5 py-8">
-            <p className="font-bold tracking-wider">Quick Links</p>
-            <div className="flex flex-col gap-3 text-sm text-white ">
-              <a
-                target="_blank"
-                href="mail:enquiry@texasintl.edu.np"
-                className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
-              >
-                enquiry@texasintl.edu.np
-              </a>
-              <a
-                target="_blank"
-                href="https://texasintl.edu.np/"
-                className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
-              >
-                Texas International College
-              </a>
-              <a
-                target="_blank"
-                href="https://texascollege.edu.np/"
-                className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
-              >
-                Texas College of IT and Management
-              </a>
-            </div>
-          </div>
           <div className="flex flex-col items-start gap-5 px-5 py-8">
             <p className="font-bold tracking-wider">Resources</p>
-            <div className="flex flex-col gap-5 text-sm text-white pl-9">
+            <div className="flex flex-col gap-5 text-sm text-white">
               <a
                 href="/"
                 target="_blank"
@@ -148,6 +115,19 @@ export const Footer: React.FC = () => {
                 Privacy Policy
               </a>
             </div>
+          </div>
+        </div>
+        <div className="flex py-2 items-center justify-end w-full gap-3">
+          <p className="sm:text-lg text-sm font-semibold tracking-wide ">Connect With Us : </p>
+          <div className="flex items-center gap-4">
+            {links?.map((link, index) => (
+              <Link
+                href={link.href}
+                key={index}
+                icon={link.icon}
+                title={link.title}
+              />
+            ))}
           </div>
         </div>
       </footer>
@@ -176,4 +156,18 @@ export const Footer: React.FC = () => {
   );
 };
 
+interface LinkProp {
+  href: string;
+  title?: string;
+  icon?: React.ReactNode;
+}
 
+const Link: React.FC<LinkProp> = ({ href, icon, title }) => {
+  return (
+    <div className="flex items-center gap-9">
+      <a aria-label={`Go to ${title}`} target="_blank" href={href}>
+        <button className=" bg-white p-1.5 rounded-full ">{icon}</button>
+      </a>
+    </div>
+  );
+};

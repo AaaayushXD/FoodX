@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { RootState } from "../store";
+import { RootState } from "@/store";
 import { useEffect } from "react";
 
 interface PrivateRouteProp {
   userRole: Auth.role[];
 }
 
-const PrivateRoute: React.FC<PrivateRouteProp> = ({ userRole }) => {
+export const PrivateRoute: React.FC<PrivateRouteProp> = ({ userRole }) => {
   const location = useLocation();
 
   const auth = useSelector((state: RootState) => state.root.auth);
@@ -25,4 +25,3 @@ const PrivateRoute: React.FC<PrivateRouteProp> = ({ userRole }) => {
   );
 };
 
-export default PrivateRoute;

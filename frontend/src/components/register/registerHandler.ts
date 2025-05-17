@@ -18,7 +18,7 @@ export const allFieldsRequired = (
 };
 
 export const validateEmail = (
-  RegisterValue: Auth.ValidationType,
+  RegisterValue: Partial<Auth.ValidationType>,
   error: Record<string, string>
 ) => {
   //TODO: Change this according to college/school.

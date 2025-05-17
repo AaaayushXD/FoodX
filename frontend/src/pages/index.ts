@@ -1,7 +1,12 @@
 export * from "./home";
-export * from "./checkout/page.checkout";
+export * from "./checkout/checkoutPage";
 export * from "./page.404/page.404";
-export * from "./profile/page.profile";
 export * from "./verification/page.verification";
-export * from "./profile/page.profile";
-export * from "./cart/page.cart"
+export * from "./profile/profilePage";
+export * from "./search/searchPage"
+export * from "./product/productPage"
+export * from "./notification/mobileNotification"
+export * from "./favourite"
+export * from "./order"
+export * from "./notification/mobileNotification"
+

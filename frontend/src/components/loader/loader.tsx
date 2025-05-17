@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { RotatingLines } from "react-loader-spinner";
-import SplashImage from "../../assets/F.gif";
+import SplashImage from "@/assets/F.gif";
 
 interface LoadingTextProp {
   isLoading: boolean;

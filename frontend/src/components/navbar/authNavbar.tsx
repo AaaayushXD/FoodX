@@ -1,4 +1,4 @@
-import Logo from '../../assets/logo/Fx.png'
+import Logo from '@/assets/logo/Fx.png'
 
 export const AuthNavbar: React.FC = () => {
   return (

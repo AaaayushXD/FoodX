@@ -3,7 +3,7 @@ declare namespace Actions {
     extends Omit<Models.Revenue, "createdAt" | "updatedAt"> {}
 
   interface AddNotification {
-    userId: string;
+    uid: string;
     title: string;
     message: string;
   }
@@ -12,30 +12,31 @@ declare namespace Actions {
 
   interface UpdateProfile {
     avatar?: string;
-    fullName?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
   }
 
   interface Login {
     email: string;
     password: string;
   }
- 
+
   interface Register<T> {
-   avatar: T;
-   firstName: string;
-   lastName: string;
-   email: string;
-   phoneNumber: string;
-   password: string;
-   confirmpassword?: string;
-   role: Auth.role;
+    avatar: T;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+    confirmpassword?: string;
+    role: Auth.role;
   }
- 
- interface GetOrderModal<T> extends Common.FetchPaginate<T> {
-  
-   status?: Models.OrderStatus
-   userId?: string;
- }
+
+  interface GetOrderModal<T>
+    extends Common.FetchPaginate<T, Model.OrderStatus | ""> {
+    status?: Model.OrderStatus;
+    userId?: string;
+  }
 }
