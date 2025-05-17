@@ -30,6 +30,7 @@ export const MenuType: React.FC = () => {
           message: error?.message,
         });
       }
+      throw new ApiError(400)
     }
   };
 
