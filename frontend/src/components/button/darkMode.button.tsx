@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useThemeContext } from "../../context/context.theme";
-import { Icons } from "../../utils";
+import { useThemeContext } from "@/contexts/context.theme";
+import { Icons } from "@/utils";
 
 const mode = [
   {
@@ -51,7 +51,7 @@ export const DarkMode = () => {
         <Icons.displaySetting className="size-5" />
         <p> Mode</p>
         <span>
-          <Icons.chevronDown
+          <Icons.arrowDown
             className={`size-5 ${open ? "rotate-180" : ""}  duration-150`}
           />
         </span>

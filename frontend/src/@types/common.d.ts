@@ -1,15 +1,27 @@
 declare namespace Common {
-
   type folder = "users" | "products" | "banners";
+  type AssetsType = "users" | "banners" | "categories" | "default" | "reviews";
+  type sortAction = "asc" | "desc";
+  type SortType = "time" | `price[${sortAction}]` | "rating";
 
-  interface FetchPaginate<T>{
-    pageSize: number;
+  type ProductCollection = "products" | "specials";
+
+  interface FetchPaginate<T, K> {
+    pageSize?: number;
     filter?: T;
     sort?: "asc" | "desc";
     currentFirstDoc?: any | null;
     currentLastDoc?: any | null;
     direction?: "prev" | "next";
+    status?: K;
+    uid?: string;
   }
+
+  type CurrentDocType = {
+    currentFirstDoc: string;
+    currentLastDoc: string;
+  };
+
   interface TableModalProps<T> {
     data: Array<T>;
     totalData: number;
@@ -28,6 +40,13 @@ declare namespace Common {
     disableNoData?: boolean;
     onPageChange?: (page: number) => void;
     disableActions?: boolean;
+  }
+
+  interface PaginateResponse<T> {
+    data: T;
+    currentFirstDoc: string;
+    currenLastDoc: string;
+    length: number;
   }
   interface TableActions {
     orderFn?: (id: string) => void;

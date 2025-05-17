@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useNavigate } from "react-router-dom";
-import { RecentProductCard } from "../../components";
-import { getOrderByUser } from "../../services";
-import Empty from "../../assets/empty.png";
-import { useAppSelector } from "../../hooks/useActions";
-import { Icons } from "../../utils";
+import { RecentProductCard } from "@/components";
+import { getOrderByUser } from "@/services";
+import Empty from "@/assets/empty.png";
+import { useAppSelector } from "@/hooks";
+import { Icons } from "@/utils";
 
 export const RecentProduct = () => {
   const [initialData, setInitialData] = useState<Ui.Product[]>([]);

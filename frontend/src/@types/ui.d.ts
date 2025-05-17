@@ -5,13 +5,33 @@ declare namespace Ui {
     name: string;
     price: number;
     quantity: number;
+    description?: string;
+    cookingTime?: string;
+    rating?: string;
     tag?: string;
     tagId?: string;
     totalSold?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt?: Common.TimeStamp;
+    updatedAt?: Common.TimeStamp;
+    collection?: Common.ProductCollection;
+    discountPrice?: number;
   }
+
+  interface SpecialProducts extends Product {
+    discountPrice: number;
+  }
+
   type BannerType = "banners" | "sponsors";
+
+  interface FeedbackInfo {
+    uid: string;
+    userId?: string;
+    productId: string;
+    rating: number;
+    message: string;
+    image?: string;
+  }
+
   interface Banner {
     id: string;
     title: string;
@@ -21,13 +41,17 @@ declare namespace Ui {
     createdAt?: string;
     updatedAt?: string;
   }
+
   interface Category {
     id: string; //pk
     name: string;
     image: string;
+    description?: string;
+    cover?: string;
     createdAt?: Common.TimeStamp;
     updatedAt?: Common.TimeStamp;
   }
+
   interface SlideProp {
     url: string;
   }

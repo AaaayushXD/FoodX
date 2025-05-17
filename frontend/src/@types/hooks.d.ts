@@ -41,7 +41,7 @@ declare namespace Hook {
       loading: boolean;
       setLoading: React.Dispatch<React.SetStateAction<boolean>>;
       data?: T;
-      setData: React.Dispatch<React.SetStateAction<T | undefined>>;
+      setData: React.Dispatch<React.SetStateAction<T>>;
     };
     orderNotification: {
       orderId: string;

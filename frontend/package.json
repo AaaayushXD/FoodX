@@ -8,12 +8,15 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/brand.png"
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/brand.png",
+    "start": "node build/index.js"
   },
   "dependencies": {
     "@firebase/auth": "^1.8.2",
     "@react-pdf/renderer": "^4.2.1",
     "@reduxjs/toolkit": "^2.5.1",
+    "@tanstack/react-query": "^5.69.0",
+    "@tanstack/react-query-devtools": "^5.69.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "antd": "^5.23.4",
@@ -21,6 +24,7 @@
     "dayjs": "^1.11.13",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.0.2",
+    "framer-motion": "^12.4.4",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.474.0",
@@ -29,14 +33,16 @@
     "react-hot-toast": "^2.5.1",
     "react-icons": "^5.4.0",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-intersection-observer": "^9.15.1",
     "react-loader-spinner": "^6.1.6",
     "react-loading-skeleton": "^3.5.0",
-    "react-query": "^3.39.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
     "react-spinners": "^0.15.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "rsuite": "^5.78.0",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {

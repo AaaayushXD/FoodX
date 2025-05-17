@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "@/store";
 import { Frown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { RecentProductCard } from "../../components/card/card.recent.product";
-import { getOrderByUser } from "../../services/order.services";
+import { RecentProductCard } from "@/components";
+import { getOrderByUser } from "@/services";
 
 export const TopProduct = () => {
   const [initialData, setInitialData] = useState<Ui.Product[]>([]);

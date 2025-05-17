@@ -13,6 +13,10 @@ export const getRemainingTime = (time: Dayjs) => {
   const minutes = Math.floor((diff / (1000 * 60)) % 60); // Remaining minutes
   const seconds = Math.floor((diff / 1000) % 60); // Remaining seconds
 
+  if (days > 2) {
+    return dayjs(time).format("YYYY-MM-DD")
+  }
+
   if (days && hours && minutes) {
     return `${days}d ${hours}h ${minutes}m`;
   }

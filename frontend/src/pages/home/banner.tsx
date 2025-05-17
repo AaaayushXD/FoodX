@@ -1,7 +1,9 @@
-import Carousel from "../../components/corousel/corousel";
-import { getBanners } from "../../services/banner.services";
-import Skeleton from "react-loading-skeleton";
-import { useQuery } from "react-query";
+import { Carousel } from "@/components";
+import { getBanners } from "@/services";
+import { ApiError, Skeleton } from "@/helpers";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Error } from "@/commons";
+import { toaster } from "@/utils";
 
 export const Banner: React.FC = () => {
   const getBanner = async (): Promise<Ui.Banner[]> => {
@@ -9,28 +11,49 @@ export const Banner: React.FC = () => {
       const response = await getBanners("banners");
       return response.data && (response.data.banners as Ui.Banner[]);
     } catch (error) {
-      throw new Error("Error while fetching banners" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error?.message,
+          className: "bg-red-50",
+        });
+      }
     }
   };
 
-  const { data, isLoading } = useQuery("banner", getBanner, {
-    staleTime: 1 * 60 * 1000,
+  const query = useQueryClient();
+  const previousData = query.getQueryData<Ui.Banner[]>(["banner"]);
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["banner"],
+    queryFn: getBanner,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
+
+  if (isError) {
+    return (
+      <Error
+        message="Error while fetching banners"
+        button={{
+          title: "Refresh",
+          onClick: () => refetch(),
+        }}
+      />
+    );
+  }
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className="lg:h-[600px] lg:min-w-[700px] flex items-center min-w-[300px] w-[400px] h-[300px] sm:w-[600px] sm:h-[350px] md:w-[500px] md:h-[450px] duration-500 xl:w-[1000px] flex-grow">
+      <div className=" w-full h-[120px] sm:h-[400px] ">
         {isLoading ? (
-          <div className="flex w-full h-full items-center justify-center gap-4 rounded-xl ">
-            <Skeleton
-              borderRadius={"13px"}
-              className="w-full h-full"
-              containerClassName="w-[900px] h-[300px] h-[220px] md:h-[400px] lg:h-[600px] "
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
-            />
-          </div>
+          <Skeleton
+            children={{
+              className: "w-full h-[100px] sm:h-[250px] rounded-lg",
+            }}
+            className="w-full h-full"
+            count={1}
+          />
         ) : (
           data &&
           data.length > 0 && (
@@ -43,38 +66,53 @@ export const Banner: React.FC = () => {
 };
 
 export const Sponsor: React.FC = () => {
-  const getBanner = async (): Promise<Ui.Banner[]> => {
+  const getSponsors = async (): Promise<Ui.Banner[]> => {
     try {
       const response = await getBanners("sponsors");
       return response.data.banners as Ui.Banner[];
     } catch (error) {
-      throw new Error("Error while fetching banners" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          message: error?.message,
+          className: "bg-red-50",
+        });
+      }
+      throw new ApiError(400);
     }
   };
 
-  const { data, isLoading } = useQuery("sponsor", getBanner, {
-    staleTime: 60 * 1000,
+  const { data, isLoading, error, isError, refetch } = useQuery({
+    queryKey: ["sponsors"],
+    queryFn: getSponsors,
+    gcTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
   });
 
   return (
-    <div className="items-center justify-center hidden w-full h-full lg:flex">
-      <div className="lg:h-[602px]  h-[300px] max-w-md sm:h-[350px] md:h-[382px] duration-500  flex-grow">
+    <div className="items-center justify-center  w-full h-full flex">
+      <div
+        className={`w-full ${isError ? "h-full" : "h-[100px]"} sm:h-[300px]`}
+      >
         {isLoading ? (
-          <div className="lg:flex hidden w-full gap-4 rounded-xl ">
-            <Skeleton
-              borderRadius={"13px"}
-              className="w-full h-full"
-              containerClassName="w-[400px] h-[600px] "
-              baseColor="var(--light-background)"
-              highlightColor="var(--light-foreground)"
-              count={1}
-            />
-          </div>
+          <Skeleton
+            children={{
+              className: "w-full h-[100px] sm:h-[200px] rounded-lg",
+            }}
+            className="w-full h-full"
+            count={1}
+          />
+        ) : isError || data === undefined ? (
+          <Error
+            button={{ onClick: () => refetch(), title: "Refresh" }}
+            message={error?.message}
+          />
         ) : (
           data &&
           data.length > 0 && (
             <div className="w-full h-full">
               <Carousel
+                key={1}
                 actions={false}
                 props={data as Ui.Banner[]}
                 time={25000}

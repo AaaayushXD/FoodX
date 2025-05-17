@@ -1,82 +1,87 @@
 import React, { useState } from "react";
-import "react-loading-skeleton/dist/skeleton.css";
-import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { MoonLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../hooks/useActions";
-import {TimePicker} from "../../features";
-import { addOrder, resetCart } from "../../reducer";
-import { addRevenue, addNotification, removeProductFromCart } from "../../services";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { TimePicker } from "@/features";
+import { resetCart } from "@/reducer";
+import { addOrder as orderAdd, resendOtp } from "@/services";
+import { addRevenue, addNotification, removeProductFromCart } from "@/services";
+import { ApiError } from "@/helpers";
+import { toaster } from "@/utils";
+import { RippleButton } from "@/commons";
+import { VerificationContainer } from "@/pages";
+import { Modal } from "@/commons";
 
 export const Payment: React.FC = () => {
-  const [selectedPayment, setSelectedPayment] = useState<string>("esewa");
+  const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();
   const [note, setNote] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const { auth, cart } = useAppSelector();
+  const [isUserVeried, setIsUserVerified] = useState<boolean>(true);
 
-  const handlePaymentSelection = (paymentMethod: string) => {
-    setSelectedPayment(paymentMethod);
+  const handlePaymentSelection = (paymentMethod: Model.PaymentMethod) => {
+    setPayementMethod(paymentMethod);
   };
 
-  const store = useAppSelector()
-  const dispatch = useAppDispatch()
+  const store = useAppSelector();
+  const dispatch = useAppDispatch();
 
   const handlePayment = async () => {
-    if (!selectedPayment) {
-      // Show error or alert for missing payment method
-      toast.error("Please select a payment method");
+    if (!paymentMethod) {
+      toaster({
+        icon: "warning",
+        className: "bg-red-100",
+        title: "Select payment method",
+        message: "You have to select payment method to order",
+      });
       return;
     }
+
     try {
+      if (!auth?.userInfo?.isVerified) {
+        await resendOtp();
+        toaster({
+          className: "bg-yellow-50",
+          icon: "warning",
+          title: "Account Verification Required",
+          message:
+            "To proceed with your order, please verify your account. Check your email for the verification link.",
+        });
+
+        localStorage?.setItem("verifyType", "otp");
+        return setIsUserVerified(false);
+      }
       setLoading(true);
-      const newOrder = await addOrder({
-        products: store.cart.products,
+      const response = await orderAdd({
+        role: auth?.userInfo?.role,
+        uid: auth?.userInfo?.uid as string,
+        products: cart?.products,
         orderRequest: dayjs().toISOString(),
-        uid: store.auth.userInfo.uid as string,
-        note: note,
-        orderFullfilled: "",
-        revenue: store.cart.products.reduce(
-          (acc, product) => acc + product.price * product.quantity,
-          0
-        ),
         status: "pending",
-        orderId: "",
+        note: note,
       });
-      dispatch(
-        addOrder({
-          orderId: newOrder,
-          products: store?.cart?.products,
-          orderRequest: dayjs().toISOString(),
-          uid: store.auth.userInfo.uid as string,
-          revenue: store.cart.products.reduce(
-            (acc, product) => acc + product.price * product.quantity,
-            0
-          ),
-          status: "pending",
-        })
-      );
+      if (response?.message)
+        toaster({
+          title: response?.message,
+          className: " bg-green-100",
+          icon: "success",
+          message: "Your order was successfully placed",
+        });
       await addRevenue({
         id: dayjs().format("YYYY-MM-DD"),
         orders: store.cart.products,
       });
       await addNotification({
-        userId: store.auth.userInfo.uid as string,
+        uid: store.auth.userInfo.uid as string,
         title: "Order Confirmed!",
         message: `Order placed successfully! We're processing your ${store?.cart?.products?.length} item. Thank you for shopping with us!"`,
       });
 
-      // const handleOrder = (order: Order) => {
-      //   navigate(`/order/success/:${order?.orderId}`, {
-      //     state: { orderDetails: order },
-      //   });
-      // };
-
       // socket.on("new_order", handleOrder);
-      navigate("/order/success", {
-        state: store.cart,
-      });
+      navigate("/order/success");
       store?.cart?.products.forEach(async (product) => {
         await removeProductFromCart(
           store?.auth?.userInfo?.uid as string,
@@ -85,15 +90,20 @@ export const Payment: React.FC = () => {
       });
       dispatch(resetCart());
     } catch (error) {
-      toast.error("Error while payment");
-      setLoading(true);
-      throw new Error("Error while add order & payment" + error);
+      if (error instanceof ApiError) {
+        toaster({
+          icon: "error",
+          className: "bg-red-50",
+          message: error?.message,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div className="w-full md:max-w-md p-5 mt-12 rounded-lg bg-[var(--light-foreground)] shadow-md">
+    <div className="w-full md:max-w-md p-5 lg:mt-12 rounded-lg bg-[var(--light-foreground)]">
       <h1 className="text-xl font-semibold tracking-wider text-[var(--dark-text)] mb-5">
         Payment Information
       </h1>
@@ -104,26 +114,26 @@ export const Payment: React.FC = () => {
             Select Payment Method
           </label>
           <div className="flex gap-3 mt-2">
-            <button
-              onClick={() => handlePaymentSelection("esewa")}
-              className={`w-full py-3 bg-[var(--esewa)] font-semibold tracking-wide rounded-lg text-white ${
-                selectedPayment === "esewa"
+            <RippleButton
+              onClick={() => handlePaymentSelection("online")}
+              className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${
+                paymentMethod === "online"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
               }`}
             >
-              eSewa
-            </button>
-            <button
-              onClick={() => handlePaymentSelection("khalti")}
-              className={`w-full py-3 bg-[var(--khalti)] font-semibold tracking-wide rounded-lg text-white ${
-                selectedPayment === "khalti"
+              Online
+            </RippleButton>
+            <RippleButton
+              onClick={() => handlePaymentSelection("cash")}
+              className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${
+                paymentMethod === "cash"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
               }`}
             >
-              Khalti
-            </button>
+              Cash
+            </RippleButton>
           </div>
         </div>
 
@@ -141,7 +151,7 @@ export const Payment: React.FC = () => {
           />
           <div className="w-full bottom-0 absolute flex justify-end mt-0.5  ">
             <TimePicker
-              onChange={(time) =>
+              action={(time) =>
                 setNote((prev) => {
                   if (prev?.includes("Arrival Time: ")) {
                     return prev.replace(
@@ -158,46 +168,29 @@ export const Payment: React.FC = () => {
           </div>
         </div>
 
-        {/* Order Summary */}
-        <div className="mt-5 p-4 bg-[var(--light-foreground)] rounded-lg border-[1px] border-[var(--dark-border)]">
-          <div className="flex justify-between items-center  font-semibold text-[var(--green-text)]">
-            <span>Order Total</span>
-            <span>
-              Rs.
-              {store.cart.products?.reduce(
-                (productAcc, product) =>
-                  productAcc + product.price * product.quantity,
-                0
-              ) ||
-                store?.cart?.products?.reduce(
-                  (productAcc, product) =>
-                    productAcc + product.price * product.quantity,
-                  0
-                )}
-            </span>
-          </div>
-        </div>
-
         {/* Payment Action */}
         <div className="flex items-center justify-between mt-5">
           <button
             type="button"
             onClick={handlePayment}
-            className="bg-[var(--primary-color)] text-sm sm:text-[15px]  tracking-wide flex gap-2 items-center justify-start text-[var(--dark-text)] py-2 px-4 rounded-lg hover:bg-[var(--primary-light)] transition-all"
+            className="bg-[var(--primary-color)] text-white text-sm sm:text-[15px]  tracking-wide flex gap-2 items-center justify-start text-[var(--dark-text)] py-2 px-4 rounded-lg hover:bg-[var(--primary-light)] transition-all"
           >
-            Pay Now
-            {loading && (
-              <MoonLoader size={18} className=" text-[var(--primary-color)] " />
-            )}
+            Order Now
+            {loading && <MoonLoader color="white" size={14} />}
           </button>
         </div>
       </div>
 
       <div className="mt-5 text-[var(--dark-secondary-text)] text-center">
-        <small>
-          All payments are processed securely through eSewa or Khalti.
-        </small>
+        <small>All payments are processed securely through online.</small>
       </div>
+      {!isUserVeried && (
+        <Modal
+          children={<VerificationContainer />}
+          close={isUserVeried}
+          closeModal={() => setIsUserVerified(!isUserVeried)}
+        />
+      )}
     </div>
   );
 };

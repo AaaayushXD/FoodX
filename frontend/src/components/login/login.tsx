@@ -1,11 +1,13 @@
 import React, { FormEvent, useState } from "react";
-import Logo from "../../assets/logo/Fx.png";
+import Logo from "@/assets/logo/Fx.png";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/HashLoader";
-import { signInAction } from "../../actions/user.actions";
-import {AuthFooter,AuthNavbar} from "../../components"
-import { useAppDispatch } from "../../hooks/useActions";
-import { Icons } from "../../utils";
+import { signInAction } from "@/actions";
+import { AuthFooter, AuthNavbar } from "@/components";
+import { useAppDispatch } from "@/hooks";
+import { Icons, toaster } from "@/utils";
+import { validateEmail } from "../register/registerHandler";
+import {  checkPasswordValidation } from "@/helpers";
 
 //Login container
 export const LoginContainer: React.FC = () => {
@@ -24,22 +26,39 @@ export const LoginContainer: React.FC = () => {
     setPasswordType(passwordType === "text" ? "password" : "text");
   };
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const LoginFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    try {
-      setLoading(true);
-      await dispatch(signInAction({ email, password, userRole: "customer" }));
-    } catch (error) {
-      throw new Error("Error while loging" + error);
+    const error: Partial<Record<keyof Auth.ValidationType, string>> = {};
+    const emailCheck = validateEmail({ email: email }, error);
+    const passwordCheck = checkPasswordValidation(
+      { password: password },
+      error
+    );
+
+    console.log(error, emailCheck, passwordCheck);
+    if (error.email || error.password) {
+      return toaster({
+        className: "bg-red-50",
+        icon: "error",
+        title: "Error",
+        message: error.email || error.password,
+      });
     }
+    if (error)
+      try {
+        setLoading(true);
+        await dispatch(signInAction({ email, password, userRole: "customer" ,navigate: navigate}));
+      } catch (error) {
+        throw new Error("Error while loging" + error);
+      }
     setLoading(false);
   };
 
   return (
-    <div className="flex bg-white items-center justify-center w-full h-full px-3 py-8">
-      <div className="w-full  bg-white flex flex-col gap-8 rounded-lg shadow-sm">
+    <div className="flex bg-white items-center justify-center w-full h-full px-3 py-5">
+      <div className="w-full  bg-white flex flex-col gap-4 rounded-lg shadow-sm">
         <div className="w-full flex flex-col items-center gap-3 px-3 py-6  text-[25px] sm:text-[30px] font-bold text-[var(--primary-color)] tracking-wide text-center">
           <h1>Welcome Back to FoodX</h1>
         </div>
@@ -58,7 +77,7 @@ export const LoginContainer: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className=" logPassword border-[#5d50772d] border-[1px] sm:text-[16px] text-[14px]  bg-transparent rounded-md  h-[35px] sm:h-[40px] outline-none px-5 py-3 text-md"
+                className=" logPassword border-[#5d50772d] border-[1px] sm:text-[16px] text-[14px]  bg-transparent rounded-md  h-[35px] sm:h-[40px] outline-none px-5 py-5 text-md"
               />
             </label>
             <label className="relative flex flex-col gap-1">
@@ -71,7 +90,7 @@ export const LoginContainer: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-[#5d50772d] sm:text-[16px] text-[14px] border-[1px] bg-transparent rounded-md h-[35px] sm:h-[40px] outline-none px-5 py-3 text-md"
+                className="border-[#5d50772d] sm:text-[16px] text-[14px] border-[1px] bg-transparent rounded-md h-[35px] sm:h-[40px] outline-none px-5 py-5 text-md"
               />
 
               {show ? (

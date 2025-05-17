@@ -1,2 +1,3 @@
 export * from "./cart.favourite"
-export * from "./cart.product"
+export * from "./cardProduct"
+export * from "./total/totalPay"

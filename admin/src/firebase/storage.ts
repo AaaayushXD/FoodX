@@ -1,11 +1,11 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "./index";
-import { ImageFolders } from "../models/authentication.model";
+const storeImageInFirebase = async (image: File, folder: Common.ImageFolder
 
-const storeImageInFirebase = async (image: File, folder: ImageFolders) => {
+) => {
   if (!image) throw new Error("No image Found.");
   try {
-    const imageRef = ref(storage, `${folder.folder}/${image.name}`);
+    const imageRef = ref(storage, `${folder}/${image.name}`);
 
     await uploadBytes(imageRef, image);
     const imageUrl = getDownloadURL(imageRef).then((url) => url);

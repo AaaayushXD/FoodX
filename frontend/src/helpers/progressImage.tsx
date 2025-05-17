@@ -1,24 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-export const ProgressiveImage = ({
+export const Image = ({
   lowResSrc,
   highResSrc,
   alt,
   className,
+  draggabe = false,
 }: {
   lowResSrc?: string;
   highResSrc: string;
   alt?: string;
   className: string;
+  draggabe?: boolean;
 }) => {
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
+ 
+  console.log(error, loaded)
+  useEffect(() => {
+    setError(false);
 
+  }, [lowResSrc, highResSrc]);
   return (
     <img
-      className={` ${loaded ? className : "bg-slate-50 border w-[100px] blur h-[70px] brightness-50 rounded-full "} `}
-      src={loaded ? highResSrc : lowResSrc}
+      draggable={draggabe}
+      loading="lazy"
+      className={`${className} transition-opacity duration-500 ${
+        loaded ? "opacity-100" : "opacity-50 blur-sm"
+      }`}
+      src={
+        error ? lowResSrc : loaded ? highResSrc.trim() : lowResSrc || highResSrc
+      }
       alt={alt}
-      onLoad={() => setLoaded(true)}
+      onLoad={() => {
+        setLoaded(true);
+      }}
+      onError={() => {
+        setError(true);
+      }}
     />
   );
 };

@@ -1,2 +1,2 @@
-export * from "./order.history"
-export * from "./order.recent"
+export * from "./orderHistory"
+export * from "./orderRecent"

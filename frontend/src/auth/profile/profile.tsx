@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { DarkMode } from "../../components";
-import { Icons } from "../../utils";
-import { useLogout } from "./useLogout";
+import { DarkMode } from "@/components";
+import { Icons } from "@/utils";
+import { useLogout } from "@/hooks";
 
 interface Prop {
   user: Auth.User;
@@ -74,5 +74,3 @@ export const Profile: React.FC<Prop> = ({ user, closeModal }: Prop) => {
     </div>
   );
 };
-
-

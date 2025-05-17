@@ -1,14 +1,16 @@
 import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { Store } from "./Store";
-import { authLogout } from "./Reducer/user.reducer";
+import { Store } from "@/store";
+
+import { ApiError } from "./helpers";
+import { toaster } from "./utils";
+import { authLogout } from "./reducer";
 
 // Flag to track if the token is being refreshed
 let isRefreshing = false;
 // Queue to store requests waiting for the token to refresh
-let hasLoggedOut = false;
 let failedRequestsQueue: Array<(token: string) => void> = [];
+let hasLoggedOut = false;
 
 export const makeRequest: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL, // Ensure this is set correctly in the environment file
@@ -23,7 +25,11 @@ makeRequest.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    if (axios?.isAxiosError(error)) {
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
+    }
   }
 );
 
@@ -33,8 +39,11 @@ makeRequest.interceptors.response.use(
   },
   async (error) => {
     const status = error.response ? error.response.status : null;
-
-    if (status === 401) {
+    console.log(status, error);
+    if (
+      error?.response?.data?.message ===
+      "Error verifying your token. Please try again later. TokenExpiredError: jwt expired"
+    ) {
       // Unauthorized - likely due to an expired access token
       const refreshToken = Cookies.get("refreshToken");
 
@@ -43,7 +52,12 @@ makeRequest.interceptors.response.use(
         if (!hasLoggedOut) {
           hasLoggedOut = true;
           Store.dispatch(authLogout());
-          toast.error("Your session has expired. Please log in again.");
+
+          toaster({
+            icon: "error",
+            className: "bg-red-50",
+            message: error?.response?.data?.message,
+          });
           return Promise.reject("Unauthorized: No refresh token available.");
         }
       }
@@ -54,18 +68,16 @@ makeRequest.interceptors.response.use(
 
         try {
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/users/refresh-token`,
+            `${import.meta.env.VITE_API_URL}/auth/refresh`,
             { refreshToken }
           );
 
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             response.data.data;
 
-          // Store the new tokens in cookies
           Cookies.set("accessToken", newAccessToken, { secure: true });
           Cookies.set("refreshToken", newRefreshToken, { secure: true });
 
-          // Retry all failed requests after refreshing token
           failedRequestsQueue.forEach((cb) => cb(newAccessToken));
           failedRequestsQueue = [];
           isRefreshing = false;
@@ -73,16 +85,18 @@ makeRequest.interceptors.response.use(
           // Retry the original request with the new access token
           error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return makeRequest(error.config);
-        } catch (refreshError) {
-          // Refresh token request failed, force logout
+        } catch (refreshError: any) {
+          if (refreshError.response.data.statusCode === 403)
+            Cookies.remove("refreshToken");
           Store.dispatch(authLogout());
+
           failedRequestsQueue = [];
           isRefreshing = false;
           return Promise.reject(refreshError);
         }
       } else {
         // If a token refresh is already in progress, queue the request
-        return new Promise((resolve) => {
+        return new Promise((resolve,) => {
           failedRequestsQueue.push((token: string) => {
             error.config.headers["Authorization"] = `Bearer ${token}`;
             resolve(makeRequest(error.config));
@@ -91,10 +105,18 @@ makeRequest.interceptors.response.use(
       }
     }
 
-    if (status === 403) {
+    if (
+      error?.response?.data?.message ===
+      "Unauthorized access, Tokens unaviable."
+    ) {
       // Forbidden - Invalid or expired refresh token
       Cookies.remove("refreshToken");
-      toast.error("Refresh token is invalid or expired. Please log in again.");
+      toaster({
+        title: "Session expired",
+        message: "Your session was expired, Please login again",
+        className: "bg-red-50",
+        icon: "error",
+      });
       Store.dispatch(authLogout());
       return Promise.reject("Forbidden: Invalid refresh token.");
     }

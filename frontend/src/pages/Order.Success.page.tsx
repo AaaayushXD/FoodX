@@ -1,12 +1,12 @@
 import React from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
-import Success from "../assets/success.png";
+import Success from "@/assets/success.png";
 
 import { Check } from "lucide-react";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "@/store";
 
 export const OrderSuccess: React.FC = () => {
   const navigate = useNavigate();
@@ -15,16 +15,6 @@ export const OrderSuccess: React.FC = () => {
   const products =
     state?.products ||
     useSelector((state: RootState) => state.root.cart.products);
-
-  // useEffect(() => {
-  //     // Check if products exist and set the initial data
-  //     if (products) {
-  //       setInitialData(products);
-  //     } else if (!products && state !== undefined) {
-  //       // If state exists but no products, handle it (optional)
-  //       console.log("No products found in state.");
-  //     }
-  //   }, [products, state]);
   return products?.length > 0 ? (
     <div className="w-full flex flex-col px-5 py-10 items-center justify-center gap-5 ">
       {/* Success Icon and Message */}

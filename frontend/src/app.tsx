@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-const PrivateRoute = React.lazy(() => import("./routes/privateRoute.tsx"));
-
-import { QueryClient, QueryClientProvider } from "react-query";
-import { routes } from "./routes/routes.tsx";
-import { useAppSelector } from "./hooks/useActions.ts";
+const PrivateRoute = React.lazy(() =>
+  import("@/routes").then((module) => ({ default: module.PrivateRoute }))
+);
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { routes } from "./routes";
+import { useAppSelector } from "@/hooks";
 const HomePage = React.lazy(() =>
-  import("./routes/index.tsx").then((module) => ({
+  import("@/routes").then((module) => ({
     default: module.HomePage,
   }))
 );
@@ -16,15 +17,15 @@ export const App: React.FC = () => {
   const { auth } = useAppSelector();
 
   useEffect(() => {
-    auth.success ? setIsAuthenticated(true) : setIsAuthenticated(false);
+    auth.userInfo?.isVerified ? setIsAuthenticated(true) : setIsAuthenticated(false);
   }, [auth]);
 
   const queryClient = new QueryClient();
-
+  console.log(auth);
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
-      {Object.entries(routes).map(([pathName, config]) =>
+        {Object.entries(routes).map(([pathName, config]) =>
           config.isAccessibleToPublicOnly ? (
             <Route
               key={pathName}
@@ -50,7 +51,7 @@ export const App: React.FC = () => {
               <Route
                 key={pathName}
                 element={
-                  <PrivateRoute userRole={[auth.userInfo.role as Auth.role]} />
+                  <PrivateRoute userRole={[auth?.userInfo?.role as Auth.role]} />
                 }
               >
                 <Route path={pathName} element={config.element} />
@@ -60,7 +61,6 @@ export const App: React.FC = () => {
             );
           })}
         </Route>
-
       </Routes>
     </QueryClientProvider>
   );

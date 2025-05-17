@@ -1,52 +1,69 @@
-import React from "react";
+import React, { lazy } from "react";
+import { FavouritePage, ProfilePage, SingleOrder } from "../pages";
+import ErrorBoundary from "@/errorBoundary";
+import { PasswordChange } from "@/auth";
+const CategoryPage = lazy(() =>
+  import("../pages/category/categoryPage").then((module) => ({
+    default: module.CategoryPage,
+  }))
+);
+const MobileNotification = lazy(() =>
+  import("../pages").then((module) => ({
+    default: module.MobileNotification,
+  }))
+);
+
+const ProductPage = lazy(() =>
+  import("../pages").then((module) => ({ default: module.ProductPage }))
+);
+const SearchPage = lazy(() =>
+  import("../pages").then((module) => ({ default: module.SearchPage }))
+);
+
 const Login = React.lazy(() =>
-  import("../components/index.ts").then((module) => ({ default: module.Login }))
+  import("../components").then((module) => ({ default: module.Login }))
 );
 const OrderSuccess = React.lazy(() =>
-  import("../pages/Order.Success.page.tsx").then((module) => ({
+  import("../pages/Order.Success.page").then((module) => ({
     default: module.OrderSuccess,
   }))
 );
 const VerificationPage = React.lazy(() =>
-  import("../pages/verification/page.verification.tsx").then((module) => ({
+  import("../pages").then((module) => ({
     default: module.VerificationPage,
   }))
 );
 
 const Register = React.lazy(() =>
-  import("../components/register/register.tsx").then((module) => ({
+  import("../components").then((module) => ({
     default: module.Register,
   }))
 );
 const NotFoundPage = React.lazy(() =>
-  import("../pages/index.ts").then((module) => ({
+  import("../pages").then((module) => ({
     default: module.NotFoundPage,
   }))
 );
 const Home = React.lazy(() =>
-  import("../pages/home/index.ts").then((module) => ({ default: module.Home }))
+  import("../pages").then((module) => ({ default: module.Home }))
 );
 const ForgotPassword = React.lazy(() =>
-  import("../features/index.ts").then((module) => ({
+  import("@/features").then((module) => ({
     default: module.ForgotPassword,
   }))
 );
-const CartPage = React.lazy(() =>
-  import("../pages/index.ts").then((module) => ({
-    default: module.CartPage,
-  }))
-);
 const CheckoutPage = React.lazy(() =>
-  import("../pages/index.ts").then((module) => ({
+  import("@/pages").then((module) => ({
     default: module.CheckoutPage,
   }))
 );
-const UserProfile = React.lazy(() =>
-  import("../pages/profile/page.profile.tsx").then((module) => ({
-    default: module.UserProfile,
-  }))
+
+const DesktopOrderPage = React.lazy(() =>
+  import("../pages").then((module) => ({ default: module.Order }))
 );
-const Order = React.lazy(() => import("../pages/order/order.tsx"));
+const MobileOrderPage = React.lazy(() =>
+  import("../pages").then((module) => ({ default: module.OrderPage }))
+);
 
 interface Routes {
   [path: string]: {
@@ -64,29 +81,90 @@ export const routes: Routes = {
     element: <Home />,
     accessToAnyOne: true,
   },
-  "/cart": {
+  notifications: {
     roles: ["customer"],
-    element: <CartPage />,
+    element: <MobileNotification />,
+    accessToAnyOne: false,
+    requiresAuth: true,
+  },
+  "search/:productId": {
     accessToAnyOne: true,
+    element: <ProductPage />,
+  },
+  "favourite/:productId": {
+    accessToAnyOne: false,
+    element: <ProductPage />,
+    requiresAuth: true,
+    roles: ["customer"],
+  },
+  ":collection/:productId": {
+    accessToAnyOne: true,
+    element: (
+      <ErrorBoundary>
+        <ProductPage />,
+      </ErrorBoundary>
+    ),
+  },
+  "/favourite": {
+    accessToAnyOne: false,
+    element: <FavouritePage />,
+    requiresAuth: true,
+    roles: ["customer"],
+  },
+  "/search": {
+    accessToAnyOne: true,
+    element: <SearchPage />,
   },
   "/profile": {
     requiresAuth: true,
     roles: ["customer"],
-    element: <UserProfile />,
+    element: <ProfilePage />,
     accessToAnyOne: false,
   },
-
+  "/profile/:setting": {
+    requiresAuth: true,
+    accessToAnyOne: false,
+    element: <ProfilePage />,
+    roles: ["customer"],
+  },
+  "/category/:id": {
+    roles: ["customer"],
+    element: <CategoryPage />,
+    accessToAnyOne: true,
+  },
+  "/category/:id/:productId": {
+    accessToAnyOne: true,
+    element: <ProductPage />,
+  },
   "/orders": {
     requiresAuth: true,
     roles: ["customer", "chef", "admin"],
-    element: <Order />,
+    element: (
+      <ErrorBoundary>
+        <div className="w-full h-full">
+          <div className=" w-full sm:flex hidden ">
+            <DesktopOrderPage />
+          </div>
+          <div className="w-full flex h-full sm:hidden ">
+            <MobileOrderPage />
+          </div>
+        </div>
+      </ErrorBoundary>
+    ),
     accessToAnyOne: false,
   },
-  "/cart/checkout": {
+  "/checkout": {
     requiresAuth: true,
     roles: ["customer", "chef", "admin"],
     element: <CheckoutPage />,
     accessToAnyOne: false,
+  },
+  "orders/:orderId": {
+    requiresAuth: true,
+    roles: ["customer", "chef", "admin"],
+    element: <SingleOrder />,
+    accessToAnyOne: false,
+    isAccessibleToPublicOnly: false,
   },
   "/order/success": {
     requiresAuth: true,
@@ -116,5 +194,10 @@ export const routes: Routes = {
   "*": {
     element: <NotFoundPage />,
     accessToAnyOne: true,
+  },
+  "/password-reset": {
+    element: <PasswordChange />,
+    accessToAnyOne: true,
+    isAccessibleToPublicOnly: true,
   },
 };
