@@ -27,5 +27,6 @@ declare namespace Auth {
     lastName?: string;
     password: string;
     confirmPassword?: string;
+    oldPassword?: string;
   }
 }

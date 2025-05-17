@@ -15,7 +15,7 @@ import Avatar from "@/assets/logo/avatar.png";
 import Banner from "@/assets/bannerCard.png";
 
 export const Header = () => {
-   const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -39,7 +39,10 @@ export const Header = () => {
                 Order With FoodX
               </p>
             </div>
-            <button onClick={()=> navigate("#categories")} className=" font-bold tracking-wider md:text-2xl text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] ">
+            <button
+              onClick={() => navigate("#categories")}
+              className=" font-bold tracking-wider md:text-2xl text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] "
+            >
               Order Now
             </button>
           </div>

@@ -26,7 +26,7 @@ declare namespace Common {
     data: Array<T>;
     totalData: number;
     selectedData?: Array<T>;
-    columns: ColumnProps[];
+    columns: ColumnProps<T>[];
     actions?: TableActions;
     loading?: boolean;
     headStyle?: React.CSSProperties;

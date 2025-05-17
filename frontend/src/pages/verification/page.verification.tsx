@@ -124,7 +124,11 @@ export const VerificationContainer = ({
       setOtp(new Array(6).fill(""));
       setTimer(30); // Reset the timer
       localStorage.setItem("time", "30");
-      const response = await resendOtp();
+      const response = await resendOtp({
+        email: localStorage?.getItem("email") as string,
+        type: "reset",
+        uid: uid as string
+      });
       toaster({
         className: "bg-success-50",
         icon: "success",

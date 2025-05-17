@@ -15,7 +15,7 @@ export const FavouritePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const [initialProducts, setInitialProducts] = useState<Ui.Product[]>([]);
 
-  const { products, isError, isLoading } = useAllProducts();
+  const { products,  isLoading } = useAllProducts();
 
   const getFavouireProducts = async () => {
     try {

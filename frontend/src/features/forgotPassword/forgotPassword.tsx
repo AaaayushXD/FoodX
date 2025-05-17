@@ -23,6 +23,7 @@ const LoginContainer: React.FC = () => {
     }
     try {
       const response = await forgetPassword({ email });
+      localStorage?.setItem("email", email)
       localStorage?.setItem("verifyType", "reset");
       localStorage?.setItem("uid", response?.data?.uid);
       localStorage?.setItem("accessToken", response?.data?.accessToken);

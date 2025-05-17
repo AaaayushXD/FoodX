@@ -22,7 +22,7 @@ export const CustomerReview = ({
   const { auth } = useAppSelector();
   const { data } = useQuery({
     queryKey: ["get-user", review.userId],
-    queryFn: async () => getUserById("customer", review.userId),
+    queryFn: async () => getUserById("customer", review.uid),
     staleTime: 15 * 60 * 60,
     gcTime: 15 * 60 * 60,
   });

@@ -29,11 +29,16 @@ export const verifyNewUser = async (
   }
 };
 
-export const resendOtp = async (): Promise<Api.Response<null>> => {
+export const resendOtp = async (data: {
+  type: "reset",
+  uid: string,
+  email:string
+}): Promise<Api.Response<null>> => {
   try {
     const response = await makeRequest({
       method: "post",
       url: "/auth/resend",
+      data:data
     });
     return response?.data;
   } catch (error) {

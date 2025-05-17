@@ -12,19 +12,19 @@ export const MobileProfile = () => {
     {
       icon: <Icons.total className="size-6 sm:size-7 " />, // Blue for orders
       title: "Total orders",
-      total: 45,
+      total: auth?.userInfo?.totalOrder,
       bg: "bg-blue-500",
     },
     {
       icon: <Icons.money className="size-6 sm:size-7 " />,
       title: "Total spents",
-      total: 3400,
+      total: auth?.userInfo?.totalSpent,
       bg: "bg-green-500",
     },
     {
       icon: <Icons.user className="size-6 sm:size-7 " />, // Yellow for user
       title: "User",
-      total: "Customer",
+      total: auth?.userInfo?.role,
       bg: "bg-yellow-500",
     },
   ];
@@ -86,6 +86,7 @@ export const MobileProfile = () => {
           />
         ))}
       </div>
+      <div className="w-full h-screen overflow-y-auto">
       <div className="w-full flex flex-col items-start justify-start gap-5">
         <h1 className=" text-lg font-semibold px-2 text-[var(--dark-text)] ">
           Account
@@ -166,6 +167,7 @@ export const MobileProfile = () => {
           </button>
         </nav>
       </div>
+    </div>
     </div>
   );
 };

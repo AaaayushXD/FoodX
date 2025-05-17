@@ -79,9 +79,9 @@ export const OrderHistory = () => {
             <p>
               {item.id == selectedId && isCollapsed
                 ? item.products.map(
-                    (product) => `${product.name}* ${product.quantity} ,`
+                    (product) => `${product?.name}* ${product?.quantity} ,`
                   )
-                : item.products[0].name + ` (${item.products[0].quantity})`}
+                : item.products[0]?.name + ` (${item.products[0]?.quantity})`}
             </p>
             <span
               onClick={() => {
@@ -91,7 +91,7 @@ export const OrderHistory = () => {
             >
               <Icons.chevronRight
                 className={`size-3 ${
-                  selectedId === item.id && isCollapsed ? "rotate-90" : ""
+                  selectedId === item?.id && isCollapsed ? "rotate-90" : ""
                 }  duration-200 cursor-pointer `}
               />
               {}{" "}

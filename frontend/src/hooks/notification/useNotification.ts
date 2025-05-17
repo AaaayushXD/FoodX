@@ -9,6 +9,7 @@ interface UseNotificationProp {
 }
 
 export const useNotification = ({ isOpen }: UseNotificationProp) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [fetchData, setFetchedData] = useState<Model.Notification[]>([]);
   const [totalData, setTotalData] = useState<number>();
@@ -20,7 +21,7 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
   const { auth } = useAppSelector();
 
   const getNotification = async ({ pageParam }: any) => {
-    console.log(pageParam);
+    setLoading(true);
     try {
       const response = await fetchNotifications({
         userId: auth?.userInfo?.uid,
@@ -62,16 +63,17 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
         );
       }
     }
+    finally {
+      setLoading(false);
+    }
   };
-
   const { isLoading, data, error, fetchNextPage, isError, hasNextPage } =
     useInfiniteQuery({
       queryKey: ["fetch-notification"],
       queryFn: getNotification,
       getNextPageParam: (lastPage) => lastPage?.lastPage.currentDoc || null,
       initialPageParam: currentDoc,
-      gcTime: 5 * 60 * 60,
-      staleTime: 5 * 60 * 60,
+   
     });
 
   return {
@@ -85,5 +87,6 @@ export const useNotification = ({ isOpen }: UseNotificationProp) => {
     hasMore,
     totalData,
     currentDoc,
+    loading,
   };
 };

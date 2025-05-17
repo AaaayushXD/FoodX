@@ -16,7 +16,7 @@ export const Image = ({
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
  
-  console.log(error, loaded)
+
   useEffect(() => {
     setError(false);
 
@@ -29,7 +29,7 @@ export const Image = ({
         loaded ? "opacity-100" : "opacity-50 blur-sm"
       }`}
       src={
-        error ? lowResSrc : loaded ? highResSrc.trim() : lowResSrc || highResSrc
+        error ? lowResSrc : loaded ? highResSrc?.trim() : lowResSrc || highResSrc
       }
       alt={alt}
       onLoad={() => {

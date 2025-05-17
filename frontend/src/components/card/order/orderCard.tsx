@@ -87,7 +87,12 @@ export const OrderCard: React.FC<Model.UserOrder> = (order) => {
               lowResSrc={PlaceholderImg}
               className="size-full object-cover rounded-full"
               highResSrc={
-                order?.products[0]?.image || order?.products[1]?.image
+                import.meta.env.VITE_URI +
+                "assets/" +
+                order?.products[0]?.image ||
+                import.meta.env.VITE_URI +
+                "assets/" +
+                order?.products[1]?.image
               }
               alt={order?.products[0]?.name || order?.products[1]?.name}
             />

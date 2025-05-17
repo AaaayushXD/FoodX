@@ -26,6 +26,8 @@ export const RecentOrder = () => {
     { enable: isVisible }
   );
 
+  console.log(data);
+
   const recentCardReference = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
@@ -40,7 +42,7 @@ export const RecentOrder = () => {
       >
         {!loading ? (
           data.length > 0 ? (
-            data?.map((order) => <RecentCard key={order.id} item={order} />)
+            data?.map((order) => <RecentCard key={order?.id} item={order} />)
           ) : (
             <div className="flex flex-col items-center justify-center w-full h-full p-4 text-center">
               <img src={Empty} alt="No orders found" className="mb-4 size-40" />
@@ -90,7 +92,7 @@ export const RecentOrder = () => {
                 left: 300,
               });
             }}
-            className="  p-2 hover:bg-[#68656541] duration-150  text-[var(--dark-text)] rounded-full "
+            className="p-2 hover:bg-[#68656541] duration-150  text-[var(--dark-text)] rounded-full "
           >
             <Icons.chevronRight className=" text-gray-800 size-5 " />
           </button>

@@ -10,7 +10,7 @@ import { ApiError, Image, Skeleton } from "@/helpers";
 export const ProfileCard: React.FC<Auth.User> = (user) => {
   const uploadAvatarRef = useRef<HTMLInputElement | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  const [previewAvatar, setPreviewAvatar] = useState<string>(avatar);
+  const [previewAvatar, setPreviewAvatar] = useState<string>(user?.avatar || avatar);
   const [originalAvatar, setOriginalAvatar] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -28,8 +28,11 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
       }
     }
   };
-
   const UpdateUserProfile = async () => {
+    if (!originalAvatar) {
+      setEdit(false);
+      return;
+    }
     setLoading(true);
     try {
       const response = await userUpload(originalAvatar as File, "users");
@@ -178,6 +181,11 @@ export const AvatarUpdate: React.FC<Auth.User> = (user) => {
   };
 
   const UpdateUserProfile = async () => {
+ 
+    if (!originalAvatar) {
+      setEdit(false);
+      return;
+    }
     setLoading(true);
     try {
       const response = await userUpload(originalAvatar as File, "users");

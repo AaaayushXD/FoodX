@@ -21,7 +21,7 @@ export const ProfilePage = () => {
       </div>
       <div className="w-full flex-col md:flex hidden ">
         {setting === "password-change" ? (
-          <PasswordChange />
+          <PasswordChange setIsOpen={() => {}} />
         ) : setting === "account-delete" ? (
           <AccountDelete />
         ) : setting === "account-disable" ? (
@@ -46,7 +46,7 @@ export const ProfilePage = () => {
           <Icons.arrowLeft className="text-black  "  />
         </button>
         {setting === "password-change" ? (
-          <PasswordChange />
+          <PasswordChange setIsOpen={() => {}} />
         ) : setting === "account-delete" ? (
           <AccountDelete />
         ) : setting === "account-disable" ? (

@@ -39,10 +39,21 @@ export const Payment: React.FC = () => {
       });
       return;
     }
-
+    if(cart?.products?.length <= 0){
+      return toaster({
+        icon: "warning",
+        className: "bg-orange-100",
+        title: "No products in cart",
+        message: "You have to add products to cart to order",
+      });
+    }
     try {
       if (!auth?.userInfo?.isVerified) {
-        await resendOtp();
+        await resendOtp({
+          email: auth?.userInfo?.email as string || localStorage?.getItem("email") as string,
+          type: "reset",
+          uid: auth?.userInfo?.uid  as string  || localStorage?.getItem("uid") as string
+        });
         toaster({
           className: "bg-yellow-50",
           icon: "warning",

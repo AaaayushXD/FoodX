@@ -3,14 +3,16 @@ import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Image } from "@/helpers";
 import Img from "@/assets/placeholder.svg";
+import { useAppSelector } from "@/hooks";
 
 export const PopularProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
-
+  const { product : productList } = useAppSelector();
+  const eachProduct = productList?.products?.find((pro) => pro?.id === product?.id)
   return (
     <div
       onClick={() =>
-        navigate(`/${product?.collection || "products"}/${product.id}`)
+        navigate(`/${eachProduct?.collection || "products"}/${product.id}`)
       }
       className=" h-full max-w-[250px] cursor-pointer flex flex-col  gap-1.5  items-start justify-start rounded-lg w-full lg:max-w-[400px] "
     >

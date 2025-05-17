@@ -3,6 +3,7 @@ import { StarRating } from "../star/starReview";
 import React, { useState } from "react";
 import { AddProductReview } from "@/features";
 import { Portal, RippleButton } from "@/commons";
+import { useAppSelector } from "@/hooks";
 
 export const AverageReview = React.memo(
   ({
@@ -26,6 +27,7 @@ export const AverageReview = React.memo(
         ratings?.some((rate) => rate.rating === revenue)
       );
     }, [ratings]);
+    const { auth } = useAppSelector();
 
     const [openRating, setOpenRating] = useState<boolean>(false);
 
@@ -35,13 +37,15 @@ export const AverageReview = React.memo(
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings
           </h1>
-          <RippleButton
-            onClick={() => setOpenRating(!openRating)}
-            className="flex max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3"
-          >
-            <Icons.comment className="sm:size-5 size-4 " />
-            <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
-          </RippleButton>
+          {ratings?.some((rate) => rate?.uid!== auth?.userInfo?.uid) && (
+            <RippleButton
+              onClick={() => setOpenRating(!openRating)}
+              className="flex max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3"
+            >
+              <Icons.comment className="sm:size-5 size-4 " />
+              <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
+            </RippleButton>
+          )}
         </div>
 
         {/* average ratings */}
