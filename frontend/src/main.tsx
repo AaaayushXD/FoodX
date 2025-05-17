@@ -31,7 +31,7 @@ root.render(
           </ThemeContextProvider>
         </BrowserRouter>
         {createPortal(
-          <Toaster />,
+          <Toaster position="top-right" containerStyle={{zIndex: 99999}} />,
           document.body
         )}
       </PersistGate>
