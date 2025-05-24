@@ -119,6 +119,7 @@ const addProduct = asyncHandler(
     await addProductToFirestore(
       {
         id: "",
+        bannerImage: product.bannerImage ? product.bannerImage : product.image,
         ...product,
         totalSold: 0,
       },

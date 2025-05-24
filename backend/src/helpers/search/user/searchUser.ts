@@ -7,20 +7,20 @@ export const searchUserInDatabase = async (query: string) => {
     const customerSnapshot = await searchItemInDatabase(
       "customer",
       query,
-      "firstName",
+      "fullName",
       5
     );
 
     const chefSnapshot = await searchItemInDatabase(
       "chef",
       query,
-      "firstName",
+      "fullName",
       5
     );
     const adminSnapshot = await searchItemInDatabase(
       "admin",
       query,
-      "firstName",
+      "fullName",
       5
     );
     let searchResult: User.UserInfo[] = [

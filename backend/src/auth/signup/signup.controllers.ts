@@ -5,11 +5,19 @@ import { generateAccessAndRefreshToken } from "../../utils/token/tokenHandler.js
 import { sendOTPEmail } from "../../utils/messaging/email.js";
 import { redisClient } from "../../utils/cache/cache.js";
 import { OptGenerator } from "../../helpers/otp/otpGenerator.js";
+import { APIError } from "../../helpers/error/ApiError.js";
 
 export const SignUp = asyncHandler(async (req: Request, res: Response) => {
   const user = req.body as unknown as Auth.Register;
   let response: API.ApiResponse;
-
+  if (user.role === "admin") {
+    return res.json({
+      data: null,
+      message: "Admin role cannot be registered through this endpoint.",
+      success: false,
+      status: 403,
+    });
+  }
   const userData = await signUp(user);
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
