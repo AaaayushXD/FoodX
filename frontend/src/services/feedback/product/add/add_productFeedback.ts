@@ -9,7 +9,7 @@ export const add_productFeedback = async (
     const response = await makeRequest({
       method: "post",
       url: "feedback/add",
-      data: data,
+      data: {...data,rating: parseInt(data?.rating)},
     });
     return response?.data;
   } catch (error) {

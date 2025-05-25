@@ -5,7 +5,7 @@ import { useAllProducts } from "../../hooks/useAllProducts";
 import { CategoryProduct } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/helpers";
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 import EmptyImage from "@/assets/empty.png";
 import { getFavourites } from "@/services";
 import { addToFavourite } from "@/reducer";

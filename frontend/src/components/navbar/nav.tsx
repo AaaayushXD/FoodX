@@ -13,7 +13,7 @@ import { Icons } from "@/utils";
 import toast from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { Modal } from "@/commons";
+import { Modal } from "@/common";
 import { addProductToCart } from "@/services";
 import { addToCart } from "@/reducer";
 

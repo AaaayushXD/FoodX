@@ -86,7 +86,7 @@ export const MobileProfile = () => {
           />
         ))}
       </div>
-      <div className="w-full h-screen overflow-y-auto">
+      <div className="w-full h-screen scrollbar-custom  pr-2 overflow-y-auto">
       <div className="w-full flex flex-col items-start justify-start gap-5">
         <h1 className=" text-lg font-semibold px-2 text-[var(--dark-text)] ">
           Account

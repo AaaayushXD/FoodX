@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { pdf } from "@react-pdf/renderer";
 import { useAppSelector, useAppDispatch, useHooks } from "@/hooks";
-import { Table } from "@/commons";
+import { Table } from "@/common";
 import { ApiError, useAggregateUserOrder } from "@/helpers";
 import { Icons, toaster } from "@/utils";
 

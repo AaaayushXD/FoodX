@@ -8,7 +8,7 @@ import {
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 import { NotificationLoader, PopularProduct } from "@/components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
 import {
   addProductToCart,
@@ -22,7 +22,7 @@ import ProductReview from "@/components/review/productReview";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 
 export const ProductPage = () => {
   const { collection, productId } = useParams();
@@ -144,17 +144,49 @@ const RecommendProduct = () => {
     data?.data?.some((pro) => pro.id === product.id)
   );
 
+  const recentCardReference = useRef<HTMLDivElement | null>(null);
+
   return (
-    <div className="flex w-full flex-col items-start justify-start gap-6">
+    <div className="flex w-full relative flex-col items-start justify-start gap-6">
       <h1 className="sm:text-[24px] text-[18px] font-semibold ">
         You might also like
       </h1>
-      <div className="w-full h-full overflow-y-hidden overflow-x-auto">
+      <div
+        ref={recentCardReference}
+        className="w-full  h-full overflow-y-hidden overflow-x-auto"
+      >
         <div className=" w-max  flex  items-start justify-start gap-5">
           {products.map((product) => (
             <PopularProduct {...product} key={product.id} />
           ))}
         </div>
+
+        {data?.data && data?.data?.length > 0 && (
+          <>
+            <button
+              onClick={() => {
+                recentCardReference.current?.scrollBy({
+                  behavior: "smooth",
+                  left: -300,
+                });
+              }}
+              className=" p-2  absolute hover:bg-black/60 bg-black/50 left-0 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
+            >
+              <Icons.chevronLeft className=" text-white size-5 " />
+            </button>
+            <button
+              onClick={() => {
+                recentCardReference.current?.scrollBy({
+                  behavior: "smooth",
+                  left: 300,
+                });
+              }}
+              className="p-2 hover:bg-black/60 absolute bg-black/50 right-0 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
+            >
+              <Icons.chevronRight className="  size-5 " />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

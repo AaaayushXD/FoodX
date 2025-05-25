@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useAppSelector, useNotification } from "@/hooks";
-import { Empty, Error } from "@/commons";
+import { Empty, Error } from "@/common";
 import { NotificationLoader, NotificationCard } from "@/components";
 import { useInView } from "react-intersection-observer";
 

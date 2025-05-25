@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useAllProducts } from "@/hooks";
 import { SpecialProduct } from "@/components";
 import { Skeleton } from "@/helpers";
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 import EmptyImg from "@/assets/specialEmpty.png";
 
 export const Specials: React.FC = () => {

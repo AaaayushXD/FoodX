@@ -11,15 +11,17 @@ export const update_productFeedback = async (
   try {
     const response = await makeRequest({
       method: "patch",
-      url: "feedback/update/",
+      url: `feedback/update/${id}`,
       params: { id },
       data: { field, newData, uid },
     });
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }

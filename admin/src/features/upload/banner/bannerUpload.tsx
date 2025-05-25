@@ -109,7 +109,7 @@ const UploadBanner: React.FC<UploadBannerProp> = ({ closeModal }) => {
     setImage(imageURL);
 
     try {
-      const imageUrl = await uploadImage(file, "banners", (progress) => {
+      const imageUrl = await uploadImage(file,  banner as Common.AssetsType, (progress) => {
         setUploadProgress(progress);
       });
       setImage(`${imageUrl?.data?.folderName}/${imageUrl?.data?.filename}`);

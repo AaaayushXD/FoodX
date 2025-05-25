@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProductSearch } from "@/features";
 import { Icons } from "@/utils";
 import { useAppSelector } from "@/hooks";
-import { Modal } from "@/commons";
+import { Modal } from "@/common";
 import {
   NavbarContainer,
   NotificationPage,
@@ -127,7 +127,7 @@ const DesktopNavbar = () => {
           <Icons.heart className="size-5 sm:size-6" />
         </button>
         <div ref={profileRef} className="">
-          {auth.userInfo?.isVerified && (
+          {auth.userInfo?.uid && (
             <div className="relative w-full">
               <div
                 onClick={() => navigate(`profile`)}
@@ -137,11 +137,7 @@ const DesktopNavbar = () => {
                   className=" rounded-full object-cover size-full "
                   lowResSrc={Avatar}
                   highResSrc={
-                    auth?.userInfo?.avatar
-                      ? import.meta.env.VITE_URI +
-                        "assets/" +
-                        auth.userInfo.avatar
-                      : Avatar
+                    import.meta.env.VITE_URI + "assets/" + auth?.userInfo?.avatar
                   }
                   alt="avatar"
                 />
@@ -195,7 +191,7 @@ const MobileNav = () => {
     <div className="w-full lg:hidden flex items-center justify-between  py-3">
       <div></div>
       <div ref={profileRef} className="">
-        {auth.userInfo?.isVerified && (
+        {auth.userInfo?.uid && (
           <div className="relative w-full">
             <div
               onClick={() => navigate(`profile`)}

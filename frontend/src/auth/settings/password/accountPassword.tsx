@@ -4,6 +4,8 @@ import { Icons, toaster } from "@/utils";
 import { changePassword } from "@/services/user/edit/editUser";
 import { useAppSelector } from "@/hooks";
 import { useMutation } from "@tanstack/react-query";
+import { forgetPasswordWithAccessToken } from "@/services";
+import { useNavigate } from "react-router-dom";
 
 export function PasswordChange({
   setIsOpen,
@@ -263,8 +265,7 @@ export function ResetNewPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [validationError, setValidationError] =
     useState<Record<keyof Auth.ValidationType, string>>();
-
-
+  const navigate = useNavigate();
   const handlePassword = async (e: FormEvent) => {
     e.preventDefault();
     const error: Record<keyof Auth.ValidationType, string> = {
@@ -293,12 +294,16 @@ export function ResetNewPassword() {
       return setValidationError(error);
     setValidationError({ confirmPassword: "", password: "" } as any);
     try {
-      const response = await changePassword({
-        newPassword: password,
-        oldPassword: "",
-        uid: "",
-        role: "",
+      const response = await forgetPasswordWithAccessToken({
+        accessToken: localStorage.getItem("accessToken") as string,
+        password,
+        uid: localStorage.getItem("uid") as string,
       });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("uid");
+      localStorage?.removeItem("verifyType");
+      localStorage?.removeItem("email");
+      navigate("/login");
       toaster({
         message: response.message,
         icon: "success",

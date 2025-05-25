@@ -3,7 +3,7 @@ import { useOrders } from "@/hooks";
 import { NotificationLoader, OrderCard } from "@/components";
 import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
-import { Empty, Error } from "@/commons";
+import { Empty, Error } from "@/common";
 import EmptyImage from "@/assets/orderEmpty.webp";
 import { useInView } from "react-intersection-observer";
 

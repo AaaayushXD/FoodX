@@ -82,11 +82,15 @@ interface ProfileCardType {
 const ProfileCard: React.FC<ProfileCardType> = (props: ProfileCardType) => {
   const uploadAvatarRef = useRef<HTMLInputElement | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  const [updateAvatar, setUpdateAvatar] = useState<string>(avatar);
+  const [updateAvatar, setUpdateAvatar] = useState<string>(props?.avatar);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(props?.avatar, updateAvatar);
+
   const UpdateUserProfile = async () => {
+    if (updateAvatar === props?.avatar) {
+      setEdit(false);
+      return;
+    }
     setLoading(true);
     try {
       await dispatch(updateUserAction({ avatar: updateAvatar }));

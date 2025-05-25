@@ -8,14 +8,15 @@ export const delete_productFeedback = async (
   try {
     const response = await makeRequest({
       method: "delete",
-      url: "feedback/delete/",
+      url: `feedback/delete/${id}`,
       params: { id },
     });
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }

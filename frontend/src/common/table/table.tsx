@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Empty from "@/assets/empty.png";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "@/utils";
-import { Pagination } from "@/commons";
+import { Pagination } from "@/common";
 import { Empty as EmptyComponent } from "../index";
 
 export const Table = <T extends { id: string }>({

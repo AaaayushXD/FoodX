@@ -4,7 +4,7 @@ import { getCategories } from "@/services";
 import { FoodCategory } from "./food";
 import { ApiError, Skeleton } from "@/helpers";
 import { toaster } from "@/utils";
-import { Empty, Error } from "@/commons";
+import { Empty, Error } from "@/common";
 import EmptyImage from "@/assets/EmptyOrder.png";
 import { useAppDispatch } from "@/hooks";
 import { addCategory } from "@/reducer";

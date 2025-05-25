@@ -21,6 +21,10 @@ const UpdateCategoryOption: UpdateCategoryType[] = [
     label: "Image",
     value: "image",
   },
+  {
+    label: "Banner Image",
+    value: "bannerImage",
+  },
 ];
 
 export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({
@@ -28,7 +32,7 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({
   closeModal,
 }) => {
   const [newData, setNewData] = useState<string>("");
-  const [field, setField] = useState<"image" | "name">("name");
+  const [field, setField] = useState<"image" | "name" | "bannerImage">("name");
   const [isUploading, setIsUploading] = useState(false);
   const fileRef = useRef<HTMLImageElement>();
   const queryClient = useQueryClient();
@@ -131,10 +135,10 @@ export const UpdateCategory: React.FC<Prop.updateComponentProp> = ({
       >
         <Selector
           categoryOption={UpdateCategoryOption}
-          setField={(value) => setField(value as "name" | "image")}
+          setField={(value) => setField(value as "name" | "image" | "bannerImage")}
         />
 
-        {field === "image" ? (
+        {(field === "image" || field === "bannerImage") ? (
           newData ? (
             <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
               <Image

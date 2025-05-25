@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { StarRating } from "../star/starReview";
 import dayjs from "dayjs";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { delete_productFeedback, getUserById } from "@/services";
 import { useAppSelector } from "@/hooks";
 import { ApiError, Image } from "@/helpers";
 import EmptyImage from "@/assets/empty.png";
-import { Delete, Portal } from "@/commons";
+import { Delete, Portal } from "@/common";
 import { Icons, toaster } from "@/utils";
 import toast from "react-hot-toast";
 import { AddProductReview } from "@/features";
@@ -15,14 +15,15 @@ export const CustomerReview = ({
   review,
 }: {
   review: Model.FeedbackDetail;
-}) => {
+  }) => {
+   const queryClient = useQueryClient()
   const [isDelete, setIsDelete] = useState<boolean>();
   const [open, setOpen] = useState<boolean>(false);
 
   const { auth } = useAppSelector();
   const { data } = useQuery({
-    queryKey: ["get-user", review.userId],
-    queryFn: async () => getUserById("customer", review.uid),
+    queryKey: ["get-user", review?.uid ?? review.userId],
+    queryFn: async () => getUserById("customer", review?.uid ?? review.userId),
     staleTime: 15 * 60 * 60,
     gcTime: 15 * 60 * 60,
   });
@@ -40,6 +41,10 @@ export const CustomerReview = ({
         message: response.message,
         title: "Your review successfully removed!",
       });
+      queryClient.invalidateQueries({
+        queryKey: ["product:review"],
+      });
+      setIsDelete(false);
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({

@@ -23,9 +23,13 @@ Api.Response<
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
+     
       const statusCode = error?.response?.status || 500;
       const message = error?.response?.data?.message;
       const errorMessage = error?.response?.data?.error;
+      if(message === "Validation Error") {
+        throw new ApiError(statusCode, error?.response?.data?.errors?.[0]?.message, errorMessage, false);
+      }
       throw new ApiError(statusCode, message, errorMessage, false);
     }
     throw new ApiError(500);

@@ -1,4 +1,4 @@
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 import { PopularProduct } from "@/components";
 import { Skeleton } from "@/helpers";
 import { Icons } from "@/utils";

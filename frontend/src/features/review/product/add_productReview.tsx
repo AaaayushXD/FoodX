@@ -29,14 +29,13 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   const [data, setData] = useState<Ui.FeedbackInfo>({
     message: "",
     productId: "",
-    rating: 0,
+    rating: "",
     uid: "",
   });
 
   const queryClient = useQueryClient();
 
   const handleAdd = async () => {
-    
     if (!auth?.success) {
       return toaster({
         title: "Please login!",
@@ -44,7 +43,6 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         icon: "error",
         message: "You have to access account to add feedback",
       });
-     
     }
     const toastLoader = toaster({
       title: "Please wait...",
@@ -60,7 +58,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       const response = await add_productFeedback({
         message: data.message as string,
         productId: productId,
-        rating: data?.rating as number,
+        rating: data?.rating,
         uid: auth?.userInfo?.uid as string,
         image: uploadedImage,
       });
@@ -75,7 +73,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       setData({
         message: "",
         productId: "",
-        rating: 0,
+        rating: "",
         uid: "",
         image: "",
         userId: "",
@@ -114,8 +112,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         const response = await userUpload(originalFile, "reviews");
         uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
-
-      const updatedData = {...data};
+ 
+      const updatedData = { ...data };
       if (uploadedImage) {
         updatedData.image = uploadedImage;
       }
@@ -123,24 +121,34 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       Object.keys(updatedData).forEach(async (key) => {
         const typedKey = key as keyof Ui.FeedbackInfo;
         if (updatedData[typedKey] !== "") {
-          const response = await update_productFeedback(
+           await update_productFeedback(
             productId,
             key as keyof Model.FeedbackDetail,
             updatedData[typedKey],
             auth?.userInfo?.uid
-          );
-          queryClient.invalidateQueries(["product:review"] as any);
-          toaster({
-            className: "bg-green-50 ",
-            icon: "success",
-            message: response?.message,
-            title: "Your review updated!",
+          ).catch((err) => {
+            if (err instanceof ApiError) {
+             return  toaster({
+                title: "Error",
+                className: "bg-red-50 ",
+                icon: "error",
+                message: err?.message,
+              });
+            }
+          }).then((res)=>{
+            if(res instanceof ApiError){
+              return toaster({
+                title: "Error",
+                className: "bg-red-50 ",
+                icon: "error",
+                message: res?.message,
+              });
+            }
           });
-          setOpenReview(!openReview);
           setData({
             message: "",
             productId: "",
-            rating: 0,
+            rating: "0",
             uid: "",
             image: "",
             userId: "",
@@ -148,6 +156,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         }
       });
     } catch (error) {
+      console.log(error)
       if (error instanceof ApiError) {
         toaster({
           title: "Error",
@@ -256,7 +265,7 @@ const Rating = ({
   setOpenReview,
   openReview,
 }: {
-  action: (rate: number) => void;
+  action: (rate: string) => void;
   openReview: boolean;
   setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -279,7 +288,7 @@ const Rating = ({
         {[1, 2, 3, 4, 5]?.map((star) => (
           <button
             onClick={() => {
-              action(star);
+              action(star.toString());
               setIndex(star);
             }}
             key={star}

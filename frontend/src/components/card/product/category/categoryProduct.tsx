@@ -10,7 +10,7 @@ import { ApiError, handleShare, Image } from "@/helpers";
 import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
 import PlaceholderImg from "@/assets/placeholder.svg";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 
 export const CategoryProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();

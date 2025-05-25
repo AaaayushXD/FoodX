@@ -9,9 +9,9 @@ import { addOrder as orderAdd, resendOtp } from "@/services";
 import { addRevenue, addNotification, removeProductFromCart } from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 import { VerificationContainer } from "@/pages";
-import { Modal } from "@/commons";
+import { Modal } from "@/common";
 
 export const Payment: React.FC = () => {
   const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();

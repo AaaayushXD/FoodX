@@ -16,7 +16,7 @@ export const ProfilePage = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full flex items-start justify-start gap-3">
-      <div className="  sm:h-screen overflow-auto md:max-w-xs pr-1 w-full ">
+      <div className="  h-screen    overflow-y-auto md:max-w-xs pr-1 w-full ">
         <MobileProfile />
       </div>
       <div className="w-full flex-col md:flex hidden ">
@@ -43,7 +43,7 @@ export const ProfilePage = () => {
           onClick={() => navigate(-1)}
           className="px-5 w-full   border-b py-3"
         >
-          <Icons.arrowLeft className="text-black  "  />
+          <Icons.arrowLeft className="text-black  " />
         </button>
         {setting === "password-change" ? (
           <PasswordChange setIsOpen={() => {}} />

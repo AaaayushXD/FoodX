@@ -26,16 +26,17 @@ export const RecentOrder = () => {
     { enable: isVisible }
   );
 
-  console.log(data);
-
   const recentCardReference = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
   return (
     <div className="w-full relative group/recent h-full flex text-[var(--dark-text)]  flex-col gap-6 bg-[var--light-foreground] px-5 py-4   rounded items-start justify-center">
-      <h1 className="sm:text-[25px] text-[21px] tracking-wider font-semibold ">
-        Recent Orders
-      </h1>
+      <button onClick={() => navigate(-1)} className="flex  justify-start items-center gap-2">
+        <Icons.chevronLeft className="size-5 mt-1" />
+        <h1 className="sm:text-[25px] text-[21px] tracking-wider font-semibold ">
+          Recent Orders
+        </h1>
+     </button>
       <div
         ref={recentCardReference}
         className="flex items-center w-full h-full gap-5 pb-4 overflow-x-auto item-scrollbar "

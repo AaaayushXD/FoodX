@@ -27,7 +27,7 @@ declare namespace Ui {
     uid: string;
     userId?: string;
     productId: string;
-    rating: number;
+    rating: string;
     message: string;
     image?: string;
   }

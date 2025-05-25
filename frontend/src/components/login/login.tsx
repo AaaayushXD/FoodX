@@ -6,8 +6,8 @@ import { signInAction } from "@/actions";
 import { AuthFooter, AuthNavbar } from "@/components";
 import { useAppDispatch } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { validateEmail } from "../register/registerHandler";
-import {  checkPasswordValidation } from "@/helpers";
+import { validateLogin, LoginInput } from "@/utils/validation/auth";
+import { Input } from "@/common";
 
 //Login container
 export const LoginContainer: React.FC = () => {
@@ -20,6 +20,9 @@ export const LoginContainer: React.FC = () => {
     "password"
   );
   const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
 
   const showPassword = () => {
     setShow((show) => !show);
@@ -30,30 +33,49 @@ export const LoginContainer: React.FC = () => {
 
   const LoginFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const error: Partial<Record<keyof Auth.ValidationType, string>> = {};
-    const emailCheck = validateEmail({ email: email }, error);
-    const passwordCheck = checkPasswordValidation(
-      { password: password },
-      error
-    );
 
-    console.log(error, emailCheck, passwordCheck);
-    if (error.email || error.password) {
-      return toaster({
+    // Reset errors
+    setErrors({});
+
+    // Use Zod validation
+    const validationResult = validateLogin({ email, password });
+
+    if (!validationResult.success) {
+      // Map errors to their respective fields
+      const fieldErrors: { email?: string; password?: string } = {};
+
+      validationResult.error.errors.forEach((err) => {
+        if (err.path.includes("email")) {
+          fieldErrors.email = err.message;
+        } else if (err.path.includes("password")) {
+          fieldErrors.password = err.message;
+        }
+      });
+
+      setErrors(fieldErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await dispatch(
+        signInAction({
+          email,
+          password,
+          userRole: "customer",
+          navigate: navigate,
+        })
+      );
+    } catch (error) {
+      toaster({
         className: "bg-red-50",
         icon: "error",
         title: "Error",
-        message: error.email || error.password,
+        message: "Failed to login. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
-    if (error)
-      try {
-        setLoading(true);
-        await dispatch(signInAction({ email, password, userRole: "customer" ,navigate: navigate}));
-      } catch (error) {
-        throw new Error("Error while loging" + error);
-      }
-    setLoading(false);
   };
 
   return (
@@ -68,47 +90,39 @@ export const LoginContainer: React.FC = () => {
             className="flex  text-[#202020] flex-col gap-4 p-2"
             onSubmit={LoginFormSubmit}
           >
-            <label className="relative flex flex-col gap-1">
-              <h1 className="text-[15px]">Email</h1>
-              <input
-                name="email"
-                type="email"
-                autoComplete="off"
+            <div>
+              <Input
+                label="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                className=" logPassword border-[#5d50772d] border-[1px] sm:text-[16px] text-[14px]  bg-transparent rounded-md  h-[35px] sm:h-[40px] outline-none px-5 py-5 text-md"
               />
-            </label>
-            <label className="relative flex flex-col gap-1">
-              <h1 className="text-[15px]">Password</h1>
-              <input
-                name="password"
-                type={passwordType}
-                autoComplete="off"
-                maxLength={25}
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <Input
+                label="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                className="border-[#5d50772d] sm:text-[16px] text-[14px] border-[1px] bg-transparent rounded-md h-[35px] sm:h-[40px] outline-none px-5 py-5 text-md"
+                type={passwordType}
+                rightIcon={
+                  show ? (
+                    <span onClick={showPassword}>
+                      <Icons.eyeOpen />
+                    </span>
+                  ) : (
+                    <span onClick={showPassword}>
+                      <Icons.eyeClose />
+                    </span>
+                  )
+                }
               />
-
-              {show ? (
-                <div
-                  className="text-[#646168] absolute top-[37px] right-[10px] cursor-pointer"
-                  onClick={showPassword}
-                >
-                  <Icons.eyeOpen className=" size-5 sm:size-6" />
-                </div>
-              ) : (
-                <div
-                  className="text-[#646168] absolute top-[37px] right-[10px] cursor-pointer"
-                  onClick={showPassword}
-                >
-                  <Icons.eyeClose className=" size-5 sm:size-6" />
-                </div>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
               )}
-            </label>
+            </div>
 
             <p
               onClick={() => navigate("/forgot-password")}

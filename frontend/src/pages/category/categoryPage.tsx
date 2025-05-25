@@ -6,7 +6,7 @@ import { useAllProducts } from "@/hooks/useAllProducts";
 import { useEffect, useState } from "react";
 import { ProductFilter, ProductSort } from "@/features";
 import { productFilter, productSort, Skeleton } from "@/helpers";
-import { Empty, RippleButton } from "@/commons";
+import { Empty, RippleButton } from "@/common";
 import EmptyImage from "@/assets/orderEmpty.webp";
 import { useAppSelector } from "@/hooks";
 

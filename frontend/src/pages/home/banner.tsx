@@ -2,7 +2,7 @@ import { Carousel } from "@/components";
 import { getBanners } from "@/services";
 import { ApiError, Skeleton } from "@/helpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Error } from "@/commons";
+import { Error } from "@/common";
 import { toaster } from "@/utils";
 
 export const Banner: React.FC = () => {
@@ -23,7 +23,7 @@ export const Banner: React.FC = () => {
   };
 
   const query = useQueryClient();
-  const previousData = query.getQueryData<Ui.Banner[]>(["banner"]);
+
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["banner"],
@@ -46,10 +46,11 @@ export const Banner: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className=" w-full h-[120px] sm:h-[400px] ">
-        {isLoading ? (
-          <Skeleton
-            children={{
+      {data && data.length > 0 && (
+        <div className=" w-full h-[120px] sm:h-[400px] ">
+          {isLoading ? (
+            <Skeleton
+              children={{
               className: "w-full h-[100px] sm:h-[250px] rounded-lg",
             }}
             className="w-full h-full"
@@ -61,8 +62,10 @@ export const Banner: React.FC = () => {
             <Carousel props={data as Ui.Banner[]} time={5000} />
           )
         )}
-      </div>
+        </div>
+      )}
     </div>
+
   );
 };
 

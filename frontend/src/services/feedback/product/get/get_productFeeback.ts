@@ -21,8 +21,9 @@ export const get_productFeedback = async (
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }

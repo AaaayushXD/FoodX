@@ -5,7 +5,7 @@ import { removeProductFromCart } from "@/services";
 import toast from "react-hot-toast";
 import { Icons, toaster } from "../../../utils";
 import { ApiError, Image } from "@/helpers";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 
 interface SingleCardProp {
   prop: Ui.Product;

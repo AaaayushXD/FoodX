@@ -3,6 +3,7 @@ import * as userAction from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
 import Cookies from "js-cookie";
+import { z } from "zod";
 
 export interface SigninTypes {
   email: string;
@@ -27,7 +28,6 @@ const signUpAction = createAsyncThunk(
       Cookies.set("accessToken", user.accessToken);
       Cookies.set("refreshToken", user.refreshToken);
 
-      console.log(user);
       localStorage?.setItem("verifyType", "otp");
       if (!data?.isVerified) {
         navigate("/email-verification");
@@ -95,21 +95,33 @@ const verifyAction = createAsyncThunk(
       uid,
       type,
       accessToken,
+      navigate,
     }: {
       otp: string;
-      uid: string;
+      uid?: string;
       type: "otp" | "reset";
       accessToken?: string;
+      navigate?: Function;
     },
     thunkApi
   ) => {
     try {
       const response = await userAction.verifyNewUser({
         code: otp,
-        type, 
-        accessToken,
+        type,
         uid,
       });
+      if (type === "reset") {
+        navigate?.("/password-reset");
+        toaster({
+          title: "Success",
+          icon: "success",
+          message: response?.message,
+          className: "bg-green-100",
+        });
+        localStorage.removeItem("time");
+        return;
+      }
       localStorage.removeItem("time");
 
       return response.data.userInfo;
