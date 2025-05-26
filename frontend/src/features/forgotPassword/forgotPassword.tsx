@@ -6,6 +6,9 @@ import { useMutation } from "@tanstack/react-query";
 import { forgetPassword } from "@/services/user";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
+import { Input } from "@/common";
+
+const COLLEGE_EMAIL_DOMAIN = "texascollege.edu.np";
 
 const LoginContainer: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -21,9 +24,20 @@ const LoginContainer: React.FC = () => {
       });
       return;
     }
+    
+    if (!email.endsWith(`@${COLLEGE_EMAIL_DOMAIN}`)) {
+      toaster({
+        className: "bg-red-50",
+        message: `Email must be a ${COLLEGE_EMAIL_DOMAIN} email address`,
+        icon: "error",
+        title: "Error",
+      });
+      return;
+    }
+    
     try {
       const response = await forgetPassword({ email });
-      localStorage?.setItem("email", email)
+      localStorage?.setItem("email", email);
       localStorage?.setItem("verifyType", "reset");
       localStorage?.setItem("uid", response?.data?.uid);
       localStorage?.setItem("accessToken", response?.data?.accessToken);
@@ -62,21 +76,11 @@ const LoginContainer: React.FC = () => {
         </div>
         <div className="px-3 py-4">
           <form onSubmit={mutate} className="flex flex-col gap-4 p-2">
-            <div className="relative flex flex-col gap-2">
-              <label htmlFor="logEmail" className="text-sm">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="logEmail"
-                autoComplete="off"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="border-[var(--light-border)] focus:border-transparent focus:bg-[var(--light-border)] border bg-transparent rounded-md h-[40px] outline-none px-5 py-3 text-md"
-              />
-            </div>
+            <Input
+              label="Email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
 
             <p
               onClick={() => navigate("/login")}

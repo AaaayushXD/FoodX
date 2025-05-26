@@ -6,6 +6,7 @@ import { useAppSelector } from "@/hooks";
 import { useMutation } from "@tanstack/react-query";
 import { forgetPasswordWithAccessToken } from "@/services";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export function PasswordChange({
   setIsOpen,
@@ -267,6 +268,10 @@ export function ResetNewPassword() {
     useState<Record<keyof Auth.ValidationType, string>>();
   const navigate = useNavigate();
   const handlePassword = async (e: FormEvent) => {
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Please wait...",
+    });
     e.preventDefault();
     const error: Record<keyof Auth.ValidationType, string> = {
       oldPassword: "",
@@ -319,6 +324,8 @@ export function ResetNewPassword() {
           title: "Error",
         });
       }
+    } finally {
+      toast.dismiss(toastLoader);
     }
   };
 

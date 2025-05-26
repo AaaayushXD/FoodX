@@ -37,15 +37,16 @@ export const forgetPasswordWithAccessToken = async ({
   uid: string;
   accessToken: string;
   password: string;
-}): Promise<Api.Response<{}>> => {
+  }): Promise<Api.Response<{}>> => {
+  
   try {
     const response = await makeRequest({
       method: "post",
       url: "/auth/forgot-password",
       headers: {
-        Authorization: `${accessToken} Bearer`,
+        Authorization: `Bearer ${accessToken}`,
       },
-      data: { uid, password },
+      data: { uid, password, accessToken },
     });
     return response.data;
   } catch (error) {

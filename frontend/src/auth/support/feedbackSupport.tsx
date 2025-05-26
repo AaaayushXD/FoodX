@@ -1,5 +1,4 @@
 import { useFeedbackFn } from "@/hooks";
-import { Icons } from "@/utils";
 
 export const FeedbackSupport = () => {
   const {
@@ -9,11 +8,10 @@ export const FeedbackSupport = () => {
 
     setFeedback,
     setFeedbackType,
-    setRating,
   } = useFeedbackFn();
 
   return (
-    <div className="w-full sm:p-6 py-20 px-2 bg-white flex flex-col items-center justify-center gap-7 sm:gap-16">
+    <div className="w-full h-screen sm:p-6 py-20 px-2 bg-white flex flex-col items-center justify-center gap-7 sm:gap-16">
       <form
         onSubmit={mutate}
         className="w-full max-w-xl rounded-lg space-y-3 sm:space-y-6"
@@ -71,20 +69,10 @@ export const FeedbackSupport = () => {
 
         {/* Buttons */}
         <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => {
-              setRating(0);
-              setFeedback("");
-              setFeedbackType("");
-            }}
-            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md"
-          >
-            Clear Form
-          </button>
+
           <button
             type="submit"
-            className="px-6 py-2 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] text-white rounded-md"
+            className="px-6 w-full py-2 bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] text-white rounded-md"
           >
             Submit
           </button>

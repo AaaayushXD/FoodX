@@ -95,7 +95,7 @@ export const VerificationContainer = ({
     setIsVerifying(true);
 
     const otpString = otp.join("");
-    console.log(otpString, uid, auth?.userInfo?.uid);
+    
     try {
       await dispatch(
         verifyAction({

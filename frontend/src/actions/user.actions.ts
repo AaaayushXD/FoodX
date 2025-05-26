@@ -3,7 +3,6 @@ import * as userAction from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
 import Cookies from "js-cookie";
-import { z } from "zod";
 
 export interface SigninTypes {
   email: string;
@@ -110,9 +109,11 @@ const verifyAction = createAsyncThunk(
         code: otp,
         type,
         uid,
+        accessToken,
       });
       if (type === "reset") {
         navigate?.("/password-reset");
+        localStorage?.setItem("accessToken", response?.data?.accessToken);
         toaster({
           title: "Success",
           icon: "success",
@@ -122,9 +123,9 @@ const verifyAction = createAsyncThunk(
         localStorage.removeItem("time");
         return;
       }
-      localStorage.removeItem("time");
 
-      return response.data.userInfo;
+      localStorage.removeItem("time");
+      return response.data.user;
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
