@@ -23,7 +23,6 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
   // };
 
   const navigate = useNavigate();
-
   const discountPrice = Math.round(
     (product.discountPrice / 100) * product.price
   );

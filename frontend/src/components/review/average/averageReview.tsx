@@ -30,13 +30,11 @@ export const AverageReview = React.memo(
       );
     }, [ratings]);
     const { auth } = useAppSelector();
-    const haveReview = React.useMemo(() => {
-      return ratings?.some(
-        (rate) =>
-          rate?.uid?.trim() ??
-          rate?.userId?.trim() !== auth?.userInfo?.uid?.trim()
-      );
-    }, [ratings, auth]);
+  const haveReview = ratings?.some(
+    (rate) => 
+      (rate?.uid?.trim()  !== auth?.userInfo?.uid?.trim()) 
+  );
+    console.log(haveReview, auth?.userInfo?.uid, ratings)
 
     const [openRating, setOpenRating] = useState<boolean>(false);
 
@@ -50,7 +48,7 @@ export const AverageReview = React.memo(
           <RippleButton
             onClick={() => setOpenRating(!openRating)}
             className={`flex ${
-              !haveReview ? "" : "hidden"
+              haveReview ? "" : "hidden"
             } max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3`}
           >
             <Icons.comment className="sm:size-5 size-4 " />

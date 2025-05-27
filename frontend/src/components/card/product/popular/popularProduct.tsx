@@ -3,12 +3,20 @@ import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Image } from "@/helpers";
 import Img from "@/assets/placeholder.svg";
-import { useAppSelector } from "@/hooks";
+import { useAppSelector, useRating } from "@/hooks";
 
 export const PopularProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
-  const { product : productList } = useAppSelector();
-  const eachProduct = productList?.products?.find((pro) => pro?.id === product?.id)
+  const { product: productList } = useAppSelector();
+  const eachProduct = productList?.products?.find(
+    (pro) => pro?.id === product?.id
+  );
+
+  const ratings = useRating(eachProduct?.id as string);
+  const rating = ratings?.data?.filter(
+    (rating) => rating?.productId === eachProduct?.id
+  );
+
   return (
     <div
       onClick={() =>
@@ -30,14 +38,16 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
             {product.name}
           </h1>
           <span className=" flex items-center font-semibold justify-center gap-1 text-red-500">
-            <Icons.tomato className="fill-red-500 " /> {product?.rating}
+            <Icons.tomato className="fill-red-500 " /> {rating?.length || 0}
           </span>
         </div>
         <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--secondary-text)] ">
           <p className=" sm:text-[18px] text-[16px] text-[var(--primary-dark)] font-semibold ">
             Rs. {product?.price}
           </p>
-          <p className=" sm:text-[14px] text-[12px] ">{product?.cookingTime || "15mins - 20mins"}</p>
+          <p className=" sm:text-[14px] text-[12px] ">
+            {product?.cookingTime || "15mins - 20mins"}
+          </p>
         </div>
       </div>
     </div>

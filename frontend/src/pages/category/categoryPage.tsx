@@ -34,7 +34,7 @@ export const CategoryPage = () => {
   const { category: categories } = useAppSelector();
 
   const category = categories.categories?.find((cat) => cat.id === id);
-
+  console.log(category);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,12 +86,15 @@ export const CategoryPage = () => {
     });
   }, [filters]);
 
+  const bannerImage = `${import.meta.env.VITE_URI}assets/${
+    category?.bannerImage
+  }`;
   return (
     <div className="flex w-full bg-white h-full flex-col items-start justify-start gap-5">
       {/* Category Header */}
       <div
         style={{
-          backgroundImage: `url(${category?.cover || Image})`,
+          backgroundImage: `url(${bannerImage || Image})`,
         }}
         className="w-full relative flex items-start pt-5 pl-3 bg-right-bottom bg-no-repeat bg-cover h-[300px] sm:h-[400px]  transition-all ease-in-out duration-500"
       >

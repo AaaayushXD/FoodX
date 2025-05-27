@@ -47,7 +47,7 @@ declare namespace Ui {
     name: string;
     image: string;
     description?: string;
-    cover?: string;
+    bannerImage?: string;
     createdAt?: Common.TimeStamp;
     updatedAt?: Common.TimeStamp;
   }
