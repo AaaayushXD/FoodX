@@ -11,6 +11,7 @@ declare namespace Product {
     cookingTime: string;
     rating: string;
     bannerImage?: string;
+    discount?: number;
   }
   interface UploadProductType {
     product: Product;

@@ -23,6 +23,7 @@ export const addProductToFirestore = async (
       description,
       rating,
       bannerImage,
+      discount,
     } = product;
     await productRef
       .add({
@@ -37,6 +38,7 @@ export const addProductToFirestore = async (
         description: description ? description : null,
         rating: rating ? rating : 0,
         bannerImage: bannerImage ? bannerImage : null,
+        discount: discount ? discount : null,
       })
       .then((docRef) =>
         docRef.update({
