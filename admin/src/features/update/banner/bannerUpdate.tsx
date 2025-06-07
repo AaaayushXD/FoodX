@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { storeImageInFirebase } from "@/firebase/storage";
 import toast from "react-hot-toast";
 import { Selector } from "@/common";
 import { Icons } from "@/utils";
@@ -33,9 +32,9 @@ const UpdateBanner: React.FC<Prop.updateComponentProp> = ({ id }) => {
   };
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
-    const image = event.target.files[0];
-    const imageUrl = await storeImageInFirebase(image, { folder: "banners" });
-    setNewData(imageUrl);
+    // const image = event.target.files[0];
+    // const imageUrl = await storeImageInFirebase(image, { folder: "banners" });
+    // setNewData(imageUrl);
   };
   return (
     <div className="flex flex-col items-start justify-center gap-5">

@@ -2,11 +2,15 @@ import { ApiError } from "@/helpers";
 import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
-export const deleteAccount = async (): Promise<Api.Response<Auth.User>> => {
+export const deleteAccount = async (data: {
+  id: string;
+  role: Auth.UserRole;
+}): Promise<Api.Response<Auth.User>> => {
   try {
     const response = await makeRequest({
       method: "delete",
       url: "users/delete-account",
+      data: { id: data.id, role: data.role },
     });
     return response.data;
   } catch (error) {

@@ -7,8 +7,7 @@ const Footer = React.lazy(() =>
 );
 import useScrollToTop from "../hooks/scrollToTop";
 import { useAppDispatch, useAppSelector } from "../hooks/useActions";
-import { addToFavourite, updateOrder } from "../reducer";
-import { getFavourites } from "../services";
+import { updateOrder } from "../reducer";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useSocket } from "../utils/socket";

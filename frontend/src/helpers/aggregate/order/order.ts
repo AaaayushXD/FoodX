@@ -17,6 +17,7 @@ export const useAggregateUserOrder = (userOrder: Model.Order[]) => {
         time: dayjs(order.orderRequest).format("MM-DD-YYYY h:mm A"),
         status: order.status,
         amount: totalAmount,
+        uid: order?.uid,
       };
     });
     return aggregateData;

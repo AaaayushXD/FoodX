@@ -34,7 +34,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
       quantity: "",
       tagId: "",
       rating: "0",
-     discountPrice: 0 
+      discountPrice: 0,
     },
     collection: "products",
   });
@@ -163,28 +163,38 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         message: "Product are unavailable",
         className: "bg-red-50",
       });
+    if (
+      addFood.product.name === "" ||
+      addFood.product.price === "" ||
+      addFood.product.quantity === "" ||
+      addFood.product.tagId === "" ||
+      addFood.product.description === "" ||
+      addFood.product.cookingTime === "" ||
+      addFood.product.bannerImg === "" ||
+      addFood.product.image === ""
+    )
+      return toaster({
+        icon: "error",
+        title: "Error",
+        message: "Please fill all the fields",
+        className: "bg-red-50",
+      });
     setLoading(true);
-    const convertOGProduct = {
-      collection: addFood.collection,
-      product: {
-        id: addFood.product.id,
-        name: addFood.product.name,
-        image: addFood.product.image,
-        bannerImg: addFood.product.bannerImg,
-        description: addFood.product.description,
-        price: parseInt(addFood.product.price as string),
-        quantity: parseInt(addFood.product.quantity as string),
-        tagId: addFood.product.tagId,
-        rating: addFood.product.rating,
-        cookingTime: addFood.product.cookingTime,
-      },
-    };
+
     try {
-      const response = await addProducts(convertOGProduct);
+      await addProducts({
+        collection: addFood?.collection,
+        product: {
+          ...addFood?.product,
+          rating: addFood?.product.rating as string as any,
+          quantity: parseInt(addFood?.product.quantity as string) as any,
+          discountPrice: addFood?.product?.discountPrice,
+        },
+      });
 
       toaster({
-        title: "Product successfully added!",
-        message: response?.message,
+        title: "Success",
+        message: "Product successfully added!",
         className: " bg-green-50",
         icon: "success",
       });
@@ -193,13 +203,13 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
         product: {
           id: "",
           image: "",
-          coverImg: "",
+          bannerImg: "",
           description: "",
           name: "",
           price: "",
           quantity: "",
           tagId: "",
-          rating: "0",
+          rating: "",
           cookingTime: "",
         },
       }));
@@ -254,6 +264,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
               </label>
               <input
                 required
+                value={addFood?.product?.name}
                 type="text"
                 onChange={(event) =>
                   setAddFood((prev) => ({
@@ -272,6 +283,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
               <input
                 required
                 type="number"
+                value={addFood?.product?.price}
                 onChange={(event) =>
                   setAddFood((prev) => ({
                     ...prev,
@@ -314,6 +326,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
                 <input
                   required
                   type="number"
+                  value={addFood?.product?.quantity}
                   onChange={(event) =>
                     setAddFood((prev) => ({
                       ...prev,
@@ -388,6 +401,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
             </label>
             <textarea
               required
+              value={addFood?.product?.description}
               onChange={(event) =>
                 setAddFood((prev) => ({
                   ...prev,
@@ -426,7 +440,6 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
                   className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-16"
                 >
                   <input
-                    required
                     ref={coverImageRef}
                     onChange={(event) => handleImage(event, "bannerImg")}
                     type="file"
@@ -477,7 +490,6 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
                   className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2.5px] rounded border-[var(--dark-border)] stroke-[1px] py-16"
                 >
                   <input
-                    required
                     ref={productImageRef}
                     onChange={(event) => handleImage(event, "product")}
                     type="file"

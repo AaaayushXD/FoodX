@@ -3,7 +3,9 @@ import { Icons } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { Image } from "@/helpers";
 import Img from "@/assets/placeholder.svg";
-import { useAppSelector, useRating } from "@/hooks";
+import { useAppSelector } from "@/hooks";
+import { useQuery } from "@tanstack/react-query";
+import { get_productFeedback } from "@/services";
 
 export const PopularProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
@@ -12,10 +14,12 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
     (pro) => pro?.id === product?.id
   );
 
-  const ratings = useRating(eachProduct?.id as string);
-  const rating = ratings?.data?.filter(
-    (rating) => rating?.productId === eachProduct?.id
-  );
+  const { data: rating } = useQuery({
+    queryKey: ["product:review"],
+    queryFn: () => get_productFeedback({ currentFirstDoc: null, currentLastDoc: null })
+  });
+
+  const productRating = rating?.data?.feedbacks?.filter((rat) => rat.productId === product?.id)
 
   return (
     <div
@@ -38,7 +42,7 @@ export const PopularProduct: React.FC<Ui.Product> = (product) => {
             {product.name}
           </h1>
           <span className=" flex items-center font-semibold justify-center gap-1 text-red-500">
-            <Icons.tomato className="fill-red-500 " /> {rating?.length || 0}
+            <Icons.tomato className="fill-red-500" /> {productRating?.length || 0}
           </span>
         </div>
         <div className=" text-[13px] sm:text-sm w-full flex items-center justify-between text-[var(--secondary-text)] ">

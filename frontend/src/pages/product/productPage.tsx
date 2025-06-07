@@ -170,9 +170,9 @@ const RecommendProduct = () => {
                   left: -300,
                 });
               }}
-              className=" p-2  absolute hover:bg-black/60 bg-black/50 left-0 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
+              className=" p-2  absolute hover:bg-black/60 bg-black/50 -left-2 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
             >
-              <Icons.chevronLeft className=" text-white size-5 " />
+              <Icons.chevronLeft className=" text-white size-3.5 sm:size-5 " />
             </button>
             <button
               onClick={() => {
@@ -181,9 +181,9 @@ const RecommendProduct = () => {
                   left: 300,
                 });
               }}
-              className="p-2 hover:bg-black/60 absolute bg-black/50 right-0 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
+              className="p-2 hover:bg-black/60 absolute bg-black/50 -right-2 top-1/2 -translate-y-1/2 duration-150  text-white rounded-full "
             >
-              <Icons.chevronRight className="  size-5 " />
+              <Icons.chevronRight className="  size-3.5 sm:size-5 " />
             </button>
           </>
         )}
@@ -349,9 +349,8 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
          "
       >
         <h1 className=" text-lg  ">Details</h1>
-        <p className=" text-[var(--secondary-text)] text-[16px] md:text-[16px] ">
-          {product?.description ||
-            " Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt a  corporis quo odio doloribus cupiditate praesentium voluptatibus quasi  perferendis! Minus ea sunt repellat?"}
+        <p className=" text-[var(--secondary-text)] line-clamp-5 text-[16px] md:text-[16px] ">
+          {product?.description }
         </p>
       </div>
     </div>

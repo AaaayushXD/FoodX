@@ -20,6 +20,7 @@ declare namespace Ui {
     item: number;
     order: number;
     revenue: number;
+    description?: string;
 
   }
 

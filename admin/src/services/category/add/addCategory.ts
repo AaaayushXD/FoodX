@@ -6,12 +6,13 @@ export const addCategory = async (data: {
   image: Ui.Category["image"];
   name: Ui.Category["name"];
   bannerImage?: Ui.Category["bannerImage"];
+  description: Ui.Category["description"];
 }): Promise<Api.Response<Ui.Category[]>> => {
   try {
     const response = await makeRequest({
       method: "post",
-      url: "categories/add-category",
-      data: { name: data.name, image: data.image },
+      url: "categories/add",
+      data: { name: data.name, image: data.image, bannerImage: data.bannerImage, description: data.description },
     });
     return response.data;
   } catch (error) {

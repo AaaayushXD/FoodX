@@ -123,9 +123,9 @@ const verifyAction = createAsyncThunk(
         localStorage.removeItem("time");
         return;
       }
-
+      navigate?.("/");
       localStorage.removeItem("time");
-      return response.data.user;
+      return response.data.userInfo;
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({

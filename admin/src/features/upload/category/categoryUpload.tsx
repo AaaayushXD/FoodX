@@ -19,10 +19,12 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
   const reference = useRef<HTMLDivElement>();
   const [data, setData] = useState<{
     name: string;
+    description: string;
     image: string;
     bannerImage: string;
   }>({
     name: "",
+    description: "",
     image: "",
     bannerImage: ""
   })
@@ -32,7 +34,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
 
   const handleSave = async (event: FormEvent) => {
     event.preventDefault();
-    if (!data.name || !data.image || !data.bannerImage)
+    if (!data.name || !data.description || !data.image || !data.bannerImage)
       return toaster({
         icon: "error",
         className: "bg-red-50",
@@ -49,6 +51,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
       setLoading(true);
       const response = await addCategory({
         name: data.name,
+        description: data.description,
         image: data.image,
         bannerImage: data.bannerImage
       });
@@ -58,8 +61,10 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
         message: response?.message,
         title: "Category successfully added!",
       });
+      queryClient?.invalidateQueries({ queryKey: "categories-1" });
       setData({
         name: "",
+        description: "",
         image: "",
         bannerImage: "",
       });
@@ -80,7 +85,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
     }
   };
 
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>, type: 'image' | 'bannerImg') => {
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>, type: 'image' | 'bannerImage') => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
 
@@ -113,7 +118,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
     event.preventDefault();
   };
 
-  const handleImage = async (event: ChangeEvent<HTMLInputElement>, type: 'image' | 'bannerImg') => {
+  const handleImage = async (event: ChangeEvent<HTMLInputElement>, type: 'image' | 'bannerImage') => {
     type === 'image' ? setImageLoading(true) : setBannerImageLoading(true);
     try {
       if (event.target.files) {
@@ -122,7 +127,9 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
           ...data,
           [type]: `${response?.data?.folderName}/${response?.data?.filename}`,
         });
+        console.log( response, type)
       }
+     
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
@@ -159,23 +166,41 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
             mutate(e);
           }}
           action=""
-          className="sm:w-[600px]  text-[var(--dark-text)]  w-full px-5 min-w-full py-7 gap-16 flex flex-col items-start justify-center"
+          className="sm:w-[600px] h-[60vh] overflow-y-auto  text-[var(--dark-text)]  w-full px-5 min-w-full py-7 gap-16 flex flex-col"
         >
           {/* First Row */}
-          <div className=" w-full flex flex-col items-baseline justify-center gap-0.5">
-            <label
-              className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
-              htmlFor=""
-            >
-              Category Name
-            </label>
-            <input
-              required
-              onChange={(e) => setData({ ...data, name: e.target.value })}
-              type="text"
-              placeholder="Pizza"
-              className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded"
-            />
+          <div className="w-full flex flex-col gap-6">
+            <div className="w-full flex flex-col items-baseline justify-center gap-0.5">
+              <label
+                className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
+                htmlFor=""
+              >
+                Category Name
+              </label>
+              <input
+                required
+                onChange={(e) => setData({ ...data, name: e.target.value })}
+                type="text"
+                placeholder="Pizza"
+                className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded"
+              />
+            </div>
+
+            <div className="w-full flex flex-col items-baseline justify-center gap-0.5">
+              <label
+                className="font-semibold pl-0.5 text-[15px] text-[var(--dark-text)]"
+                htmlFor=""
+              >
+                Category Description
+              </label>
+              <textarea
+                required
+                onChange={(e) => setData({ ...data, description: e.target.value })}
+                placeholder="Enter category description..."
+                rows={4}
+                className="w-full border-[1px] border-[var(--dark-border)] bg-[var(--light-foreground)] outline-none placeholder:text-sm py-2 px-4 rounded resize-none"
+              />
+            </div>
           </div>
           
           {/* Image Upload Section */}
@@ -236,12 +261,12 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
                 <div className="w-full overflow-hidden transition-all hover:bg-[var(--light-secondary-text)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-secondary-text)] stroke-[1px]">
                   <Image
                     className="w-full h-[230px] object-fill"
-                    highResSrc={`${import.meta.env.VITE_API_URL_ASSETS}${data.bannerImage}`}
+                    highResSrc={`${import.meta.env.VITE_API_URL_ASSETS} ${data.bannerImage}`}
                   />
                 </div>
               ) : (
                 <div
-                  onDrop={(e) => handleDrop(e, 'bannerImg')}
+                  onDrop={(e) => handleDrop(e, 'bannerImage')}
                   onDragOver={handleDragOver}
                   onClick={() => bannerFileRef.current?.click()}
                   className="w-full transition-all hover:bg-[var(--light-foreground)] cursor-pointer relative border-dotted border-[2px] rounded border-[var(--dark-border)] stroke-[1px] py-20"
@@ -249,7 +274,7 @@ export const UploadCategory: React.FC<CategoryModal> = ({ closeModal }) => {
                   <input
                     required
                     ref={bannerFileRef as any}
-                    onChange={(event) => handleImage(event, 'bannerImg')}
+                    onChange={(event) => handleImage(event, 'bannerImage')}
                     type="file"
                     className="hidden"
                   />

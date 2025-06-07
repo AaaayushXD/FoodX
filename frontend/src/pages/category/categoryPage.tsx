@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import Image from "@/assets/banner.png";
+
 import { Icons } from "@/utils";
 import { CategoryProduct } from "@/components";
 import { useAllProducts } from "@/hooks/useAllProducts";
@@ -9,7 +9,7 @@ import { productFilter, productSort, Skeleton } from "@/helpers";
 import { Empty, RippleButton } from "@/common";
 import EmptyImage from "@/assets/orderEmpty.webp";
 import { useAppSelector } from "@/hooks";
-
+import bannerDefault from "@/assets/banner.png";
 export const CategoryPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [filters, setFilters] = useState<
@@ -34,8 +34,10 @@ export const CategoryPage = () => {
   const { category: categories } = useAppSelector();
 
   const category = categories.categories?.find((cat) => cat.id === id);
-  console.log(category);
+
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     setFilters((prev) => {
@@ -86,15 +88,17 @@ export const CategoryPage = () => {
     });
   }, [filters]);
 
-  const bannerImage = `${import.meta.env.VITE_URI}assets/${
-    category?.bannerImage
-  }`;
+  const bannerImage = category?.bannerImage
+    ? `${import.meta.env.VITE_URI}assets/${category?.bannerImage}`
+    : bannerDefault;
+  
+  
   return (
     <div className="flex w-full bg-white h-full flex-col items-start justify-start gap-5">
       {/* Category Header */}
       <div
         style={{
-          backgroundImage: `url(${bannerImage || Image})`,
+          backgroundImage: `url(${bannerImage})`,
         }}
         className="w-full relative flex items-start pt-5 pl-3 bg-right-bottom bg-no-repeat bg-cover h-[300px] sm:h-[400px]  transition-all ease-in-out duration-500"
       >
@@ -110,9 +114,8 @@ export const CategoryPage = () => {
           <h1 className="text-[20px] text-white tracking-wide sm:text-[25px] font-semibold">
             {category?.name}
           </h1>
-          <p className="text-[14px] sm:text-[16px] text-gray-200">
-            {category?.description ||
-              "   Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, ex?    Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, ex?   Lorem ipsum dolor sit amet consectetur adipisicing elit.    . Facere, ex? Facere, ex?"}
+          <p className="text-[14px] line-clamp-4 max-w-full w-full pr-2 sm:text-[16px] text-gray-200">
+            {category?.description}
           </p>
         </div>
       </div>

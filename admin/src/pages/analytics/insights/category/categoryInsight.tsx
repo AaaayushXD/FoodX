@@ -102,11 +102,7 @@ const AllCategories = () => {
         (category) => category.id
       );
       const response = await bulkDeleteOfCategory(AllCategoriesId as string[]);
-      await addLogs({
-        action: "delete",
-        date: new Date(),
-        detail: `Category bulk delete : ${JSON.stringify(AllCategoriesId)}`,
-      });
+
       toast.dismiss(toastLoader);
       const refreshCategory = initialCategory.filter((category) => {
         return !AllCategoriesId.includes(category.id as string);
@@ -141,16 +137,17 @@ const AllCategories = () => {
 
   const handleDelete = async (id: string) => {
     if (!id) return toast.error("Category not exist");
-    const toastLoader = toast.loading("Deleting category...");
+    const toastLoader = toaster({
+      message: " Please wait...",
+      icon: "loading",
+    });
     try {
-     
-      await deleteCategory("bnw");
-      toast.success("Successfully deleted");
-      await addLogs({
-        action: "delete",
-        date: new Date(),
-        detail: `category : ${id} `,
+      await deleteCategory(id);
+      toaster({
+        message: "Successfully deleted",
+        icon: "success",
       });
+
       const refreshCategory = initialCategory?.filter(
         (category) => category.id !== id
       );
@@ -158,8 +155,10 @@ const AllCategories = () => {
     } catch (error) {
       toast.dismiss(toastLoader);
       return toast.error("Failed to delete");
+    } finally {
+      setIsDelete(false);
+      toast.dismiss(toastLoader);
     }
-    setIsDelete(false);
   };
 
   useEffect(() => {

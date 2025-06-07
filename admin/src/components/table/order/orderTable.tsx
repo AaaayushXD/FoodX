@@ -135,10 +135,10 @@ export const OrderTable: React.FC<orderTableProp> = ({
           <p>
             {!isCollapsed && item.id == selectedId
               ? item.products?.map(
-                  (product) => `${product.name} * ${product.quantity} `
+                  (product) => `${product?.name} * ${product?.quantity} `
                 )
               : item.products &&
-                `${item.products[0].name} × ${item.products[0].quantity}  `}
+                `${item?.products[0]?.name} × ${item?.products[0]?.quantity}  `}
           </p>
           <button
             onClick={() => {

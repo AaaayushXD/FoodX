@@ -1,13 +1,16 @@
 import { AverageReview } from "./average/averageReview";
 import { ApiError, Skeleton } from "@/helpers";
 import { CustomerReview } from "./customer/customerReview";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRating } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 
 export default function ProductReview({ productId }: { productId: string }) {
-  const { data, error, isLoading } = useRating(productId);
+ 
+  const stableProductId = useMemo(() => productId, [productId]);
+  const { data, error, isLoading } = useRating(stableProductId);
 
+  
   const [limitReview, setLimitReview] = useState<Model.FeedbackDetail[]>([]);
   const [view, setView] = useState<boolean>(false);
 

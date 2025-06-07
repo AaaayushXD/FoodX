@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ProductSearch } from "@/features";
+import { OrderNotification, ProductSearch } from "@/features";
 import { Icons } from "@/utils";
 import { useAppSelector } from "@/hooks";
 import { Modal } from "@/common";

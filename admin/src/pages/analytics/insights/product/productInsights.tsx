@@ -80,7 +80,7 @@ export const AllProductAnalytics = () => {
 
     // Apply filtering
     if (filter?.typeFilter?.type === "products") {
-      filteredProducts = normalProducts as unknown as Ui.Product[]
+      filteredProducts = normalProducts as unknown as Ui.Product[];
     } else if (filter?.typeFilter?.type === "specials") {
       filteredProducts = specialProducts as Ui.Product[];
     } else if (normalProducts && specialProducts) {
@@ -132,8 +132,8 @@ export const AllProductAnalytics = () => {
   const searchProducts = async (value: string) => {
     if (!specialLoading && !normalLoading) {
       const filterProducts = [
-        ...(normalProducts as  unknown as Ui.Product[]),
-        ...(specialProducts as  unknown as Ui.Product[]),
+        ...(normalProducts as unknown as Ui.Product[]),
+        ...(specialProducts as unknown as Ui.Product[]),
       ]?.filter((product) =>
         product.name.toLowerCase().includes(value.toLowerCase())
       );
@@ -204,8 +204,12 @@ export const AllProductAnalytics = () => {
     });
     try {
       await deleteProduct({ id: id, type: type });
- 
-      toast.success("Successfully deleted");
+
+      toaster({
+        icon: "success",
+        title: "Successfully deleted",
+        className: "bg-green-50",
+      });
       await addLogs({
         action: "delete",
         date: new Date(),
@@ -216,19 +220,18 @@ export const AllProductAnalytics = () => {
       );
       setFetchedProducts(refreshProducts);
     } catch (error) {
-      if (error instanceof ApiError ) {
+      if (error instanceof ApiError) {
         toaster({
           icon: "error",
           title: error?.message,
           className: "bg-red-50",
         });
       }
-    } 
-    finally {
+    } finally {
       setIsDelete(false);
 
       toast.dismiss(toastLoader);
- }
+    }
   };
 
   const handleBulkSelected = (id: string, isChecked: boolean) => {

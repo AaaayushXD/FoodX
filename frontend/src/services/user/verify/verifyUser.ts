@@ -7,7 +7,7 @@ export const verifyNewUser = async (data: {
   uid?: string;
   type: "reset" | "otp";
   accessToken?: string;
-}): Promise<Api.Response<{ user: Auth.User, accessToken: string }>> => {
+}): Promise<Api.Response<{ userInfo: Auth.User, accessToken: string }>> => {
   try {
     const response = await makeRequest({
       method: "post",

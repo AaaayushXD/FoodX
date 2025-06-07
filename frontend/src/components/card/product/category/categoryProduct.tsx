@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { EllipsePopup } from "@/components";
 import { Heart } from "lucide-react";
 import { useFavourite } from "@/hooks";
-import { addProductToCart } from "@/services";
+import { addProductToCart, get_productFeedback } from "@/services";
 import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
 import { ApiError, handleShare, Image } from "@/helpers";
 import { addToCart } from "@/reducer";
 import toast from "react-hot-toast";
 import PlaceholderImg from "@/assets/placeholder.svg";
 import { RippleButton } from "@/common";
+import { useQuery } from "@tanstack/react-query";
 
 export const CategoryProduct: React.FC<Ui.Product> = (product) => {
   const navigate = useNavigate();
@@ -48,6 +49,16 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
     }
   }
   const [openEllipse, setOpenEllipse] = useState<boolean>(false);
+
+  const { data: rating } = useQuery({
+    queryKey: ["product:review"],
+    queryFn: () =>
+      get_productFeedback({ currentFirstDoc: null, currentLastDoc: null }),
+  });
+
+  const productRating = rating?.data?.feedbacks?.filter(
+    (feedback) => feedback?.productId === product?.id
+  );
 
   return (
     <div className="w-full  lg:bg-white group/category bg-transparent  rounded-lg relative flex items-center justify-start gap-2 sm:gap-5 h-[150px] sm:h-[200px] ">
@@ -110,14 +121,14 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
                 {" "}
                 <Icons.tomato className=" size-2.5 sm:size-5 fill-white text-white" />{" "}
               </button>
-              4.6 (1.9k+)
+              ({productRating?.length?.toFixed(1)}{" "}
+              {productRating && productRating?.length > 0 ? "+" : ""} )
             </h1>
             <p>{product?.cookingTime || "20mins - 50mins"}</p>
           </div>
         </div>
-        <p className="text-[14px] line-clamp-2 md:line-clamp-4 sm:text-[18px] text-gray-400">
-          {product?.description ||
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. In non corrupti quae saepe expedita corporis."}
+        <p className="text-[13px] line-clamp-2 md:line-clamp-4 sm:text-[18px] text-gray-400">
+          {product?.description}
         </p>
       </div>
 

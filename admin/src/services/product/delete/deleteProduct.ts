@@ -9,8 +9,8 @@ export const bulkDeleteOfProduct = async (data: {
   try {
     const response = await makeRequest({
       method: "delete",
-      url: "products/bulk-delete/products",
-      data: { category: data.category, ids: [...data.ids] },
+      url: `products/bulk-delete/${data?.category}`,
+      data: { ids: [...data.ids] },
     });
     return response.data.data;
   } catch (error) {
@@ -28,7 +28,7 @@ export const bulkDeleteOfProduct = async (data: {
 export const deleteProduct = async (data: {
   id: string;
   type: "products" | "specials";
-}) => {
+}): Promise<Api.Response<any>> => {
   try {
     const response = await makeRequest({
       method: "delete",

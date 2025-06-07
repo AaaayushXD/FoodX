@@ -4,7 +4,7 @@ import { MoonLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { TimePicker } from "@/features";
-import { resetCart } from "@/reducer";
+import { addOrder, resetCart } from "@/reducer";
 import { addOrder as orderAdd, resendOtp } from "@/services";
 import { addRevenue, addNotification, removeProductFromCart } from "@/services";
 import { ApiError } from "@/helpers";
@@ -39,7 +39,7 @@ export const Payment: React.FC = () => {
       });
       return;
     }
-    if(cart?.products?.length <= 0){
+    if (cart?.products?.length <= 0) {
       return toaster({
         icon: "warning",
         className: "bg-orange-100",
@@ -52,7 +52,7 @@ export const Payment: React.FC = () => {
         await resendOtp({
           email: auth?.userInfo?.email as string || localStorage?.getItem("email") as string,
           type: "reset",
-          uid: auth?.userInfo?.uid  as string  || localStorage?.getItem("uid") as string
+          uid: auth?.userInfo?.uid as string || localStorage?.getItem("uid") as string
         });
         toaster({
           className: "bg-yellow-50",
@@ -74,6 +74,13 @@ export const Payment: React.FC = () => {
         status: "pending",
         note: note,
       });
+      dispatch(addOrder({
+        orderId: response?.data,
+        products: cart?.products,
+        status: "pending",
+        orderRequest: dayjs().toISOString(),
+        uid: auth?.userInfo?.uid as string,
+      }));
       if (response?.message)
         toaster({
           title: response?.message,
@@ -127,21 +134,19 @@ export const Payment: React.FC = () => {
           <div className="flex gap-3 mt-2">
             <RippleButton
               onClick={() => handlePaymentSelection("online")}
-              className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${
-                paymentMethod === "online"
+              className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${paymentMethod === "online"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
-              }`}
+                }`}
             >
               Online
             </RippleButton>
             <RippleButton
               onClick={() => handlePaymentSelection("cash")}
-              className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${
-                paymentMethod === "cash"
+              className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${paymentMethod === "cash"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
-              }`}
+                }`}
             >
               Cash
             </RippleButton>
