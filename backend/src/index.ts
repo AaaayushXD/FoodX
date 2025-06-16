@@ -37,6 +37,15 @@ server.listen(PORT, () => {
   logger.info(`Server is running on port ${PORT}`);
 });
 
+app.get("/health", (_, res) => {
+  res.status(200).json({
+    message: "Server is healthy",
+    success: true,
+    status: 200,
+    data: null,
+  });
+});
+
 //route handling
 app.use("/api/v1", rootRouter);
 
