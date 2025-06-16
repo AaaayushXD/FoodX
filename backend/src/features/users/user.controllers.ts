@@ -124,7 +124,8 @@ const updateUserRole = asyncHandler(
         firstName: user.fullName.split(" ")[0]?.trim(),
         lastName: user.fullName.split(" ")[1]?.trim(),
       },
-      newRole
+      newRole,
+      uid
     );
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
       newUser.uid,

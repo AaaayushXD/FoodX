@@ -7,12 +7,13 @@ import logger from "../../../utils/logger/logger.js";
 
 export const addUserToFirestore = async (
   user: Auth.Register,
-  access: User.RoleType
+  access: User.RoleType,
+  uid?: string
 ) => {
   const customerDocRef = db.collection(access);
   if (!customerDocRef) throw new APIError("No document found.", 404);
   try {
-    const userId = generateRandomId();
+    const userId = uid ? uid : generateRandomId();
     const oldUser = await customerDocRef.where("email", "==", user.email).get();
     if (oldUser.size !== 0)
       throw new APIError("User already exist with this email.", 409);
