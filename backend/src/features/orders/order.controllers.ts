@@ -64,6 +64,8 @@ const addNewOrder = asyncHandler(
       orderId: "",
       note: order.note || "",
       orderFullFilled: null,
+      image: order.image || "",
+      paymentMethod: order.paymentMethod,
     });
     const user = await getUserWithIdFromDatabase(order.role, order.uid);
     io.to("chef").emit("new_order", { ...order, orderId });

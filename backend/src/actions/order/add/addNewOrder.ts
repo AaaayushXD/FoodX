@@ -7,7 +7,7 @@ export const addNewOrderToDatabase = async (order: Order.Order) => {
   const orderDocRef = db.collection("orders");
   if (!orderDocRef) throw new APIError("Couldn't find order collection.", 404);
   try {
-    const { orderRequest, products, uid, status, note } = order;
+    const { orderRequest, products, uid, status, note, image, paymentMethod } = order;
     const orderData = await orderDocRef
       .add({
         orderId: "",
@@ -16,6 +16,8 @@ export const addNewOrderToDatabase = async (order: Order.Order) => {
         status,
         uid,
         note,
+        image: image || "",
+        paymentMethod,
       })
       .then((docRef) => {
         docRef.update({

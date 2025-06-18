@@ -15,6 +15,8 @@ declare namespace Order {
     note: string;
     orderRequest: any;
     orderFullFilled: any;
+    image?: string;
+    paymentMethod: "online" | "cash";
   }
 
   type OrderStatus =

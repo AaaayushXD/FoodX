@@ -15,6 +15,8 @@ export const AddOrderSchema = z.object({
   note: z.string().optional(),
   orderRequest: z.string({ required_error: "Order request is required." }),
   role: roleSchema.default("customer"),
+  image: z.string().optional(),
+  paymentMethod: z.enum(["online", "cash"]).default("cash"),
 });
 
 export type AddOrderSchemaType = z.infer<typeof AddOrderSchema>;
