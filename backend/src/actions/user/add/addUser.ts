@@ -9,7 +9,7 @@ export const addUserToFirestore = async (
   user: Auth.Register,
   access: User.RoleType,
   uid?: string,
-  isUpdatingRole: boolean = false
+  isUpdatingRole: boolean = false,
 ) => {
   const customerDocRef = db.collection(access);
   if (!customerDocRef) throw new APIError("No document found.", 404);
