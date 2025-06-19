@@ -5,6 +5,7 @@ import { Icons, toaster } from "../../utils";
 import { ApiError } from "@/helpers";
 import { resendOtp } from "@/services";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const VerificationPage = () => {
   return (
@@ -102,8 +103,9 @@ export const VerificationContainer = ({
           otp: otpString,
           uid: uid ?? (auth?.userInfo?.uid as string),
           type: getVerifyType,
-          accessToken: accessToken as string,
+          accessToken: accessToken ?? Cookies.get("accessToken") as string,
           navigate: navigate,
+          closeModal: closeModal,
         })
       );
     } catch (error) {
@@ -117,7 +119,6 @@ export const VerificationContainer = ({
       //   });
       // }
     } finally {
-      closeModal && closeModal();
       setIsVerifying(false);
     }
   }

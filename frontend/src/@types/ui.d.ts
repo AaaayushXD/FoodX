@@ -14,11 +14,11 @@ declare namespace Ui {
     createdAt?: Common.TimeStamp;
     updatedAt?: Common.TimeStamp;
     collection?: Common.ProductCollection;
-    discountPrice?: number;
+    discount?: number;
   }
 
   interface SpecialProducts extends Product {
-    discountPrice: number;
+    discount: number;
   }
 
   type BannerType = "banners" | "sponsors";

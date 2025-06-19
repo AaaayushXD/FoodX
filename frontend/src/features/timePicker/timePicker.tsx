@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { TimePicker as Component } from "rsuite";
-import "rsuite/TimePicker/styles/index.css";
+import * as React from 'react';
+import { LocalizationProvider, TimePicker as MuiTimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Dayjs } from 'dayjs';
 
 interface TimePickerProp {
-  action: (value: Date) => void;
+  action: (value: Dayjs | null) => void;
 }
+
 export const TimePicker: React.FC<TimePickerProp> = ({ action }) => {
-  const [time, setTime] = useState<Date | null>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
+
   return (
-    <Component
-      format="HH:mm"
-      value={time}
-      onChange={(value) => {
-        setTime(value);
-        action(value);
-      }}
-      cleanable
-      placeholder="Select Time"
-    />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MuiTimePicker
+        label="Select Time"
+        value={value}
+        onChange={(newValue: Dayjs | null) => {
+          setValue(newValue);
+          action(newValue);
+        }}
+        ampm
+        slotProps={{ textField: { size: 'small' } }}
+      />
+    </LocalizationProvider>
   );
 };

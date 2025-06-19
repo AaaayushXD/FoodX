@@ -12,9 +12,13 @@ declare namespace Prop {
     products: Ui.Product[];
     price: number;
     status: Common.OrderStatus;
+    note?: string;
     orderRequest: string;
     uid: string;
+    paymentMethod: "cash" | "online";
+    paymentImage?: string;
     onChange?: (status: Common.OrderStatus) => void;
+    name?: string;
 
   }
 
@@ -33,7 +37,7 @@ declare namespace Prop {
       };
       customerDetails: {
         name: string;
-        phoneNumber: number;
+        phoneNumber: number | string;
         userId: string;
       };
       orderDetails: {

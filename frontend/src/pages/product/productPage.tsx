@@ -303,7 +303,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
               Rs.{product?.price}
             </p>
             <p className=" text-[var(--secondary-text)] text-[14px] md:text-[16px] mb-1  line-through ">
-              {product?.discountPrice && "Rs." + product?.discountPrice} Rs.100
+              {product?.discount && "Rs." + product?.discount} Rs.100
             </p>
           </div>
 

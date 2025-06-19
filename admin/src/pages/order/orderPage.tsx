@@ -9,11 +9,14 @@ import {
   handleDownloadCSV,
   OrderSearch,
 } from "@/features";
-import { Icons, useSocket } from "@/utils";
+import { Icons, useSocket, toaster } from "@/utils";
 import Bell from "@/assets/order.mp3";
 import { useAppSelector, usePaginateOrders } from "@/hooks";
 import { customToast } from "@/common/toast/toast";
 import { OrderTable } from "@/components";
+import { updateOrderStatus, addNotification } from "@/services";
+import { ApiError } from "@/helpers";
+
 const OrderList = () => {
   const {
     isFilter,
@@ -82,14 +85,110 @@ const OrderList = () => {
         },
         ...prev.map((o) => ({ ...o, rank: o.rank! + 1 })),
       ]);
-      const audio = new Audio(Bell);
-      audio?.play();
+      
+      // Enhanced toast with actions
       customToast({
         orderId: order.orderId,
         products: order.products,
         orderRequest: order.orderRequest,
         name: user?.fullName as string,
         note: order.note as string,
+        paymentMethod: order.paymentMethod,
+      }, {
+        onAccept: async (orderId: string) => {
+          const toastLoader = toaster({
+            icon: "loading",
+            message: "Accepting order...",
+          });
+          
+          try {
+            const user = await getUserByUid(order.uid as string);
+            const response = await updateOrderStatus({
+              id: orderId,
+              status: "preparing",
+              price: order.products?.reduce(
+                (productAcc, product) =>
+                  productAcc + Number(product.price) * Number(product.quantity),
+                0
+              ),
+              uid: order.uid as string,
+              role: user?.role as Auth.UserRole,
+            });
+            
+            if (response?.message) {
+              toaster({
+                className: "bg-green-50",
+                icon: "success",
+                message: response.message,
+                title: "Order accepted successfully!",
+              });
+            }
+          } catch (error) {
+            if (error instanceof ApiError) {
+              toaster({
+                className: "bg-red-50",
+                icon: "error",
+                message: error?.message,
+                title: "Error accepting order",
+              });
+            }
+          } finally {
+            toast.dismiss(toastLoader);
+          }
+        },
+        onReject: async (orderId: string) => {
+          const toastLoader = toaster({
+            icon: "loading",
+            message: "Rejecting order...",
+          });
+          
+          try {
+            const user = await getUserByUid(order.uid as string);
+            const response = await updateOrderStatus({
+              id: orderId,
+              status: "cancelled",
+              price: order.products?.reduce(
+                (productAcc, product) =>
+                  productAcc + Number(product.price) * Number(product.quantity),
+                0
+              ),
+              uid: order.uid as string,
+              role: user?.role as Auth.UserRole,
+            });
+            
+            if (response?.message) {
+              toaster({
+                className: "bg-green-50",
+                icon: "success",
+                message: response.message,
+                title: "Order rejected successfully!",
+              });
+            }
+            
+            // Send notification to user
+            await addNotification({
+              message: "Your order has been cancelled. Please contact customer support for assistance.",
+              title: "Order Cancelled",
+              uid: order.uid as string,
+            });
+          } catch (error) {
+            if (error instanceof ApiError) {
+              toaster({
+                className: "bg-red-50",
+                icon: "error",
+                message: error?.message,
+                title: "Error rejecting order",
+              });
+            }
+          } finally {
+            toast.dismiss(toastLoader);
+          }
+        },
+        onView: (orderId: string) => {
+          // Handle view order action - refresh the order list
+          console.log("View order:", orderId);
+          // The order list will automatically update since we're already on the order page
+        },
       });
     };
 

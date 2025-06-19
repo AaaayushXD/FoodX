@@ -66,7 +66,7 @@ export const CustomerReview = ({
   return (
     <div className="w-full border-dashed border-b pb-5 flex bg-[#fbfbfd] p-3 rounded-md flex-col items-start justify-start gap-2  ">
       <div className="w-full flex items-center justify-between">
-        <StarRating rating={4} size="4" />
+        <StarRating rating={Number(review?.rating)} size="4" />
         <p className=" text-[14px] text-gray-600 ">
           {dayjs?.unix(review.createdAt._seconds).format("MMM D, YYYY")}
         </p>
@@ -92,7 +92,7 @@ export const CustomerReview = ({
             alt={review.rating + ""}
           />
         </div>
-        {auth?.userInfo?.uid === data?.data?.uid && (
+        { auth?.success && auth?.userInfo?.uid === data?.data?.uid && (
           <div className="flex items-center justify-start gap-3">
             <button
               onClick={() => setOpen(!open)}
@@ -113,6 +113,7 @@ export const CustomerReview = ({
         <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
           <AddProductReview
             action="update"
+            feedbackId={review.id}
             openReview={open}
             productId={review.productId}
             setOpenReview={() => setOpen(!open)}

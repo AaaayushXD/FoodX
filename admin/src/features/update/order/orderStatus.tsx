@@ -14,8 +14,44 @@ export const UpdateStatus: React.FC<StatusChangerProp> = ({
   const [showModal, setShowModal] = useState(true);
 
   const reference = useRef<HTMLDivElement>();
-  const Status = ["preparing", "prepared", "pending", "cancelled", "completed"];
-  const updateStatus = Status.filter((sts) => sts !== status);
+  
+  const statusConfig = {
+    pending: {
+      label: "Pending",
+      color: "bg-[var(--pending)] text-[var(--dark-text)] border-[var(--dark-border)]",
+    },
+    preparing: {
+      label: "Preparing", 
+      color: "bg-[var(--preparing)] text-[var(--dark-text)] border-[var(--dark-border)]",
+    },
+    prepared: {
+      label: "Prepared",
+      color: "bg-[var(--prepared)] text-[var(--dark-text)] border-[var(--dark-border)]",
+    },
+    completed: {
+      label: "Completed",
+      color: "bg-[var(--completed)] text-[var(--dark-text)] border-[var(--dark-border)]",
+    },
+    cancelled: {
+      label: "Cancelled",
+      color: "bg-[var(--cancelled)] text-[var(--dark-text)] border-[var(--dark-border)]",
+    },
+  };
+
+  // Function to get available statuses based on current status
+  const getAvailableStatuses = (currentStatus: Common.OrderStatus) => {
+    const statusFlow = {
+      pending: ["preparing", "cancelled", "completed", "prepared"],
+      preparing: ["prepared", "cancelled", "completed"],
+      prepared: ["completed", "cancelled"],
+      completed: [], // No further status changes allowed
+      cancelled: [], // No further status changes allowed
+    };
+
+    return statusFlow[currentStatus] || [];
+  };
+
+  const updateStatus = getAvailableStatuses(status);
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {

@@ -47,7 +47,7 @@ export const CreateTicket: React.FC<CreateTicketProp> = ({ close }) => {
 
     setLoading(true);
     try {
-      const response = await createTicket({ ...initialTicket });
+      const response = await createTicket({ ...initialTicket ,ticketStatus: "pending"});
 
       toaster({
         icon: "success",

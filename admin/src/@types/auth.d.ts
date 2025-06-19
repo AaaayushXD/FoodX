@@ -43,6 +43,7 @@ declare namespace Auth {
   }
 
   interface User {
+    id?: string;
     isVerified?: boolean
     uid?: string;
     avatar?: string;

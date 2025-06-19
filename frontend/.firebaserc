@@ -1,23 +1,12 @@
 {
   "projects": {
-    "default": "foodxcafe"
+    "default": "foodx-nepal"
   },
   "targets": {
     "foodx-nepal": {
       "hosting": {
-        "foodxcafe-target": [
-          "foodxcafe"
-        ]
-      }
-    },
-    "foodxcafe": {
-      "hosting": {
-        "foodxcafe-target": [
-          "foodxcafe"
-        ]
+        "foodxcafe": ["foodxcafe"]
       }
     }
-  },
-  "etags": {},
-  "dataconnectEmulatorConfig": {}
+  }
 }

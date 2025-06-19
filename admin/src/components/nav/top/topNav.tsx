@@ -91,7 +91,7 @@ export const Navbar = () => {
               ref={profileReference as any}
               className=" relative  cursor-pointer  "
             >
-              {" "}
+             
               <Image
                 highResSrc={import.meta.env.VITE_API_URL_ASSETS + user.userInfo?.avatar as string}
                 lowResSrc={Img}

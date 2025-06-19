@@ -15,6 +15,7 @@ interface AddProductReviewProp {
   openReview: boolean;
   setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
   productId: string;
+  feedbackId: string;
 }
 
 export const AddProductReview: React.FC<AddProductReviewProp> = ({
@@ -22,6 +23,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   setOpenReview,
   productId,
   action,
+  feedbackId
 }) => {
   const { auth } = useAppSelector();
   const [originalFile, setOriginalFile] = useState<File>();
@@ -112,7 +114,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         const response = await userUpload(originalFile, "reviews");
         uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
- 
+
       const updatedData = { ...data };
       if (uploadedImage) {
         updatedData.image = uploadedImage;
@@ -121,22 +123,23 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       Object.keys(updatedData).forEach(async (key) => {
         const typedKey = key as keyof Ui.FeedbackInfo;
         if (updatedData[typedKey] !== "") {
-           await update_productFeedback(
+          await update_productFeedback(
             productId,
             key as keyof Model.FeedbackDetail,
             updatedData[typedKey],
+            feedbackId,
             auth?.userInfo?.uid
           ).catch((err) => {
             if (err instanceof ApiError) {
-             return  toaster({
+              return toaster({
                 title: "Error",
                 className: "bg-red-50 ",
                 icon: "error",
                 message: err?.message,
               });
             }
-          }).then((res)=>{
-            if(res instanceof ApiError){
+          }).then((res) => {
+            if (res instanceof ApiError) {
               return toaster({
                 title: "Error",
                 className: "bg-red-50 ",
@@ -144,6 +147,14 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
                 message: res?.message,
               });
             }
+            queryClient?.invalidateQueries(["product:review"] as any);
+            toaster({
+              title: "Success",
+              className: "bg-green-50 ",
+              icon: "success",
+              message: "Review updated successfully",
+            });
+            setOpenReview(!openReview);
           });
           setData({
             message: "",
@@ -210,9 +221,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   return (
     <div
-      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60  left-0 right-0 bottom-0 w-screen h-screen ${
-        openReview ? "opacity-100 visible  " : "opacity-0 invisible"
-      } `}
+      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60  left-0 right-0 bottom-0 w-screen h-screen ${openReview ? "opacity-100 visible  " : "opacity-0 invisible"
+        } `}
     >
       <div className="w-full md:hidden flex  p-2   items-center justify-between">
         <button
@@ -227,11 +237,10 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         <div></div>
       </div>
       <div
-        className={`w-full duration-150 ${
-          openReview
+        className={`w-full duration-150 ${openReview
             ? "bottom-0 visible opacity-100"
             : "-bottom-96 invisible opacity-0 "
-        } bg-slate-100  rounded-xl p-5  md:max-w-lg flex flex-col items-start justify-start gap-7`}
+          } bg-slate-100  rounded-xl p-5  md:max-w-lg flex flex-col items-start justify-start gap-7`}
       >
         <Rating
           openReview={openReview}
@@ -294,11 +303,10 @@ const Rating = ({
             key={star}
           >
             <Icons.tomato
-              className={`size-8 transition-transform  duration-300 ease-in-out ${
-                index >= star
+              className={`size-8 transition-transform  duration-300 ease-in-out ${index >= star
                   ? "fill-red-500 scale-110"
                   : "fill-gray-400 group-hover:fill-red-500 group-hover:scale-125" // Hover: Red & bigger
-              }`}
+                }`}
             />
           </button>
         ))}

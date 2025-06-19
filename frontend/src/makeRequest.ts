@@ -25,8 +25,9 @@ makeRequest.interceptors.request.use(
   },
   (error) => {
     if (axios?.isAxiosError(error)) {
-      const { status, data } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
   }
 );
@@ -36,9 +37,10 @@ makeRequest.interceptors.response.use(
     return response;
   },
   async (error) => {
+
     const status = error.response ? error.response.status : null;
- console.log(status, error  )
-    if (
+
+    if ( status === 401 &&
       error?.response?.data?.message ===
       "Error verifying your token. Please try again later. TokenExpiredError: jwt expired"
     ) {

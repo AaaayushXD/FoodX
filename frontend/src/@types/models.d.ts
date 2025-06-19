@@ -61,6 +61,8 @@ declare namespace Model {
     role?: Auth.role,
     updateAt?: string;
     note?: string;
+    image?: string;
+    paymentMethod?: "online" | "cash";
   }
 
   type OrderStatus =

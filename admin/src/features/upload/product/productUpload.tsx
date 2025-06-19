@@ -34,7 +34,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
       quantity: "",
       tagId: "",
       rating: "0",
-      discountPrice: 0,
+      discount: 0,
     },
     collection: "products",
   });
@@ -188,7 +188,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
           ...addFood?.product,
           rating: addFood?.product.rating as string as any,
           quantity: parseInt(addFood?.product.quantity as string) as any,
-          discountPrice: addFood?.product?.discountPrice,
+          discount: addFood?.product?.discount,
         },
       });
 
@@ -548,7 +548,7 @@ export const UploadFood: React.FC<UploadFoodProp> = ({ closeModal }) => {
                       ...prev,
                       product: {
                         ...prev.product,
-                        discountPrice: parseInt(event.target.value),
+                        discount: parseInt(event.target.value),
                       },
                     }))
                   }

@@ -16,7 +16,7 @@ export interface InvoiceDocumentProp {
     };
     customerDetails: {
       name: string;
-      phoneNumber: number;
+      phoneNumber: number | string;
       userId: string;
     };
     orderDetails: {
@@ -139,7 +139,7 @@ const InvoiceDocument: React.FC<InvoiceDocumentProp> = ({ orders }) => (
               <Text
                 style={{
                   color: "gray",
-                  fontStyle: "monoscope",
+                  fontStyle: "italic",
                 }}
               >
                 texas@gmail.com
@@ -149,7 +149,7 @@ const InvoiceDocument: React.FC<InvoiceDocumentProp> = ({ orders }) => (
               <Text
                 style={{
                   fontSize: "20px",
-                  fontStyle: "bold",
+                  fontWeight: "bold",
                 }}
               >
                 Online Food Service Invoice

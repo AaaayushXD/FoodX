@@ -1,10 +1,12 @@
-  import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { UpdateStatus } from "@/features";
 import { addNotification, updateOrderStatus } from "@/services";
 import { Icons, toaster } from "@/utils";
 import { Table } from "@/common";
 import { getUserByUid } from "@/helpers";
+import { Modal } from "@/common/popUp/Popup";
+import { CreditCard } from "lucide-react";
 
 interface orderTableProp {
   totalData: number;
@@ -35,6 +37,8 @@ export const OrderTable: React.FC<orderTableProp> = ({
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
   const [isChangeStatus, setIsChangeStatus] = useState<boolean>(false);
   const [initialOrder, setInitialOrder] = useState<Ui.OrderModal[]>([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPaymentImage, setSelectedPaymentImage] = useState<string>("");
 
   const message = {
     completed: "Your order has been successfully completed.",
@@ -99,11 +103,12 @@ export const OrderTable: React.FC<orderTableProp> = ({
   };
 
   const Columns: Common.ColumnProps[] = [
+ 
     {
       fieldName: "Id",
       colStyle: { width: "100px", textAlign: "start" },
       render: (item: Ui.OrderModal) => (
-        <div className=" !p-0 w-[100px]   relative cursor-pointer group/id text-center ">
+        <div className=" !p-0 w-[100px]   relative cursor-pointer group/id text-start ">
           #{item.id?.substring(0, 8)}
           <div
             className=" top-[-27px]  text-[15px] -left-2 group-hover/id:visible opacity-0 group-hover/id:opacity-[100] duration-150 invisible   absolute bg-[var(--light-foreground)] p-0.5
@@ -152,6 +157,47 @@ export const OrderTable: React.FC<orderTableProp> = ({
               }  duration-200 cursor-pointer `}
             />
           </button>
+        </div>
+      ),
+    },
+    {
+      fieldName:"Pre-order",
+      colStyle: {width:"100px",justifyContent:"start",textAlign:"start"},
+      render: (item: Ui.OrderModal) => (
+        <div className=" w-[100px] flex flex-col items-start justify-center text-[var(--dark-text)] ">
+          <span>{item?.note ? item.note.replace(/^Preorder Time: /, '') : "No"}</span>
+        </div>
+      ),
+    },
+    {
+      fieldName:"Payment Method",
+      colStyle: {width:"150px",justifyContent:"start",textAlign:"start"},
+      render: (item: Ui.OrderModal) => (
+        <div className=" w-[150px] flex flex-col items-start justify-center text-[var(--dark-text)] ">
+          <span>{ item?.paymentMethod ? item?.paymentMethod?.charAt(0).toUpperCase() + item?.paymentMethod?.slice(1) : "N/A"}</span>
+        </div>
+      ),
+    },
+    {
+      fieldName: "Payment Image",
+      colStyle: { width: "120px", justifyContent: "start", textAlign: "start" },
+      render: (item: Ui.OrderModal) => (
+        <div className="w-[120px] flex items-center justify-start">
+          {item?.paymentMethod === "online" && item?.paymentImage ? (
+            <div className="relative group">
+              <img
+                src={import.meta.env.VITE_API_URL_ASSETS + item.paymentImage}
+                alt="Payment confirmation"
+                className="h-8 w-8 rounded border border-[var(--dark-border)] object-cover cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => {
+                  setSelectedPaymentImage(item.paymentImage as string);
+                  setShowPaymentModal(true);
+                }}
+              />
+            </div>
+          ) : (
+            <span className="text-[var(--dark-secondary-text)] text-sm">N/A</span>
+          )}
         </div>
       ),
     },
@@ -228,11 +274,11 @@ export const OrderTable: React.FC<orderTableProp> = ({
     },
   ];
 
-  console;
 
   useEffect(() => {
     setInitialOrder(orders);
   }, [orders]);
+
 
   return (
     <div className="w-full overflow-auto rounded-t-md">
@@ -244,13 +290,18 @@ export const OrderTable: React.FC<orderTableProp> = ({
         totalData={totalData}
         data={initialOrder as any}
         columns={Columns}
+        actions={
+          {
+            checkFn: (id: string, isChecked: boolean) => {
+              setSelectedId(id);
+              action.checkFn?.(id, isChecked);
+            },
+            checkAllFn: (isChecked: boolean,) => {
+              action.checkAllFn?.(isChecked);
+            },
+          }
+        }
         actionIconColor="red"
-        actions={{
-          checkFn: (id: string, isChecked: boolean) =>
-            action.checkFn && action.checkFn(id, isChecked),
-          checkAllFn: (isCheckedAll: boolean) =>
-            action.checkAllFn && action.checkAllFn(isCheckedAll),
-        }}
         disableActions={false}
         loading={loading}
         bodyHeight={400}
@@ -262,6 +313,46 @@ export const OrderTable: React.FC<orderTableProp> = ({
         disableNoData={false}
         headStyle={{ width: "100%" }}
       />
+
+      {/* Payment Image Modal */}
+      {showPaymentModal && (
+        <Modal close={false} closeModal={() => setShowPaymentModal(false)}>
+          <div className="max-w-4xl max-h-[90vh] p-0">
+            <div className="p-6 pb-2">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-[var(--dark-text)]">
+                <CreditCard className="h-5 w-5" />
+                Payment Confirmation
+              </h2>
+            </div>
+            <div className="border-t border-[var(--dark-border)]" />
+            <div className="p-6 pt-4">
+              <div className="flex flex-col items-center gap-4">
+                <div className="relative max-w-full h-[60vh] overflow-hidden rounded-lg border border-[var(--dark-border)]">
+                  <img
+                    src={import.meta.env.VITE_API_URL_ASSETS + selectedPaymentImage}
+                    alt="Payment confirmation"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setShowPaymentModal(false)}
+                    className="px-4 py-2 rounded border border-[var(--dark-border)] text-[var(--dark-text)] hover:bg-[var(--light-background)] transition-colors"
+                  >
+                    Close
+                  </button>
+                  <button 
+                    onClick={() => window.open(import.meta.env.VITE_API_URL_ASSETS + selectedPaymentImage, "_blank")}
+                    className="px-4 py-2 rounded bg-[var(--primary-color)] text-white hover:bg-[var(--primary-light)] transition-colors"
+                  >
+                    Open Full Size
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

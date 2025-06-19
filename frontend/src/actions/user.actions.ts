@@ -95,12 +95,14 @@ const verifyAction = createAsyncThunk(
       type,
       accessToken,
       navigate,
+      closeModal,
     }: {
       otp: string;
       uid?: string;
       type: "otp" | "reset";
       accessToken?: string;
       navigate?: Function;
+      closeModal?: () => void;
     },
     thunkApi
   ) => {
@@ -120,9 +122,11 @@ const verifyAction = createAsyncThunk(
           message: response?.message,
           className: "bg-green-100",
         });
+      
         localStorage.removeItem("time");
         return;
       }
+      closeModal?.();
       navigate?.("/");
       localStorage.removeItem("time");
       return response.data.userInfo;

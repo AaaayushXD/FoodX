@@ -28,6 +28,7 @@ export const fetchNotifications = async ({
         sort,
         uid,
         direction,
+        userId: uid,
       },
     });
     return response.data;

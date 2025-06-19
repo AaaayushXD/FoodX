@@ -1,10 +1,11 @@
 import React from "react";
 import { debounce } from "@/helpers";
-
+import avatar from "@/assets/logo/avatar.png"
 import { searchUser } from "../../../services/user";
 import { useQuery } from "react-query";
 import Customer from "@/assets/customer.png";
 import { RotatingLines } from "react-loader-spinner";
+import { Image } from "@/utils/Image";
 
 interface OrderSearchProp {
   payload: (user: Auth.User) => void;
@@ -78,8 +79,9 @@ export const OrderSearch: React.FC<OrderSearchProp> = ({ payload }) => {
               }}
               className="w-full hover:bg-[var(--body-bg)] cursor-pointer flex items-center  rounded-lg justify-start gap-3 p-2 border-[1px] border-[var(--dark-border)] "
             >
-              <img
-                src={user.avatar}
+              <Image
+                highResSrc={ import.meta.env.VITE_API_URL_ASSETS + user.avatar}
+                lowResSrc={avatar}
                 className="size-14 rounded-full "
                 alt="user"
               />

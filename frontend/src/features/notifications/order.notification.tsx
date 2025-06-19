@@ -57,12 +57,9 @@ const getOrderTotal = (products: Model.Product[]) => {
 
 export const OrderNotification = () => {
   const {
-    orderId,
-    setOrderId,
-    open,
-    setOpen,
     data: initialData,
     setData,
+
   } = useHooks<Model.Order[], "orderNotification">("orderNotification");
 
 
@@ -78,6 +75,7 @@ export const OrderNotification = () => {
       direction: "next",
       filter: "orderRequest",
       userId: store?.auth?.userInfo?.uid,
+      status:"pending"
     },
     { enable: !store?.order?.order.length && store?.auth?.success }
   );
@@ -104,12 +102,6 @@ export const OrderNotification = () => {
     setData(store?.order?.order);
   }, [store.order.order]);
 
-  const orderStatus: Model.OrderStatus[] = [
-    "pending",
-    "prepared",
-    "prepared",
-    "completed",
-  ];
 
 
 

@@ -1,6 +1,6 @@
 declare namespace Common {
   type folder = "users" | "products" | "banners";
-  type AssetsType = "users" | "banners" | "categories" | "default" | "reviews";
+  type AssetsType = "users" | "banners" | "categories" | "default" | "reviews" | "orders";
   type sortAction = "asc" | "desc";
   type SortType = "time" | `price[${sortAction}]` | "rating";
 

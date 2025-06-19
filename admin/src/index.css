@@ -39,6 +39,13 @@
     --green-bg: #4caf50;
 
     --green-text: #177e1a;
+
+    --pending: #f29339;
+    --preparing: #ff9800;
+    --prepared: #2c398d;
+    --completed: #4caf50;
+    --cancelled: #e00b0b;
+    --green-text: #177e1a;
   }
   .dark {
     --color: #1ba13dd2;

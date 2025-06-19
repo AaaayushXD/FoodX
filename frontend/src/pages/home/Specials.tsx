@@ -44,7 +44,7 @@ export const Specials: React.FC = () => {
                 <SpecialProduct
                   key={product.id}
                   {...product}
-                  discountPrice={product?.discountPrice as number || 0}
+                  discount={Number(product?.discount) || 0}
                 />
               ))
             )}
