@@ -22,7 +22,7 @@ export const validateEmail = (
   error: Record<string, string>
 ) => {
   //TODO: Change this according to college/school.
-  const collegeEmail = "texascollege.edu.np";
+  const collegeEmail = "gmail.com";
   const email = RegisterValue.email;
   if (error.email) return;
   const emailAddress = email?.toLowerCase().trim();

@@ -3,15 +3,15 @@ import { Icons } from "@/utils";
 
 const Footer: React.FC = () => {
   return (
-    <div className="flex flex-col w-full text-white ">
+    <div className="flex flex-col w-full text-white">
       <footer className="w-full mt-16  rounded-t  bg-[var(--primary-color)] text-white place-items-center grid px-5">
         <div className="flex flex-col items-center justify-between w-full gap-5 p-3 border-b-4 border-b-[var(--light-border)] sm:flex-row">
           <div className="px-5 py-3 bg-[var(--light-background)] rounded">
             <img src={CollegeLogo} className="max-h-[60px] " />
           </div>
-          <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-lg font-bold tracking-wide ">Follow us: </p>
-            <div className="flex items-center gap-9">
+          <div className="flex flex-col gap-3 justify-center items-center">
+            <p className="text-lg font-bold tracking-wide">Follow us: </p>
+            <div className="flex gap-9 items-center">
               <a
                 aria-label="go to facebook"
                 target="_blank"
@@ -36,11 +36,11 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="grid w-full grid-cols-2 gap-8 py-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="flex flex-col gap-6 p-8 ">
+        <div className="grid grid-cols-2 gap-8 py-4 w-full md:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-col gap-6 p-8">
             <p className="font-bold tracking-wider">Quick Contact</p>
             <div className="flex flex-col gap-5">
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex gap-2 items-center text-sm">
                 <div className="p-2 bg-[var(--light-foreground)] rounded-full text-[var(--dark-secondary-text)] flex items-center justify-center">
                   <Icons.mapMarker />
                 </div>
@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
                   <p>Kathmandu, Nepal</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex gap-2 items-center text-sm">
                 <div className="p-2 bg-[var(--light-foreground)] rounded-full text-[var(--dark-secondary-text)] flex items-center justify-center flex-wrap">
                   <Icons.phone />
                 </div>
@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
                   <p>01-4589134, 01-4588627, 9801644462</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex gap-2 items-center text-sm">
                 <div className="p-2 bg-[var(--light-foreground)] rounded-full text-[var(--dark-secondary-text)] flex items-center justify-center">
                   <Icons.email />
                 </div>
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
                   </a>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex gap-2 items-center text-sm">
                 <div className="p-2 bg-[var(--light-foreground)] rounded-full text-[var(--dark-secondary-text)] flex items-center justify-center">
                   <Icons.clock />
                 </div>
@@ -81,9 +81,9 @@ const Footer: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-5 px-5 py-8">
+          <div className="flex flex-col gap-5 items-center px-5 py-8">
             <p className="font-bold tracking-wider">Links</p>
-            <div className="flex flex-col gap-3 text-sm text-white ">
+            <div className="flex flex-col gap-3 text-sm text-white">
               <a
                 href="/"
                 className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex flex-col gap-5 px-5 py-8">
             <p className="font-bold tracking-wider">Quick Links</p>
-            <div className="flex flex-col gap-3 text-sm text-white ">
+            <div className="flex flex-col gap-3 text-sm text-white">
               <a
                 target="_blank"
                 href="mail:enquiry@texasintl.edu.np"
@@ -130,9 +130,9 @@ const Footer: React.FC = () => {
               </a>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-5 px-5 py-8">
+          <div className="flex flex-col gap-5 items-center px-5 py-8">
             <p className="font-bold tracking-wider">Resources</p>
-            <div className="flex flex-col gap-5 text-sm text-white pl-9">
+            <div className="flex flex-col gap-5 pl-9 text-sm text-white">
               <a
                 href="/"
                 target="_blank"
