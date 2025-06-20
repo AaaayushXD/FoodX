@@ -24,6 +24,8 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
 
   const navigate = useNavigate();
 
+  const discountPrice = Math.round((product?.discount/100)*product?.price)
+
   return (
     <div
       onClick={() => navigate(`${product?.collection}/${product?.id}`)}
@@ -56,11 +58,13 @@ export const SpecialProduct: React.FC<Ui.SpecialProducts> = (product) => {
           </h2>
           <div className="w-full flex items-center justify-start gap-2 sm:gap-3">
             <p className="sm:text-lg font-semibold text-[var(--primary-dark)] text-[14px] tracking-wide ">
-              Rs. {product?.price - Number(product?.discount)}
+              Rs. {discountPrice}
             </p>
-            <p className=" sm:text-sm text-[12px] tracking-wide line-through text-red-700 ">
-              Rs. {product?.price}
-            </p>
+            {product?.price !== discountPrice && (
+              <p className="sm:text-sm text-[12px] tracking-wide line-through text-red-700 ">
+                Rs. {product?.price}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex  relative  flex-col items-end">

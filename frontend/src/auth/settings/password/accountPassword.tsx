@@ -268,10 +268,6 @@ export function ResetNewPassword() {
     useState<Record<keyof Auth.ValidationType, string>>();
   const navigate = useNavigate();
   const handlePassword = async (e: FormEvent) => {
-    const toastLoader = toaster({
-      icon: "loading",
-      message: "Please wait...",
-    });
     e.preventDefault();
     const error: Record<keyof Auth.ValidationType, string> = {
       oldPassword: "",
@@ -297,6 +293,12 @@ export function ResetNewPassword() {
     );
     if (error.password !== "" || error.confirmPassword !== "")
       return setValidationError(error);
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Please wait...",
+    });
+  
+
     setValidationError({ confirmPassword: "", password: "" } as any);
     try {
       const response = await forgetPasswordWithAccessToken({

@@ -1,7 +1,7 @@
 import React, { lazy } from "react";
 import { FavouritePage, ProfilePage, SingleOrder } from "../pages";
 import ErrorBoundary from "@/errorBoundary";
-import { PasswordChange, ResetNewPassword } from "@/auth";
+import {  ResetNewPassword } from "@/auth";
 const CategoryPage = lazy(() =>
   import("../pages/category/categoryPage").then((module) => ({
     default: module.CategoryPage,

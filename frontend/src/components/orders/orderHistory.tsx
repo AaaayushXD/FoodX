@@ -179,7 +179,7 @@ export const OrderHistory = () => {
         direction: direction,
         currentFirstDoc: currentFirstDoc || null,
         currentLastDoc: currentLastDoc || null,
-        status: "pending",
+        status: "completed",
         userId: auth?.userInfo?.uid,
       });
       const userOrder = response as {

@@ -5,12 +5,11 @@ import React from "react";
 export const useSocket = (isLoggedIn: boolean) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [socket, setSocket] = React.useState<Socket | null>(null);
- console.log(loading,socket)
+
   React.useEffect(() => {
     if (isLoggedIn) {
       setLoading(true);
       const token = Cookie.get("accessToken");
-      console.log(import.meta.env.VITE_SOCKET_URL);
       const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
         auth: {
           token: token,

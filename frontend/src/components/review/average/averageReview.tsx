@@ -32,7 +32,7 @@ export const AverageReview = React.memo(
     const { auth } = useAppSelector();
 const haveReview = ratings?.some((rate)=> rate?.uid === auth?.userInfo?.uid)
     
-    console.log(haveReview)
+
 
     const [openRating, setOpenRating] = useState<boolean>(false);
 
@@ -109,6 +109,7 @@ const haveReview = ratings?.some((rate)=> rate?.uid === auth?.userInfo?.uid)
           <Portal isOpen={openRating} onClose={() => setOpenRating(false)}>
             <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
               <AddProductReview
+              feedbackId={haveReview ? ratings?.find((rate)=> rate?.uid === auth?.userInfo?.uid)?.id : undefined}
                 action="add"
                 openReview={openRating}
                 productId={productId as string}

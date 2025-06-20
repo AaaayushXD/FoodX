@@ -52,17 +52,18 @@ export const RegisterContainer: React.FC = () => {
     }
     try {
       const file = event.target.files[0];
+      console.log(file);
       const compressedImg = await compressImage(file, {
         maxWidth: 150,
         maxHeight: 150,
-        quality: 0.6,
+        quality: 0.5,
       });
 
       setRegisterValue({
         ...RegisterValue,
         avatar: URL.createObjectURL(compressedImg as Blob),
       });
-      const imageUrl = await userUpload(file, "users");
+      const imageUrl = await userUpload(compressedImg as File, "users");
       console.log(imageUrl);
       setRegisterValue({
         ...RegisterValue,

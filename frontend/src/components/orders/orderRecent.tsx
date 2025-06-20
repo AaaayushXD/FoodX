@@ -19,9 +19,10 @@ export const RecentOrder = () => {
       currentFirstDoc: null,
       currentLastDoc: null,
       direction: "next",
-      filter: "orderRequest",
+      filter: "orderFullfilled",
       userId: store?.auth?.userInfo?.uid as string,
-      status: "pending",
+      status: "completed",
+      sort:"desc"
     },
     { enable: isVisible }
   );
@@ -73,7 +74,7 @@ export const RecentOrder = () => {
           </div>
         )}
       </div>
-      {data?.length > 0 && (
+      {data?.length > 5 && (
         <div className="absolute z-50 px-1 flex justify-between  w-full duration-200 right-0 gap-40  group-hover/recent:visible group-hover/recent:opacity-100 top-[8rem] sm:top-36">
           <button
             onClick={() => {

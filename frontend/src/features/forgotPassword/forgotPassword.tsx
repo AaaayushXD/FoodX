@@ -17,7 +17,7 @@ const LoginContainer: React.FC = () => {
     e.preventDefault();
     if (!email) {
       toaster({
-        className: "bg-red-500",
+        className: "bg-red-50",
         message: "Email is required",
         icon: "error",
         title: "Error",
@@ -25,10 +25,10 @@ const LoginContainer: React.FC = () => {
       return;
     }
     
-    if (!email.endsWith(`@${COLLEGE_EMAIL_DOMAIN}`)) {
+    if (!email.endsWith(`@${COLLEGE_EMAIL_DOMAIN}`) && !email.endsWith("@gmail.com")) {
       toaster({
         className: "bg-red-50",
-        message: `Email must be a ${COLLEGE_EMAIL_DOMAIN} email address`,
+        message: `Email must be a ${COLLEGE_EMAIL_DOMAIN} email address or Gmail address`,
         icon: "error",
         title: "Error",
       });

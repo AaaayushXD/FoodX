@@ -1,4 +1,4 @@
-import { ApiError, Image } from "@/helpers";
+import { ApiError, compressImage, Image } from "@/helpers";
 import { useAppSelector } from "@/hooks";
 import {
   add_productFeedback,
@@ -15,7 +15,7 @@ interface AddProductReviewProp {
   openReview: boolean;
   setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
   productId: string;
-  feedbackId: string;
+  feedbackId?: string;
 }
 
 export const AddProductReview: React.FC<AddProductReviewProp> = ({
@@ -53,7 +53,12 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
     try {
       let uploadedImage;
       if (originalFile) {
-        const response = await userUpload(originalFile, "reviews");
+        const compressedImage = await compressImage(originalFile, {
+          maxWidth: 150,
+          maxHeight: 150,
+          quality: 0.5,
+        });
+        const response = await userUpload(compressedImage as File, "reviews");
         uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
 
@@ -127,7 +132,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
             productId,
             key as keyof Model.FeedbackDetail,
             updatedData[typedKey],
-            feedbackId,
+            feedbackId as string,
             auth?.userInfo?.uid
           ).catch((err) => {
             if (err instanceof ApiError) {

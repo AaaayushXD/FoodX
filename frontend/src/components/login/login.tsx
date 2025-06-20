@@ -6,7 +6,7 @@ import { signInAction } from "@/actions";
 import { AuthFooter, AuthNavbar } from "@/components";
 import { useAppDispatch } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { validateLogin, LoginInput } from "@/utils/validation/auth";
+import { validateLogin } from "@/utils/validation/auth";
 import { Input } from "@/common";
 
 //Login container

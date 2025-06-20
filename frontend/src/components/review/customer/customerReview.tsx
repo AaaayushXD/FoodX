@@ -6,10 +6,101 @@ import { delete_productFeedback, getUserById } from "@/services";
 import { useAppSelector } from "@/hooks";
 import { ApiError, Image } from "@/helpers";
 import EmptyImage from "@/assets/empty.png";
-import { Delete, Portal } from "@/common";
+import { Delete, Portal, Modal } from "@/common";
 import { Icons, toaster } from "@/utils";
 import toast from "react-hot-toast";
 import { AddProductReview } from "@/features";
+
+// Image Modal Component
+const ImageModal = ({ 
+  isOpen, 
+  onClose, 
+  imageSrc, 
+  alt 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  imageSrc: string; 
+  alt: string; 
+}) => {
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  const handleImageClick = () => {
+    setIsZoomed(!isZoomed);
+  };
+
+
+  return (
+    <Modal close={!isOpen} closeModal={onClose}>
+      <div className="max-w-4xl p-3 overflow-auto h-full sm:p-0 bg-white rounded-lg ">
+        {/* Header */}
+        <div className="flex items-center justify-start p-4 border-b border-gray-200">
+          {/* <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Icons.eyeOpen className="size-5 text-blue-500" />
+            Review Image
+          </h2> */}
+          <div className="flex items-center gap-2">
+            {/* <button
+              onClick={handleDownload}
+              className="flex items-center ml-60 gap-2 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Icons.download className="size-4" />
+              Download
+            </button> */}
+            {/* <button
+              onClick={onClose}
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Icons.close className="size-5" />
+            </button> */}
+          </div>
+        </div>
+
+        {/* Image Container */}
+        <div className="relative max-w-full  sm:h-[60vh] h-[40vh] overflow-auto  w-full bg-gray-100">
+          <div className="h-[50vh] overflow-auto w-full">
+          <div 
+            className={`flex items-center justify-center transition-all duration-300 ${
+              isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
+            }`}
+            style={{ 
+              minHeight: isZoomed ? '80vh' : '60vh',
+              maxHeight: isZoomed ? '80vh' : '60vh'
+            }}
+          >
+            <img
+              src={imageSrc}
+              alt={alt}
+              onClick={handleImageClick}
+              className={`transition-all duration-300 ${
+                isZoomed 
+                  ? 'max-w-none max-h-none scale-150' 
+                  : 'max-w-full max-h-full object-contain'
+              }`}
+              style={{
+                cursor: isZoomed ? 'zoom-out' : 'zoom-in'
+              }}
+            />
+          </div>
+          </div>
+          
+          {/* Zoom Indicator */}
+          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1.5 rounded-lg text-sm">
+            {isZoomed ? 'Click to zoom out' : 'Click to zoom in'}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <span>Click image to {isZoomed ? 'zoom out' : 'zoom in'}</span>
+            <span>Press ESC or click X to close</span>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 
 export const CustomerReview = ({
   review,
@@ -19,6 +110,7 @@ export const CustomerReview = ({
    const queryClient = useQueryClient()
   const [isDelete, setIsDelete] = useState<boolean>();
   const [open, setOpen] = useState<boolean>(false);
+  const [showImageModal, setShowImageModal] = useState<boolean>(false);
 
   const { auth } = useAppSelector();
   const { data } = useQuery({
@@ -63,6 +155,12 @@ export const CustomerReview = ({
     mutationFn: async (id: string) => await handleDelete(id),
   });
 
+  const handleImageClick = () => {
+    if (review.image) {
+      setShowImageModal(true);
+    }
+  };
+
   return (
     <div className="w-full border-dashed border-b pb-5 flex bg-[#fbfbfd] p-3 rounded-md flex-col items-start justify-start gap-2  ">
       <div className="w-full flex items-center justify-between">
@@ -84,13 +182,22 @@ export const CustomerReview = ({
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad voluptatum minima quaerat quam eligendi? Aperiam placeat optio adipisci voluptatibus fuga.  "}
       </span>
       <div className="w-full mt-1 flex items-end justify-between">
-        <div className="size-10 rounded-md bg-slate-300 ">
+        <div 
+          className={`size-10 rounded-md bg-slate-300 relative ${review.image ? 'cursor-pointer hover:scale-105 transition-transform duration-200' : ''}`}
+          onClick={handleImageClick}
+          title={review.image ? "Click to view full size" : ""}
+        >
           <Image
-            className="size-full object-cover rounded-md "
+            className="size-full object-cover rounded-md"
             lowResSrc={EmptyImage}
             highResSrc={import.meta.env.VITE_URI + "assets/" + review.image}
             alt={review.rating + ""}
           />
+          {review.image && (
+            <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-200 rounded-md flex items-center justify-center">
+              <Icons.eyeOpen className="size-4 text-white opacity-0 hover:opacity-100 transition-opacity duration-200" />
+            </div>
+          )}
         </div>
         { auth?.success && auth?.userInfo?.uid === data?.data?.uid && (
           <div className="flex items-center justify-start gap-3">
@@ -125,6 +232,16 @@ export const CustomerReview = ({
           closeModal={() => setIsDelete(!isDelete)}
           id={review.id}
           setDelete={(id) => mutate(id)}
+        />
+      )}
+      
+      {/* Image Modal */}
+      {review.image && (
+        <ImageModal
+          isOpen={showImageModal}
+          onClose={() => setShowImageModal(false)}
+          imageSrc={import.meta.env.VITE_URI + "assets/" + review.image}
+          alt={`Review image by ${data?.data.fullName || "User"}`}
         />
       )}
     </div>

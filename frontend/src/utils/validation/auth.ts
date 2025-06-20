@@ -17,9 +17,11 @@ export const registerSchema = z
       .min(1, { message: "* Required" })
       .email({ message: "Invalid email address" })
       .refine(
-        (email) => email.toLowerCase().endsWith(`@${COLLEGE_EMAIL_DOMAIN}`),
+        (email) => 
+          email.toLowerCase().endsWith("@gmail.com") ||
+          email.toLowerCase().endsWith(`@${COLLEGE_EMAIL_DOMAIN}`),
         {
-          message: `Please enter a valid ${COLLEGE_EMAIL_DOMAIN} email address`,
+          message: `Please enter a valid ${COLLEGE_EMAIL_DOMAIN} email address or Gmail address`,
         }
       ),
     phoneNumber: z
@@ -57,9 +59,11 @@ export const loginSchema = z.object({
     .min(1, { message: "* Required" })
     .email({ message: "Invalid email address" })
     .refine(
-      (email) => email.toLowerCase().endsWith(`@${COLLEGE_EMAIL_DOMAIN}`),
+      (email) => 
+        email.toLowerCase().endsWith("@gmail.com") ||
+        email.toLowerCase().endsWith(`@${COLLEGE_EMAIL_DOMAIN}`),
       {
-        message: `Please enter a valid ${COLLEGE_EMAIL_DOMAIN} email address`,
+        message: `Please enter a valid ${COLLEGE_EMAIL_DOMAIN} email address or Gmail address`,
       }
     ),
   password: z
