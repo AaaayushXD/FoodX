@@ -133,9 +133,7 @@ export const RecentOrders = () => {
             }
           },
           onView: (orderId: string) => {
-            // Handle view order action
-            console.log("View order:", orderId);
-            // Navigate to order list
+         
             setUrl("order-list");
           },
         });

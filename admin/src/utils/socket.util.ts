@@ -5,7 +5,6 @@ import React from "react";
 export const useSocket = (isLoggedIn: boolean) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [socket, setSocket] = React.useState<Socket | null>(null);
- console.log(socket)
   React.useEffect(() => {
     if (isLoggedIn) {
       setLoading(true);
