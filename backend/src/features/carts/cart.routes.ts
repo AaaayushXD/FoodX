@@ -15,7 +15,7 @@ cartRouter.post(
 );
 cartRouter.delete(
   "/remove",
-  rateLimiter(60, 20),
+  rateLimiter(60, 60),
   verifyRoles(["customer", "admin", "chef"]),
   removeCarts
 );

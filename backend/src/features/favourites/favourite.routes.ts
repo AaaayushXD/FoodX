@@ -12,14 +12,14 @@ const favouriteRouter = Router();
 
 favouriteRouter.post(
   "/add",
-  rateLimiter(60, 30),
+  rateLimiter(60, 50),
   verifyRoles(["customer", "admin", "chef"]),
   addFavourite
 );
 
 favouriteRouter.delete(
   "/remove",
-  rateLimiter(60, 20),
+  rateLimiter(60, 50),
   verifyRoles(["customer", "admin", "chef"]),
   removeFavourites
 );

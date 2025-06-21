@@ -24,7 +24,7 @@ import { PaginationSchema } from "../../utils/validate/pagination/paginationSche
 
 const userRouter = Router();
 
-userRouter.get("/find", verifyRoles(["admin"]), getSearchUser);
+userRouter.get("/find", verifyRoles(["admin", "chef"]), getSearchUser);
 
 userRouter.delete(
   "/delete-account",

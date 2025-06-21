@@ -20,7 +20,7 @@ categoryRouter.get(
 
 categoryRouter.post(
   "/add",
-  rateLimiter(60, 30),
+  rateLimiter(60, 50),
   verifyRoles(["chef", "admin"]),
   addNewCategory
 );

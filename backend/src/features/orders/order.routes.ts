@@ -30,7 +30,6 @@ orderRoutes.post(
 
 orderRoutes.post(
   "/add",
-  rateLimiter(60, 5),
   verifyRoles(["admin", "chef", "customer"]),
   validateRequest(AddOrderSchema),
   addNewOrder
@@ -38,7 +37,6 @@ orderRoutes.post(
 
 orderRoutes.put(
   "/update",
-  rateLimiter(60, 5),
   verifyRoles(["admin", "chef", "customer"]),
   validateRequest(UpdateOrderSchema),
   updateOrder
