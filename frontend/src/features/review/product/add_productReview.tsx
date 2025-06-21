@@ -172,7 +172,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         }
       });
     } catch (error) {
-      console.log(error)
+      
       if (error instanceof ApiError) {
         toaster({
           title: "Error",

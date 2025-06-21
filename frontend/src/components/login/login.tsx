@@ -68,6 +68,7 @@ export const LoginContainer: React.FC = () => {
       );
     } catch (error) {
       toaster({
+        
         className: "bg-red-50",
         icon: "error",
         title: "Error",
@@ -110,11 +111,11 @@ export const LoginContainer: React.FC = () => {
                 rightIcon={
                   show ? (
                     <span onClick={showPassword}>
-                      <Icons.eyeOpen />
+                      <Icons.eyeOpen className="size-5" />
                     </span>
                   ) : (
                     <span onClick={showPassword}>
-                      <Icons.eyeClose />
+                      <Icons.eyeClose className="size-5" />
                     </span>
                   )
                 }

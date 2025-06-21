@@ -6,7 +6,7 @@ import { useAllProducts } from "@/hooks/useAllProducts";
 import { useEffect, useState } from "react";
 import { ProductFilter, ProductSort } from "@/features";
 import { productFilter, productSort, Skeleton } from "@/helpers";
-import { Empty, RippleButton } from "@/common";
+import { Empty, Portal, RippleButton } from "@/common";
 import EmptyImage from "@/assets/orderEmpty.webp";
 import { useAppSelector } from "@/hooks";
 import bannerDefault from "@/assets/banner.png";
@@ -195,21 +195,25 @@ export const CategoryPage = () => {
 
       {/* Filter and Sort Modals */}
       {open && (
-        <ProductFilter
+     <Portal isOpen={open} onClose={() => setOpen(!open)}>
+         <ProductFilter
           setFilterData={setFilters}
           filterData={filters}
           close={() => setOpen(!open)}
           isOpen={open}
         />
+     </Portal>
       )}
 
       {openSort && (
-        <ProductSort
-          close={() => setOpenSort(!openSort)}
-          isOpen={openSort}
-          sortData={sortData}
-          setSortData={setSortData}
-        />
+        <Portal isOpen={openSort} onClose={() => setOpenSort(!openSort)}>
+          <ProductSort
+            close={() => setOpenSort(!openSort)}
+            isOpen={openSort}
+            sortData={sortData}
+            setSortData={setSortData}
+          />
+        </Portal>
       )}
     </div>
   );

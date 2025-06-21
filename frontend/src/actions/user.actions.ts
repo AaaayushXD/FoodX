@@ -72,7 +72,8 @@ const signInAction = createAsyncThunk(
     } catch (error: any) {
       if (error instanceof ApiError) {
         toaster({
-          title: error?.message,
+          message: error?.message,
+          title: "Error",
           className: "bg-red-100",
           icon: "error",
         });

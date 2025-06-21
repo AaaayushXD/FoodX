@@ -172,8 +172,8 @@ export const CustomerReview = ({
       {/* name */}
       <div className="flex mt-1 items-center justify-start gap-2">
         <p>{data?.data.fullName || "User"}</p>{" "}
-        <p className="flex items-center  px-1.5 gap-1 justify-start p-0.5 border border-green-200 text-[11px] bg-green-100 rounded-full text-green-600 font-semibold">
-          <Icons.award className="size-4" /> Verified
+        <p className="flex items-center   gap-1 justify-start   text-[11px]    font-semibold">
+         {data?.data.isVerified ? <span className="flex items-center px-1.5 border py-0.5 rounded-full  gap-1  bg-green-100 text-green-600 border-green-200"><Icons.award className="size-4" /> Verified</span> : <span className="flex items-center px-1.5 border py-0.5 rounded-full  gap-1  bg-red-100 text-red-600 border-red-200 "><Icons.award className="size-4" /> Unverified</span>}
         </p>
       </div>
       {/* comment */}
@@ -236,7 +236,7 @@ export const CustomerReview = ({
       )}
       
       {/* Image Modal */}
-      {review.image && (
+      {showImageModal && (
         <ImageModal
           isOpen={showImageModal}
           onClose={() => setShowImageModal(false)}

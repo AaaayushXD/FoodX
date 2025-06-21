@@ -47,7 +47,7 @@ export const CartPopup = () => {
         </button>
       </div>
 
-      <button onClick={()=> navigate("/checkout")} className=" lg:flex relative bg-[var(--primary-dark)] size-12 sm:size-14 hidden items-center justify-center rounded-full ">
+      <button onClick={()=> navigate("/checkout")} className="  lg:flex relative bg-[var(--primary-dark)] size-12 sm:size-14 hidden items-center justify-center rounded-full ">
         <Icons.shoppingCart className="size-6 text-white sm:size-7" />
         <p className=" text-xs bg-red-700 p-1 size-5 flex items-center justify-center text-white absolute right-2 top-1/2 rounded-full ">
           {cart?.products?.length}

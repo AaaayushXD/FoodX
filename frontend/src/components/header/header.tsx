@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { OrderNotification, ProductSearch } from "@/features";
+import {  ProductSearch } from "@/features";
 import { Icons } from "@/utils";
 import { useAppSelector } from "@/hooks";
 import { Modal } from "@/common";
@@ -28,7 +28,7 @@ export const Header = () => {
       <MobileNav />
       <div className="  md:gap-10 gap-5 flex flex-col items-center justify-center h-full container  ">
         {" "}
-        <ProductSearch action={(value) => console.log(value)} />
+        <ProductSearch />
         <div className=" w-full flex items-center justify-between px-2 ">
           <div className="flex flex-col sm:pt-0    items-start justify-start gap-4 md:gap-8">
             <div className="flex flex-col items-start justify-start sm:gap-4">
@@ -41,7 +41,7 @@ export const Header = () => {
             </div>
             <button
               onClick={() => navigate("#categories")}
-              className=" font-bold tracking-wider md:text-2xl text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] "
+              className=" font-bold tracking-wider md:text-2xl z-[10000] text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] "
             >
               Order Now
             </button>

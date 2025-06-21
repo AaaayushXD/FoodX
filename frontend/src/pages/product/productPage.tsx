@@ -7,7 +7,7 @@ import {
   useRating,
 } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { NotificationLoader, PopularProduct } from "@/components";
+import { PopularProduct } from "@/components";
 import { useEffect, useRef, useState } from "react";
 import { addToCart, removeCart } from "@/reducer";
 import {
@@ -23,6 +23,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ErrorBoundary from "@/errorBoundary";
 import { RippleButton } from "@/common";
+import { ProductSkeleton } from "@/components/loader/product/productSkeleton";
 
 export const ProductPage = () => {
   const { collection, productId } = useParams();
@@ -56,27 +57,25 @@ export const ProductPage = () => {
   const navigate = useNavigate();
 
   return isLoading ? (
-    <NotificationLoader />
+    <ProductSkeleton />
   ) : (
-    <div className="w-full relative flex flex-col items-center justify-start gap-3">
+    <div className="w-full relative    flex flex-col items-center justify-start gap-3">
       {/* product banner image */}
       <div
         style={{
-          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${
-            import.meta.env.VITE_URI + "assets/" + data?.data?.data?.image
-          })`,
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url(${import.meta.env.VITE_URI + "assets/" + data?.data?.data?.image
+            })`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className={`md:h-[60vh] ${
-          isLoading ? `bg-gradient-to-r animate-pulse ` : ""
-        } sm:h-[50vh] h-[45vh]  relative w-screen`}
+        className={`md:h-[60vh] ${isLoading ? `bg-gradient-to-r animate-pulse ` : ""
+          } sm:h-[50vh] h-[45vh]  relative w-screen`}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
 
         {/* Top Left & Right Buttons */}
-        <div className="absolute top-5 left-5 right-8 flex items-center justify-between ">
-          <div onClick={() => navigate(-1)} className="size-5 text-white">
+        <div className="absolute top-5 left-5 right-8 flex z-[10000] items-center justify-between ">
+          <div onClick={() => navigate(-1)} className="size-5text-white cursor-pointer">
             <Icons.arrowLeft />
           </div>
           <div className="flex items-center gap-8">
@@ -266,6 +265,8 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
       : setHaveProductQuantity(false);
   }, [productById?.quantity]);
 
+  const discountPrice = Math.round((product?.discount / 100) * product?.price)
+
   return (
     <div className="w-full flex items-start justify-start gap-5  flex-col">
       {/* Bottom Left Product Info */}
@@ -280,16 +281,16 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
           {product.name}
         </h1>
         <div className="flex items-center justify-start gap-2  ">
-          <p className="flex text-[14px] text-green-700 font-semibold py-0.5 bg-green-100 rounded-full px-2  items-center justify-start gap-2">
+          <p className="flex text-[13px] sm:text-[14px] text-green-700 font-semibold py-0.5 bg-green-100 rounded-full px-2  items-center justify-start gap-2">
             <Icons.tomato className="size-4 text-red-500 " />
             {data?.length.toFixed(1)}
           </p>
-          <p className="flex text-[14px] text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
+          <p className="flex   text-nowrap text-[13px] sm:text-[14px] text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
             <Icons.comment className="size-4    " />
             {comments} reviews
           </p>
-          <p className="flex text-[14px] text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
-            <Icons.clock className="size-4    " />
+          <p className="flex text-[13px]  sm:text-nowrap text-[var(--secondary-text)]   py-0.5  rounded-full px-2  items-center justify-start gap-2">
+            <Icons.clock className="size-4   " />
             {product?.cookingTime}
           </p>
         </div>
@@ -300,11 +301,15 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
         <div className="w-full flex  mt-4 flex-wrap gap-4 items-center justify-between text-sm">
           <div className="flex flex-col sm:flex-row sm:items-end items-start justify-start   h-full  sm:gap-3">
             <p className=" sm:text-2xl text-xl md:text-3xl text-[var(--primary-light)] font-bold ">
-              Rs.{product?.price}
+              Rs.{  !Number.isNaN(discountPrice) ? product?.price - discountPrice : product?.price}
             </p>
-            <p className=" text-[var(--secondary-text)] text-[14px] md:text-[16px] mb-1  line-through ">
-              {product?.discount && "Rs." + product?.discount} Rs.100
-            </p>
+            {
+              !Number.isNaN(discountPrice) && (
+                <p className=" text-[var(--secondary-text)] text-[14px] md:text-[16px] mb-1  line-through ">
+                  Rs.{product?.price}
+                </p>
+              )
+            }
           </div>
 
           {haveProductQuantity ? (
@@ -350,7 +355,7 @@ const ProductDetails: React.FC<Ui.SpecialProducts> = (product) => {
       >
         <h1 className=" text-lg  ">Details</h1>
         <p className=" text-[var(--secondary-text)] line-clamp-5 text-[16px] md:text-[16px] ">
-          {product?.description }
+          {product?.description}
         </p>
       </div>
     </div>

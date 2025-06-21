@@ -31,7 +31,6 @@ export const RecentCard: React.FC<RecentCardProp> = ({ item }) => {
     navigate("/checkout");
   }
 
-  console.log(item?.products[0]?.image)
 
   return (
     <div className="sm:w-[350px]  bg-[var(--light-foreground)] rounded-l-lg h-full border-[1px] border-[var(--dark-border)] rounded-lg flex items-center justify-center">
