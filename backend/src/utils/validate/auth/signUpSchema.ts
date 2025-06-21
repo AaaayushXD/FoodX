@@ -3,8 +3,7 @@ import { roleSchema } from "./roleSchema.js";
 
 export const signUpSchema = z.object({
   email: z
-    .string({ required_error: "Email is required." })
-    .endsWith(`@gmail.com`),
+    .string({ required_error: "Email is required." }),
   password: z
     .string({ required_error: "Passsword is required." })
     .min(8, { message: "Password must be atleast 8 character long." })

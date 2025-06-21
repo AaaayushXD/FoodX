@@ -5,7 +5,6 @@ import { generateAccessAndRefreshToken } from "../../utils/token/tokenHandler.js
 import { sendOTPEmail } from "../../utils/messaging/email.js";
 import { redisClient } from "../../utils/cache/cache.js";
 import { OptGenerator } from "../../helpers/otp/otpGenerator.js";
-import { APIError } from "../../helpers/error/ApiError.js";
 
 export const SignUp = asyncHandler(async (req: Request, res: Response) => {
   const user = req.body as unknown as Auth.Register;
