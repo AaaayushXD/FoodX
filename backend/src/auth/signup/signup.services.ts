@@ -1,16 +1,10 @@
 import { addUserToFirestore } from "../../actions/user/add/addUser.js";
 import { doesUserExist } from "../../actions/user/get/doesUserExist.js";
 import { APIError } from "../../helpers/error/ApiError.js";
-import {
-  isEmailValid,
-  isPasswordValid,
-} from "../../helpers/validator/auth.validator.js";
 import logger from "../../utils/logger/logger.js";
 
 export const signUp = async (user: Auth.Register) => {
   try {
-    if (!isEmailValid(user.email) && !isPasswordValid(user.password))
-      throw new APIError("Invalid email or password", 400);
     const doesExist = await doesUserExist(user.email, user.phoneNumber);
     if (doesExist) throw new APIError("User already exists", 400);
 

@@ -4,7 +4,6 @@ import { OptGenerator } from "../../helpers/otp/otpGenerator.js";
 import { redisClient } from "../../utils/cache/cache.js";
 import { sendOTPEmail } from "../../utils/messaging/email.js";
 import { APIError } from "../../helpers/error/ApiError.js";
-import { isEmailValid } from "../../helpers/validator/auth.validator.js";
 import { findUserByEmailInDatabase } from "../../actions/user/get/findUser.js";
 import { generateAccessAndRefreshToken } from "../../utils/token/tokenHandler.js";
 
@@ -13,9 +12,6 @@ export const resetPasswordController = asyncHandler(
     const { email } = req.body;
 
     if (!email) throw new APIError("Email is required.", 400);
-    const validateEmail = isEmailValid(email);
-    if (!validateEmail) throw new APIError("Invalid email.", 400);
-
     const user = await findUserByEmailInDatabase(email);
     if (!user) throw new APIError("User not found.", 404);
 
