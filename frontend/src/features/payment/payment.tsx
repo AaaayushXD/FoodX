@@ -14,7 +14,7 @@ import { VerificationContainer } from "@/pages";
 import { Modal } from "@/common";
 import { FaUpload, FaTimes } from 'react-icons/fa';
 import { QrCode, QrCodeIcon } from "lucide-react";
-import qrImageAsset from "@/assets/qr.jpeg";
+import qrImageAsset from "@/assets/qr.png";
 
 export const Payment: React.FC = () => {
   const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();

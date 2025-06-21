@@ -114,7 +114,7 @@ export const CategoryPage = () => {
           <h1 className="text-[20px] text-white tracking-wide sm:text-[25px] font-semibold">
             {category?.name}
           </h1>
-          <p className="text-[14px] line-clamp-4 max-w-full w-full pr-2 sm:text-[16px] text-gray-200">
+          <p className="text-[14px] line-clamp-4 max-w-full w-full pr-2 sm:text-[16px] text-gray-400">
             {category?.description}
           </p>
         </div>

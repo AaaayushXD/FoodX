@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
                 Home
               </a>
               <a
-                href="/cart"
+                href="/checkout"
                 className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
               >
                 Cart
@@ -164,7 +164,7 @@ interface LinkProp {
 
 const Link: React.FC<LinkProp> = ({ href, icon, title }) => {
   return (
-    <div className="flex z-[100] sm:z-[10000] items-center gap-9">
+    <div className="flex z-[100] sm:z-[1900] items-center gap-9">
       <a aria-label={`Go to ${title}`} target="_blank" href={href}>
         <button className=" bg-white p-1.5 rounded-full ">{icon}</button>
       </a>

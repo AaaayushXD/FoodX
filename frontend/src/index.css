@@ -157,7 +157,7 @@
     width: 6px;
   }
   .scrollbar-custom {
-    @apply overflow-y-scroll; /* Enables scrolling */
+    @apply sm:overflow-y-auto; /* Enables scrolling */
   }
 
   .item-scrollbar {

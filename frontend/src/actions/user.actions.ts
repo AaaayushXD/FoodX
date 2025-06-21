@@ -123,7 +123,7 @@ const verifyAction = createAsyncThunk(
           message: response?.message,
           className: "bg-green-100",
         });
-      
+
         localStorage.removeItem("time");
         return;
       }
@@ -153,7 +153,9 @@ const updateUserAction = createAsyncThunk<
   { rejectValue: string } // Define rejectValue type explicitly
 >("auth/update-user", async (data: Actions.UpdateProfile, thunkApi) => {
   try {
-    const response = await userAction.updateAccount({ ...data });
+    const response = await userAction.updateAccount({
+      ...data,
+    });
     if (response?.message) {
       toaster({
         title: response?.message,

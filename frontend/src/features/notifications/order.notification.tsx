@@ -77,8 +77,10 @@ export const OrderNotification = () => {
       userId: store?.auth?.userInfo?.uid,
       status:"pending"
     },
-    { enable: !store?.order?.order.length && store?.auth?.success }
+    { enable:  true }
   );
+
+
 
   useEffect(() => {
     if (data.length && !loading) {
@@ -96,11 +98,11 @@ export const OrderNotification = () => {
         }
       });
     }
-  }, [loading]);
+  }, [loading,store?.auth?.success]);
 
   useEffect(() => {
     setData(store?.order?.order);
-  }, [store.order.order]);
+  }, [store.order.order,store?.auth?.success]);
 
 
 

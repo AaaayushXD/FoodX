@@ -8,7 +8,7 @@ export const CartPopup = () => {
   const { pathname } = useLocation();
   return (
     <div
-      className={`w-full bg-white  lg:bg-transparent border-none  p-2  border-t ${
+      className={`w-full bg-white  z-[100000] lg:bg-transparent border-none  p-2  border-t ${
         pathname === "/checkout"
           ? " hidden"
           : cart.products.length > 0

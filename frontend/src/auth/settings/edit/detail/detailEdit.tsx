@@ -35,8 +35,7 @@ export const PersonlInformation: React.FC<Auth.User> = (user) => {
     try {
       await dispatch(
         updateUserAction({
-          firstName: update?.firstName,
-          lastName: update?.lastName,
+          fullName: update?.firstName + " " + update?.lastName,
           phoneNumber: update?.phoneNumber,
         })
       );

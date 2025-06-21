@@ -85,15 +85,15 @@ const ImageModal = ({
           </div>
           
           {/* Zoom Indicator */}
-          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1.5 rounded-lg text-sm">
-            {isZoomed ? 'Click to zoom out' : 'Click to zoom in'}
+          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1.5 rounded-lg text-sm cursor-pointer" onClick={() => setIsZoomed(!isZoomed)}>
+            {isZoomed ? 'Click to zoom out' : 'Click to zoom in'} 
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>Click image to {isZoomed ? 'zoom out' : 'zoom in'}</span>
+            <span className="cursor-pointer" >Click image to {isZoomed ? 'zoom out' : 'zoom in'}</span>
             <span>Press ESC or click X to close</span>
           </div>
         </div>
