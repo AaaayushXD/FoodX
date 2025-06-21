@@ -4,7 +4,7 @@ import { roleSchema } from "./roleSchema.js";
 export const signInSchema = z.object({
   email: z
     .string({ required_error: "Email is required." })
-    .endsWith(`@${process.env.COLLEGE_DOMAIN}`),
+    .endsWith(`@gmail.com`),
   password: z
     .string({ required_error: "Passsword is required." })
     .min(8, { message: "Password must be atleast 8 character long." })
