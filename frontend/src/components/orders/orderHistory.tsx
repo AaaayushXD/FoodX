@@ -312,9 +312,10 @@ export const OrderHistory = () => {
                 store?.auth?.userInfo?.uid as string,
                 product.id
               );
+              navigate("/checkout");
               dispatch(addToCart({ ...product }));
             });
-            navigate("/cart/checkout");
+            
           },
           downloadFn: (id: string) => {
             const findOrder = data?.find((order) => order.id === id);
