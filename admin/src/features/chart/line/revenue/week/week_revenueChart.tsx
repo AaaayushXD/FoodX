@@ -73,7 +73,7 @@ export const WeekReveneuChart: React.FC = () => {
       <div className="flex items-center justify-between w-full gap-3 px-2">
         <div className="text-left text-xl text-[var(--dark-text)] flex justify-center items-center gap-3">
           <p className="text-nowrap">Weekly Revenue</p>
-          <p
+          {/* <p
             className={`text-[16px]  tracking-wider  ${
               percentage?.includes("-") || percentage?.includes("N/A")
                 ? "text-red-600 hidden"
@@ -96,7 +96,7 @@ export const WeekReveneuChart: React.FC = () => {
                 size={12}
               />
             </span>
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="h-[400px] lg:h-[300px] w-full">

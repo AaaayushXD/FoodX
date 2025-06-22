@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { updateOrderStatus } from "../../../services/order";
@@ -45,6 +45,10 @@ export const OrderCard: React.FC<Prop.RecentOrderProp> = ({
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
 
+  useEffect(()=>{
+    setIsNewStatus(status);
+  },[status])
+  
   const ogDate = dayjs(orderRequest).format("h:mm:ss A");
   const date = dayjs(orderRequest).format("MMM D, h:mm A");
 

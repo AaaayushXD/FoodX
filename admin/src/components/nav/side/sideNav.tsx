@@ -92,7 +92,7 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
           <div className="flex   items-center justify-between gap-3 pb-8 pr-5 xl:hidden">
             <div
               onClick={() => {
-                setUrl("/admin");
+                setUrl(`/${user.userInfo?.role}`);
                 closeFn && closeFn();
               }}
               className="w-[200px] cursor-pointer"

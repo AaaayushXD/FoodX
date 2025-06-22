@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
-import { CardAnalytic } from "../../../@types/product.model";
-import { Revenue } from "../../../@types/revenue.model";
 
-export const aggregateCurrentDayData = (orders: Revenue[]) => {
+
+export const aggregateCurrentDayData = (orders: Model.Revenue[]) => {
   const today = dayjs().format("YYYY-MM-DD");
   try {
     const currentDayOrder = orders?.find((order) => {
@@ -23,9 +22,9 @@ export const aggregateCurrentDayData = (orders: Revenue[]) => {
       (acc, order) => acc + order.orders?.length,
       0
     );
-    const revenueToday = getRevenue([currentDayOrder] as Revenue[]);
+    const revenueToday = getRevenue([currentDayOrder] as Model.Revenue[]);
 
-    const dailyAnalyticsData: CardAnalytic[] = [
+    const dailyAnalyticsData: Analytic.CardAnalytic[] = [
       {
         title: "Items Delivered",
         total: currentDayOrder?.orders.length || 0,
@@ -52,9 +51,9 @@ export const aggregateCurrentDayData = (orders: Revenue[]) => {
 };
 
 export const aggregateMonthlyData = (
-  orders: Revenue[],
+  orders: Model.Revenue[],
   month: number
-): CardAnalytic[] => {
+): Analytic.CardAnalytic[] => {
   try {
     // Calculate total orders by summing up all quantities in each order
     const totalOrders = orders.reduce(
@@ -89,10 +88,10 @@ export const aggregateMonthlyData = (
       : "N/A"; // Avoid division by zero, set as "N/A" if previous month revenue is 0
 
     // Prepare daily analytics data
-    const dailyAnalyticsData: CardAnalytic[] = [
+    const dailyAnalyticsData: Analytic.CardAnalytic[] = [
       {
         title: "Items Delivered",
-        total: orders.length || 0,
+        total: orders.reduce((acc, order) => acc + order.orders?.length, 0) || 0,
         percentage: 100,
       },
       {
@@ -120,7 +119,7 @@ export const aggregateMonthlyData = (
   }
 };
 
-const getRevenue = (revenue: Revenue[]) => {
+const getRevenue = (revenue: Model.Revenue[]) => {
   const total = revenue.reduce(
     (acc, rev) =>
       acc +

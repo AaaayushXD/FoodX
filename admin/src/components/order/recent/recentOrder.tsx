@@ -33,7 +33,7 @@ export const RecentOrders = () => {
         const aggregateOrder = aggregateOrders([order]);
         const promiseResolve = await Promise.all(aggregateOrder);
         setInitialOrders((prev) => [...promiseResolve, ...prev]);
-        
+
         // Enhanced toast with actions
         customToast({
           orderId: order.orderId,
@@ -48,7 +48,7 @@ export const RecentOrders = () => {
               icon: "loading",
               message: "Accepting order...",
             });
-            
+
             try {
               const user = await getUserByUid(order.uid as string);
               const response = await updateOrderStatus({
@@ -62,7 +62,8 @@ export const RecentOrders = () => {
                 uid: order.uid as string,
                 role: user?.role as Auth.UserRole,
               });
-              
+              setInitialOrders((prev) => prev.map((order) => order.id === orderId ? { ...order, status: "preparing" } : order));
+
               if (response?.message) {
                 toaster({
                   className: "bg-green-50",
@@ -89,7 +90,7 @@ export const RecentOrders = () => {
               icon: "loading",
               message: "Rejecting order...",
             });
-            
+
             try {
               const user = await getUserByUid(order.uid as string);
               const response = await updateOrderStatus({
@@ -103,7 +104,7 @@ export const RecentOrders = () => {
                 uid: order.uid as string,
                 role: user?.role as Auth.UserRole,
               });
-              
+
               if (response?.message) {
                 toaster({
                   className: "bg-green-50",
@@ -112,7 +113,7 @@ export const RecentOrders = () => {
                   title: "Order rejected successfully!",
                 });
               }
-              
+
               // Send notification to user
               await addNotification({
                 message: "Your order has been cancelled. Please contact customer support for assistance.",
@@ -133,7 +134,7 @@ export const RecentOrders = () => {
             }
           },
           onView: (orderId: string) => {
-         
+
             setUrl("order-list");
           },
         });
@@ -147,7 +148,8 @@ export const RecentOrders = () => {
         socket?.off("new_order", handleNewOrder);
       };
     }
-  }, [socket, setInitialOrders, loader]);
+  }, [socket, setInitialOrders, loader]);4
+
 
 
   return (
@@ -187,6 +189,7 @@ export const RecentOrders = () => {
                   paymentImage={order?.paymentImage as string}
                   uid={order?.uid as string}
                   image={order?.image as string}
+                  
                   orderId={order?.id as string}
                   price={order.products?.reduce(
                     (productAcc, product) =>
