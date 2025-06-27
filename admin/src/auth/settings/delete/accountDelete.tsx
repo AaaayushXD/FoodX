@@ -28,7 +28,10 @@ export const AccountDelete = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void
     setLoading(true);
 
     try {
-      const response = await deleteAccount();
+      const response = await deleteAccount({
+        id: user?.userInfo.uid as string,
+        role: user?.userInfo.role as Auth.UserRole,
+      });
       toaster({
         message: response.message,
         icon: "success",

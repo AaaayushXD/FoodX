@@ -10,7 +10,6 @@ export const useSocket = (isLoggedIn: boolean) => {
     if (isLoggedIn) {
       setLoading(true);
       const token = Cookie.get("accessToken");
-
       const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
         auth: {
           token: token,

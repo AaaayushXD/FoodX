@@ -1,19 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import CollegeLogo from "@/assets/logo/texas.png";
+import React, { useEffect, useState } from "react";
 import {
-  Cart,
-  NotificationPage,
-  LoginContainer,
-  Favourite,
   CartPopup,
 } from "@/components";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Icons } from "@/utils";
 import toast from "react-hot-toast";
-import { RotatingLines } from "react-loader-spinner";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { Modal } from "@/commons";
 import { addProductToCart } from "@/services";
 import { addToCart } from "@/reducer";
 
@@ -29,7 +22,7 @@ const navbarItems = [
 ];
 
 export const NavbarContainer = () => {
-  const [activeKey, setActiveKey] = useState<number>();
+
 
   return (
     <div className="flex items-center gap-1 justify-start">
@@ -673,9 +666,9 @@ export const MobileNavbar = () => {
     <div
       className={`w-full ${
         isScroll === "up" || null ? "bottom-0 lg:bottom-10 " : "lg:bottom-5"
-      } duration-150 flex z-[1000] justify-between  items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
+      } duration-150 flex  justify-between  z-[10000] items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
     >
-      <div className="w-full flex-col  duration-150    flex items-center justify-between">
+      <div className="w-full flex-col z-[10000]  duration-150    flex items-center justify-between">
         <CartPopup />
 
         <div
@@ -683,7 +676,7 @@ export const MobileNavbar = () => {
             cart?.products?.length > 0 ? "border-t lg:border-none " : ""
           }  duration-150 ${
             isScroll === "up"
-              ? " h-[50px]  p-[18px] opacity-100"
+              ? " h-[60px]  p-[20px] opacity-100"
               : " h-0 opacity-0"
           } flex lg:hidden items-center   justify-between`}
         >
@@ -696,7 +689,7 @@ export const MobileNavbar = () => {
               <button className="text-[var(--secondary-text)] ">
                 {data.icon}
               </button>
-              <p className="text-[12px] font-[600] text-[var(--secondary-text)] ">
+              <p className="text-[13px] font-[600] text-[var(--secondary-text)] ">
                 {data.title}
               </p>
             </div>

@@ -39,7 +39,12 @@ makeRequest.interceptors.response.use(
   },
   async (error) => {
     const status = error.response ? error.response.status : null;
-    console.log(status, error);
+    if(error?.response?.data?.message === "Unauthorized access. customer cannot access."){
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      Store.dispatch(authLogout());
+     throw new ApiError(status as number, error?.response?.data?.message, error?.response?.data?.errors, false);
+    }
     if (
       error?.response?.data?.message ===
       "Error verifying your token. Please try again later. TokenExpiredError: jwt expired"

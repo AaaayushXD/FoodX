@@ -18,18 +18,24 @@ export const PersonlInformation: React.FC<Auth.User> = (user) => {
   }>({
     firstName: user?.fullName?.split(" ")[0] as string,
     lastName: user?.fullName?.split(" ")[1] as string,
-    phoneNumber: user?.phoneNumber || "98u9",
+    phoneNumber: user?.phoneNumber || "",
   });
   const dispatch = useAppDispatch();
-
+  
+  useEffect(() => {
+    setUpdate({
+      firstName: user?.fullName?.split(" ")[0] as string,
+      lastName: user?.fullName?.split(" ")[1] as string,
+      phoneNumber: user?.phoneNumber || "98u9",
+    });
+  }, [user]);
   const handleSubmit = async () => {
     setLoading(true);
     const loading = toaster({ title: "Loading...", icon: "loading" });
     try {
       await dispatch(
         updateUserAction({
-          firstName: update?.firstName,
-          lastName: update?.lastName,
+          fullName: update?.firstName + " " + update?.lastName,
           phoneNumber: update?.phoneNumber,
         })
       );

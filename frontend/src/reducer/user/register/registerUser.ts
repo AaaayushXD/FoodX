@@ -9,7 +9,6 @@ export function registerUser<T extends ActionReducerMapBuilder<Auth.authState>>(
   builder.addCase(
     signUpAction.fulfilled,
     (state, action: PayloadAction<Auth.User | undefined>) => {
-      console.log(action.payload);
       state.loading = false;
       state.success = true;
       state.error = null;

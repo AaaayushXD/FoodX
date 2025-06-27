@@ -27,7 +27,7 @@ const links: { icon: React.ReactNode; href: string; title?: string }[] = [
 ];
 export const Footer: React.FC = () => {
   return (
-    <div className="flex  flex-col w-full text-white ">
+    <div className="flex  flex-col w-full  text-white ">
       <footer className="w-full mt-5    rounded-t  bg-[var(--primary-color)] text-white place-items-center sm:grid px-5">
         <div className="w-full flex  items-start sm:items-center sm:justify-evenly justify-between flex-wrap  ">
           <div className="flex sm:col-span-1 col-span-3 flex-col gap-6 p-8 ">
@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
                 Home
               </a>
               <a
-                href="/cart"
+                href="/checkout"
                 className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
               >
                 Cart
@@ -164,7 +164,7 @@ interface LinkProp {
 
 const Link: React.FC<LinkProp> = ({ href, icon, title }) => {
   return (
-    <div className="flex items-center gap-9">
+    <div className="flex z-[100] sm:z-[1900] items-center gap-9">
       <a aria-label={`Go to ${title}`} target="_blank" href={href}>
         <button className=" bg-white p-1.5 rounded-full ">{icon}</button>
       </a>

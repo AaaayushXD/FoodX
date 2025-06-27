@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useActions";
 import { Icons, toaster } from "../../utils";
 import { ApiError } from "@/helpers";
 import { resendOtp } from "@/services";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const VerificationPage = () => {
   return (
@@ -76,6 +78,8 @@ export const VerificationContainer = ({
     }
   };
 
+  const navigate = useNavigate();
+
   // Submit OTP for verification
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -92,14 +96,16 @@ export const VerificationContainer = ({
     setIsVerifying(true);
 
     const otpString = otp.join("");
-
+    
     try {
       await dispatch(
         verifyAction({
           otp: otpString,
-          uid: uid as string || auth?.userInfo?.uid as string,
+          uid: uid ?? (auth?.userInfo?.uid as string),
           type: getVerifyType,
-          accessToken: accessToken as string,
+          accessToken: accessToken ?? Cookies.get("accessToken") as string,
+          navigate: navigate,
+          closeModal: closeModal,
         })
       );
     } catch (error) {
@@ -113,7 +119,6 @@ export const VerificationContainer = ({
       //   });
       // }
     } finally {
-      closeModal && closeModal();
       setIsVerifying(false);
     }
   }
@@ -124,7 +129,13 @@ export const VerificationContainer = ({
       setOtp(new Array(6).fill(""));
       setTimer(30); // Reset the timer
       localStorage.setItem("time", "30");
-      const response = await resendOtp();
+      const response = await resendOtp({
+        email:
+          (localStorage?.getItem("email") as string) ||
+          (auth?.userInfo?.email as string),
+        type: "reset",
+        uid: (uid as string) || (auth?.userInfo?.uid as string),
+      });
       toaster({
         className: "bg-success-50",
         icon: "success",

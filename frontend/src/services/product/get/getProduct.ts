@@ -14,8 +14,9 @@ export const getNormalProducts = async (): Promise<
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error.response?.status;
+      const data = error.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }
@@ -32,8 +33,9 @@ export const getSpecialProducts = async (): Promise<
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error.response?.status;
+      const data = error.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }
@@ -50,8 +52,9 @@ export const getProductsByTag = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error.response?.status;
+      const data = error.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }
@@ -68,8 +71,9 @@ export const getPopularProducts = async (): Promise<
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error.response?.status;
+      const data = error.response?.data;
+      throw new ApiError(status as number , data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }
@@ -88,8 +92,9 @@ export const getProductById = async (
     return repsonse.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error.response?.status;
+      const data = error.response?.data;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }

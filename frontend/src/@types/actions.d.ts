@@ -1,6 +1,6 @@
 declare namespace Actions {
   interface addRevenue
-    extends Omit<Models.Revenue, "createdAt" | "updatedAt"> {}
+    extends Omit<Model.Revenue, "createdAt" | "updatedAt"> {}
 
   interface AddNotification {
     uid: string;
@@ -11,6 +11,7 @@ declare namespace Actions {
   interface DeleteNotification extends Pick<Model.Notification, "id"> {}
 
   interface UpdateProfile {
+    fullName?: string;
     avatar?: string;
     firstName?: string;
     lastName?: string;

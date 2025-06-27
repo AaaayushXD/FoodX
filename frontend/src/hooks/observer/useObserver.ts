@@ -12,7 +12,7 @@ export const useIntersectionObserver = (options?: IntersectionObserverInit) => {
     if (!ref.current) return;
     
     const observer = new IntersectionObserver(observerCallback, options);
-    console.log(observer.observe(ref.current))
+
     observer.observe(ref.current);
 
     return () => observer.disconnect();

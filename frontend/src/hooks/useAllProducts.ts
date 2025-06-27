@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getNormalProducts, getSpecialProducts } from "@/services";
 import { useAppDispatch, useAppSelector } from "./useActions";
 import { useEffect } from "react";
@@ -31,7 +31,7 @@ export const getAllProducts = async (): Promise<Ui.Product[]> => {
 };
 
 export const useAllProducts = () => {
-  const { products, isError, isLoading, lastFetched } =
+  const { products, isError, isLoading } =
     useAppSelector().product;
   const dispatch = useAppDispatch();
   useEffect(() => {

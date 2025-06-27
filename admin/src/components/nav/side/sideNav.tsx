@@ -77,7 +77,7 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
         <div className="flex items-center justify-center w-full py-3 ">
           <div
             onClick={() => {
-              setUrl("/admin");
+              setUrl(`/${user.userInfo?.role}`);
               closeFn && closeFn();
             }}
             className="items-center cursor-pointer justify-center hidden xl:flex "
@@ -92,7 +92,7 @@ export const DesktopSlider: React.FC<DesktopSliderProp> = ({
           <div className="flex   items-center justify-between gap-3 pb-8 pr-5 xl:hidden">
             <div
               onClick={() => {
-                setUrl("/admin");
+                setUrl(`/${user.userInfo?.role}`);
                 closeFn && closeFn();
               }}
               className="w-[200px] cursor-pointer"
@@ -324,7 +324,7 @@ export const MobileSlider: React.FC = () => {
     <div className="relative flex items-center justify-between w-full px-4 lg:shadow-none">
       <div className="flex items-center justify-center gap-4">
         <div
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate(`/${user.role}`)}
           className="w-[150px] cursor-pointer"
         >
           <Image className="w-full h-full" highResSrc={collegeLogo} alt="" />

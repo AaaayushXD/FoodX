@@ -1,9 +1,6 @@
-import { signInUser } from "@/firebase/Authentication";
 import { globalRequest } from "@/globalRequest";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { addLogs } from "@/services";
-import dayjs from "dayjs";
 import axios from "axios";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
@@ -58,6 +55,9 @@ export const signIn = async (
       const statusCode = error?.response?.status || 500;
       const message = error?.response?.data?.message;
       const errorMessage = error?.response?.data?.error;
+      if(message === "Validation Error") {
+        throw new ApiError(statusCode, error?.response?.data?.errors?.[0]?.message, errorMessage, false);
+      }
       throw new ApiError<{ field: string; message: string }[]>(
         statusCode,
         message,

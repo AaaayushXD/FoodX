@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useAllProducts } from "@/hooks";
 import { SpecialProduct } from "@/components";
 import { Skeleton } from "@/helpers";
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 import EmptyImg from "@/assets/specialEmpty.png";
 
 export const Specials: React.FC = () => {
@@ -44,7 +44,7 @@ export const Specials: React.FC = () => {
                 <SpecialProduct
                   key={product.id}
                   {...product}
-                  discountPrice={product?.discountPrice as number || 0}
+                  discount={Number(product?.discount) || 0}
                 />
               ))
             )}

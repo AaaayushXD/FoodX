@@ -5,7 +5,7 @@ import { removeProductFromCart } from "@/services";
 import toast from "react-hot-toast";
 import { Icons, toaster } from "../../../utils";
 import { ApiError, Image } from "@/helpers";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 
 interface SingleCardProp {
   prop: Ui.Product;
@@ -54,7 +54,7 @@ export const SingleCard: React.FC<SingleCardProp> = ({
           <Image
             lowResSrc={Img}
             className="w-full h-full  object-cover shrink-0 object-center rounded-l-lg"
-            highResSrc={prop.image}
+            highResSrc={ import.meta.env.VITE_URI + "assets/" + prop?.image}
             alt="image"
           />
         </div>

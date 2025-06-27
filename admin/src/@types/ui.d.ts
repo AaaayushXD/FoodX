@@ -20,6 +20,7 @@ declare namespace Ui {
     item: number;
     order: number;
     revenue: number;
+    description?: string;
 
   }
 
@@ -32,16 +33,21 @@ declare namespace Ui {
     orderRequest: string;
     status?: Common.OrderStatus;
     orderFullfilled?: string;
+    paymentMethod?: "cash" | "online"; 
+    image?: string;
   }
 
   interface OrderModal extends Omit<Order, "orderId"> {
     phoneNumber?: string;
+    paymentMethod?: "cash" | "online"; 
+    paymentImage?: string;
     image: string;
     id?: string;
     rank?: number;
   }
 
   interface TicketType {
+    ticketStatus?: Common.TicketStatus;
     id: string;
     category: string;
     name?: string;
@@ -60,7 +66,7 @@ declare namespace Ui {
     bannerImg?: string;
     description?: string;
     rating?: string;
-    discountPrice?: number;
+    discount?: number;
     cookingTime?: string;
     name: string;
     price: number | string;

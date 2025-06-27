@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { ProductSearch } from "@/features";
+import {  ProductSearch } from "@/features";
 import { Icons } from "@/utils";
 import { useAppSelector } from "@/hooks";
-import { Modal } from "@/commons";
+import { Modal } from "@/common";
 import {
   NavbarContainer,
   NotificationPage,
@@ -15,6 +15,7 @@ import Avatar from "@/assets/logo/avatar.png";
 import Banner from "@/assets/bannerCard.png";
 
 export const Header = () => {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -27,7 +28,7 @@ export const Header = () => {
       <MobileNav />
       <div className="  md:gap-10 gap-5 flex flex-col items-center justify-center h-full container  ">
         {" "}
-        <ProductSearch action={(value) => console.log(value)} />
+        <ProductSearch />
         <div className=" w-full flex items-center justify-between px-2 ">
           <div className="flex flex-col sm:pt-0    items-start justify-start gap-4 md:gap-8">
             <div className="flex flex-col items-start justify-start sm:gap-4">
@@ -38,7 +39,10 @@ export const Header = () => {
                 Order With FoodX
               </p>
             </div>
-            <button className=" font-bold tracking-wider md:text-2xl text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] ">
+            <button
+              onClick={() => navigate("#categories")}
+              className=" font-bold tracking-wider md:text-2xl z-[10] text-[14px] sm:text-lg px-2 sm:px-4 py-2  rounded-full text-[var(--primary-dark)] bg-[var(--secondary-color)] "
+            >
               Order Now
             </button>
           </div>
@@ -123,7 +127,7 @@ const DesktopNavbar = () => {
           <Icons.heart className="size-5 sm:size-6" />
         </button>
         <div ref={profileRef} className="">
-          {auth.userInfo?.isVerified && (
+          {auth.userInfo?.uid && (
             <div className="relative w-full">
               <div
                 onClick={() => navigate(`profile`)}
@@ -133,11 +137,7 @@ const DesktopNavbar = () => {
                   className=" rounded-full object-cover size-full "
                   lowResSrc={Avatar}
                   highResSrc={
-                    auth?.userInfo?.avatar
-                      ? import.meta.env.VITE_URI +
-                        "assets/" +
-                        auth.userInfo.avatar
-                      : Avatar
+                    import.meta.env.VITE_URI + "assets/" + auth?.userInfo?.avatar
                   }
                   alt="avatar"
                 />
@@ -191,7 +191,7 @@ const MobileNav = () => {
     <div className="w-full lg:hidden flex items-center justify-between  py-3">
       <div></div>
       <div ref={profileRef} className="">
-        {auth.userInfo?.isVerified && (
+        {auth.userInfo?.uid && (
           <div className="relative w-full">
             <div
               onClick={() => navigate(`profile`)}

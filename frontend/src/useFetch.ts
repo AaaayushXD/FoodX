@@ -1,8 +1,8 @@
 import { makeRequest } from "./makeRequest";
 import { useEffect, useState } from "react";
-import { RootState, Store } from "./store";
-import { authLogout } from "./reducer/user.reducer";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "./hooks";
+import { authLogout } from "./reducer";
+import { Store } from "./store";
 
 const DelayRequestTime = <T>(fn: () => Promise<T>, time: number) => {
   return function executated() {
@@ -14,13 +14,13 @@ export const UseFetch = (url: string) => {
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<Ui.Product[]>();
-  const authUser = useSelector((state: RootState) => state.root.auth);
+const {auth} = useAppSelector()
 
   useEffect(() => {
     const fetchApiData = async () => {
       try {
         const response = await makeRequest.get(url);
-        console.log(response);
+      
         const responseData = await response.data.data;
         setLoading(false);
         setData(responseData);
@@ -35,7 +35,7 @@ export const UseFetch = (url: string) => {
     // fetchApiData()
     const delay = DelayRequestTime(fetchApiData, 200);
     delay();
-  }, [url, authUser.success]);
+  }, [url, auth?.success]);
 
   return { error, data, loading };
 };

@@ -2,19 +2,21 @@ import { ApiError } from "@/helpers";
 import { makeRequest } from "@/makeRequest";
 import axios from "axios";
 
-export const verifyNewUser = async (
-  otp: string ,
-  uid: string,
-  type: "reset" | "otp",
-  accessToken?: string,
-): Promise<Api.Response<{userInfo: Auth.User}>> => {
+export const verifyNewUser = async (data: {
+  code: string;
+  uid?: string;
+  type: "reset" | "otp";
+  accessToken?: string;
+}): Promise<Api.Response<{ userInfo: Auth.User, accessToken: string }>> => {
   try {
-    const response = (await makeRequest({
+    const response = await makeRequest({
       method: "post",
       url: "/auth/verify",
-
-      data: { code: otp, uid: uid, type: type, accessToken: accessToken },
-    }))
+      data: { ...data },
+      headers: {
+        Authorization: `Bearer ${data?.accessToken} `,
+      },
+    });
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -26,11 +28,16 @@ export const verifyNewUser = async (
   }
 };
 
-export const resendOtp = async (): Promise<Api.Response<null>> => {
+export const resendOtp = async (data: {
+  type: "reset";
+  uid: string;
+  email: string;
+}): Promise<Api.Response<null>> => {
   try {
     const response = await makeRequest({
       method: "post",
       url: "/auth/resend",
+      data: data,
     });
     return response?.data;
   } catch (error) {

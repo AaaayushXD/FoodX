@@ -5,12 +5,12 @@ import avatar from "@/assets/logo/avatar.png";
 import { updateUserAction } from "@/actions";
 import { userUpload } from "@/services";
 import toast from "react-hot-toast";
-import { ApiError, Image, Skeleton } from "@/helpers";
+import { ApiError, compressImage, Image, Skeleton } from "@/helpers";
 
 export const ProfileCard: React.FC<Auth.User> = (user) => {
   const uploadAvatarRef = useRef<HTMLInputElement | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
-  const [previewAvatar, setPreviewAvatar] = useState<string>(avatar);
+  const [previewAvatar, setPreviewAvatar] = useState<string>(user?.avatar || avatar);
   const [originalAvatar, setOriginalAvatar] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -28,11 +28,19 @@ export const ProfileCard: React.FC<Auth.User> = (user) => {
       }
     }
   };
-
   const UpdateUserProfile = async () => {
+    if (!originalAvatar) {
+      setEdit(false);
+      return;
+    }
     setLoading(true);
     try {
-      const response = await userUpload(originalAvatar as File, "users");
+      const compressedImage = await compressImage(originalAvatar as File, {
+        maxWidth: 150,
+        maxHeight: 150,
+        quality: 0.5,
+      });
+      const response = await userUpload(compressedImage as File, "users");
       setPreviewAvatar(
         `${response?.data.folderName}/${response?.data.filename}`
       );
@@ -173,11 +181,16 @@ export const AvatarUpdate: React.FC<Auth.User> = (user) => {
         });
       }
     } finally {
-      toast.dismiss();
+      toast.dismiss(loading);
     }
   };
 
   const UpdateUserProfile = async () => {
+ 
+    if (!originalAvatar) {
+      setEdit(false);
+      return;
+    }
     setLoading(true);
     try {
       const response = await userUpload(originalAvatar as File, "users");

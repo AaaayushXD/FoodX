@@ -21,7 +21,7 @@ export const App: React.FC = () => {
   }, [auth]);
 
   const queryClient = new QueryClient();
-  console.log(auth);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>

@@ -6,7 +6,7 @@ import { addProductToCart, getProductsOfCart } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 import { useAllProducts, useAppDispatch, useAppSelector } from "@/hooks";
 import { Icons, toaster } from "@/utils";
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 
 interface CardProp {
   action?: () => void;

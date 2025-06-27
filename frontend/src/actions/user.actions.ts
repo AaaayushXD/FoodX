@@ -27,7 +27,6 @@ const signUpAction = createAsyncThunk(
       Cookies.set("accessToken", user.accessToken);
       Cookies.set("refreshToken", user.refreshToken);
 
-      console.log(user);
       localStorage?.setItem("verifyType", "otp");
       if (!data?.isVerified) {
         navigate("/email-verification");
@@ -73,7 +72,8 @@ const signInAction = createAsyncThunk(
     } catch (error: any) {
       if (error instanceof ApiError) {
         toaster({
-          title: error?.message,
+          message: error?.message,
+          title: "Error",
           className: "bg-red-100",
           icon: "error",
         });
@@ -94,14 +94,42 @@ const verifyAction = createAsyncThunk(
       otp,
       uid,
       type,
-      accessToken
-    }: { otp: string; uid: string; type: "otp" | "reset"; accessToken?: string },
+      accessToken,
+      navigate,
+      closeModal,
+    }: {
+      otp: string;
+      uid?: string;
+      type: "otp" | "reset";
+      accessToken?: string;
+      navigate?: Function;
+      closeModal?: () => void;
+    },
     thunkApi
   ) => {
     try {
-      const response = await userAction.verifyNewUser(otp, uid, type, accessToken);
-      localStorage.removeItem("time");
+      const response = await userAction.verifyNewUser({
+        code: otp,
+        type,
+        uid,
+        accessToken,
+      });
+      if (type === "reset") {
+        navigate?.("/password-reset");
+        localStorage?.setItem("accessToken", response?.data?.accessToken);
+        toaster({
+          title: "Success",
+          icon: "success",
+          message: response?.message,
+          className: "bg-green-100",
+        });
 
+        localStorage.removeItem("time");
+        return;
+      }
+      closeModal?.();
+      navigate?.("/");
+      localStorage.removeItem("time");
       return response.data.userInfo;
     } catch (error) {
       if (error instanceof ApiError) {
@@ -125,7 +153,9 @@ const updateUserAction = createAsyncThunk<
   { rejectValue: string } // Define rejectValue type explicitly
 >("auth/update-user", async (data: Actions.UpdateProfile, thunkApi) => {
   try {
-    const response = await userAction.updateAccount({ ...data });
+    const response = await userAction.updateAccount({
+      ...data,
+    });
     if (response?.message) {
       toaster({
         title: response?.message,

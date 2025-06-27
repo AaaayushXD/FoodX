@@ -42,7 +42,7 @@ export const Portal = ({ children, isOpen, onClose, container }: PortalProps) =>
   return ReactDOM.createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[20000] bg-black/60 flex items-center justify-center"
+        <div className="fixed inset-0 z-[4200] bg-black/60 flex items-center justify-center"
           onClick={(e) => {
             if (e.target === e.currentTarget && onClose) {
               onClose();

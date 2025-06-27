@@ -24,6 +24,7 @@ const rootReducer = combineReducers({
   product: productReducer,
   category: categoryReducer,
   auth: authReducer,
+  order: OrderReducer,
 });
 
 const persistConfig = {

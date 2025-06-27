@@ -10,6 +10,14 @@ export const useFavourite = (id: Ui.Product["id"]) => {
   const dispatch = useAppDispatch();
 
   const addFavouriteProduct = async (id: Ui.Product["id"]) => {
+  
+    if(!auth?.userInfo?.uid) {
+      return toaster({
+        title: "Please login to add to favourite",
+        icon: "error",
+        className: "bg-red-50",
+      });
+    }
     const loading = toaster({
       title: "Please wait...",
       icon: "loading",

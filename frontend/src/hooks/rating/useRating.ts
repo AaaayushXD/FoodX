@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAppSelector } from "../useActions";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { get_productFeedback } from "@/services";
 import { ApiError } from "@/helpers";
 
@@ -9,7 +9,9 @@ export const useRating = (productId: string) => {
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const { auth } = useAppSelector();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
+
+  const stableProductId = useMemo(() => productId, [productId]);
 
   const get_productReview = async (): Promise<Model.FeedbackDetail[]> => {
     try {
@@ -18,39 +20,25 @@ export const useRating = (productId: string) => {
         currentLastDoc: currentDoc?.currentLastDoc || null,
         direction: "next",
         uid: auth?.userInfo?.uid,
-        productId: productId,
+        productId: stableProductId,
       });
-      if (response.data.feedbacks.length < 2) {
-        setHasMore(false);
-      }
-      // setCurrenDoc({
-      //   currentFirstDoc: response?.data?.currentFirstDoc,
-      //   currentLastDoc: response?.data?.currentLastDoc,
-      // });
-      const previousReview = queryClient.getQueryData([
-        "product:review",
-      ]) as Model.FeedbackDetail[];
-
-      const reviews = previousReview
-        ? response?.data?.feedbacks?.filter(
-            (newReview) =>
-              !previousReview?.some((review) => review.id === newReview.id)
-          )
-        : response?.data?.feedbacks;
-
-      return previousReview ? [...previousReview, ...reviews] : reviews;
+      return response.data.feedbacks;
     } catch (error) {
-      throw new ApiError(400, "Error while get reviews" + error);
+      throw new ApiError(400, "Error while getting reviews: " + error);
     }
   };
 
   const { data, isError, isLoading, refetch, error } = useQuery({
-    queryKey: ["product:review"],
+    queryKey: ["product:review", stableProductId],
     queryFn: get_productReview,
-    staleTime: 5 * 60 * 60,
-    gcTime: 5 * 60 * 60,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    enabled: !!stableProductId,
   });
+
   return {
     currentDoc,
     data,

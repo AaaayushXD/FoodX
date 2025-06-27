@@ -33,9 +33,36 @@ export const updateAccount = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { data, status } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const data = error?.response?.data;
+      const status = error?.response?.status;
+      throw new ApiError(status as number, data?.message, data?.errors, false);
     }
     throw new ApiError(500);
   }
 };
+
+
+export const changePassword = async (data: {
+  oldPassword: string;
+  newPassword: string;
+  uid: string;
+  role: string;
+ }): Promise<Api.Response<Auth.User>> => {
+  try {
+    const response = await makeRequest({
+      method: "post",
+      data: { ...data },
+      url: "auth/change-password",
+    });
+    return response.data;
+  } catch (error) {
+   if (axios.isAxiosError(error)) {
+     const status = error.response?.status as number;
+     const message = error?.response?.data?.message;
+     const errors = error?.response?.data?.errors;
+ 
+     throw new ApiError(status, message, errors, false);
+   }
+   throw new ApiError(500);
+  }
+ };

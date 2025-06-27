@@ -29,7 +29,7 @@ import {
   FaCloudDownloadAlt,
   FaPaperPlane,
   FaRegUserCircle,
-  FaSortAlphaUpAlt,
+  
 } from "react-icons/fa";
 import {
   IoSettingsOutline,
@@ -62,7 +62,7 @@ import {
 import {
   AlertCircle,
   AlertTriangle,
-  ArrowDown10,
+
   ArrowLeft,
   ArrowRight,
   Award,

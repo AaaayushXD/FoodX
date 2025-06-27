@@ -61,6 +61,8 @@ declare namespace Model {
     role?: Auth.role,
     updateAt?: string;
     note?: string;
+    image?: string;
+    paymentMethod?: "online" | "cash";
   }
 
   type OrderStatus =
@@ -76,6 +78,21 @@ declare namespace Model {
     time: string; // Date formatted as MM/DD/YYYY
     status: OrderStatus;
     amount: number;
+    uid: string;
     // payment: "esewa" | "cash" | "credit_card" | "other"; // Enum-like for payment methods
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

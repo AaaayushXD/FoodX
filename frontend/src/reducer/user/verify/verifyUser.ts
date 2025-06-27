@@ -11,11 +11,11 @@ export function verifyNewUser(
   builder.addCase(verifyAction.fulfilled, (state, action) => {
     state.loading = false;
     state.success = true;
-    state.userInfo = action.payload;
+    state.userInfo = action.payload as Auth.User;
   });
   builder.addCase(verifyAction.rejected, (state) => {
     state.error = true;
     state.loading = false;
-    state.userInfo = {};
+    state.success = false;
   });
 }

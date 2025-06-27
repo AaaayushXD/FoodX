@@ -126,7 +126,7 @@ const TicketPage: React.FC = () => {
     pending: <Ticket title="Pending" prop={tickets} loading={loading} />,
     progress: <Ticket title="Progress" prop={tickets} loading={loading} />,
     resolved: <Ticket title="Resolved" prop={tickets} loading={loading} />,
-    rejected: <Ticket title="Rejected" prop={tickets} loading={loading} />,
+    cancelled: <Ticket title="Cancelled" prop={tickets} loading={loading} />,
   };
   const component = ticketState && TicketComponents[ticketState];
 
@@ -156,13 +156,13 @@ const TicketPage: React.FC = () => {
             ticketState === "pending"
               ? "bg-[var(--primary-dark)]"
               : "bg-[var(--primary-light)]  "
-          } py-3 hover:bg-[var(--primary-dark)]  sm:text-[15px] text-sm duration-150   font-[550] contrast-150 rounded text-white`}
+          } py-3 hover:bg-[var(--primary-dark)]  sm:text-[15px] text-sm duration-150   font-[500] contrast-150 rounded text-white`}
         >
           Pending
         </button>
         <button
           onClick={() => setTicketState("progress")}
-          className={` py-3 sm:text-[15px] hover:bg-[#bb8115]   duration-150 text-sm  font-[550] contrast-150 rounded text-white ${
+          className={` py-3 sm:text-[15px] hover:bg-[#bb8115]   duration-150 text-sm  font-[500] contrast-150 rounded text-white ${
             ticketState === "progress"
               ? "bg-[#bb8115] "
               : "bg-[var(--orange-bg)]"
@@ -176,17 +176,17 @@ const TicketPage: React.FC = () => {
             ticketState === "resolved"
               ? "bg-[#287e28fd]"
               : "bg-[var(--green-bg)] "
-          }  text-sm  font-[550] contrast-150 rounded text-white `}
+          }  text-sm  font-[500] contrast-150 rounded text-white `}
         >
           Resolve
         </button>
         <button
-          onClick={() => setTicketState("rejected")}
+          onClick={() => setTicketState("cancelled")}
           className={`py-3 hover:bg-[#a82d2dfd] sm:text-[15px] duration-150  ${
-            ticketState === "rejected"
+            ticketState === "cancelled"
               ? "bg-[#a82d2dfd]"
               : " bg-[var(--danger-bg)] "
-          }  text-sm  font-[550] contrast-150 rounded text-white `}
+            }  text-sm  font-[500] contrast-150 rounded text-white `}
         >
           Reject
         </button>

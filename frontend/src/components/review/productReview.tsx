@@ -1,13 +1,16 @@
 import { AverageReview } from "./average/averageReview";
 import { ApiError, Skeleton } from "@/helpers";
 import { CustomerReview } from "./customer/customerReview";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRating } from "@/hooks";
 import { Icons, toaster } from "@/utils";
 
 export default function ProductReview({ productId }: { productId: string }) {
-  const { data, error, isLoading } = useRating(productId);
+ 
+  const stableProductId = useMemo(() => productId, [productId]);
+  const { data, error, isLoading } = useRating(stableProductId);
 
+  
   const [limitReview, setLimitReview] = useState<Model.FeedbackDetail[]>([]);
   const [view, setView] = useState<boolean>(false);
 
@@ -22,7 +25,7 @@ export default function ProductReview({ productId }: { productId: string }) {
 
   useEffect(() => {
     if (!view) {
-      data && setLimitReview(data?.slice(0, 5));
+      data && data?.length > 0 && setLimitReview(data?.slice(0, 5));
     }
   }, [data, view]);
 
@@ -61,7 +64,7 @@ export default function ProductReview({ productId }: { productId: string }) {
             <CustomerReview key={review.id} review={review} />
           ))
         )}
-        {data && data?.length >0 && !view && (
+        {data && data?.length > 5 && !view && (
           <button
             onClick={() => setView(!view)}
             className=" text-sm tracking-wide  py-2 px-3  hover:bg-gray-300 duration-150 ring-gray-200 max-w-[110px] rounded-xl ring-[1px] w-full flex gap-4 items-center justify-center  "

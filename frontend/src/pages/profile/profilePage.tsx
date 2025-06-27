@@ -16,12 +16,12 @@ export const ProfilePage = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full flex items-start justify-start gap-3">
-      <div className="  sm:h-screen overflow-auto md:max-w-xs pr-1 w-full ">
+      <div className="  sm:h-screen    sm:overflow-y-auto md:max-w-xs pr-1 w-full ">
         <MobileProfile />
       </div>
       <div className="w-full flex-col md:flex hidden ">
         {setting === "password-change" ? (
-          <PasswordChange />
+          <PasswordChange setIsOpen={() => {}} />
         ) : setting === "account-delete" ? (
           <AccountDelete />
         ) : setting === "account-disable" ? (
@@ -35,7 +35,7 @@ export const ProfilePage = () => {
         )}
       </div>
       <div
-        className={`w-full md:hidden h-screen flex flex-col fixed left-0 right-0 bottom-0 overflow-scroll z-10 top-0 duration-150 ${
+        className={`w-full md:hidden sm:h-screen flex flex-col fixed left-0 right-0 bottom-0 overflow-scroll z-10 top-0 duration-150 ${
           setting === undefined ? "  scale-0" : "visible bg-white scale-100  "
         }  left-0 right-0 h-full `}
       >
@@ -43,10 +43,10 @@ export const ProfilePage = () => {
           onClick={() => navigate(-1)}
           className="px-5 w-full   border-b py-3"
         >
-          <Icons.arrowLeft className="text-black  "  />
+          <Icons.arrowLeft className="text-black  " />
         </button>
         {setting === "password-change" ? (
-          <PasswordChange />
+          <PasswordChange setIsOpen={() => {}} />
         ) : setting === "account-delete" ? (
           <AccountDelete />
         ) : setting === "account-disable" ? (

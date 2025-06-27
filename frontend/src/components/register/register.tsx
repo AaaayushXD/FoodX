@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   checkValidNumber,
@@ -21,6 +15,7 @@ import { ApiError, compressImage } from "@/helpers";
 import { Icons } from "@/utils";
 import { signUpAction } from "@/actions";
 import { useAppDispatch } from "@/hooks";
+import { Input } from "@/common";
 
 export const RegisterContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +41,7 @@ export const RegisterContainer: React.FC = () => {
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
-    inputField: string
+    inputField: keyof typeof RegisterValue
   ) => {
     setRegisterValue({ ...RegisterValue, [inputField]: e.target.value });
   };
@@ -57,18 +52,19 @@ export const RegisterContainer: React.FC = () => {
     }
     try {
       const file = event.target.files[0];
+
       const compressedImg = await compressImage(file, {
         maxWidth: 150,
         maxHeight: 150,
-        quality: 0.6,
+        quality: 0.5,
       });
 
       setRegisterValue({
         ...RegisterValue,
         avatar: URL.createObjectURL(compressedImg as Blob),
       });
-      const imageUrl = await userUpload(file, "users");
-      console.log(imageUrl);
+      const imageUrl = await userUpload(compressedImg as File, "users");
+    
       setRegisterValue({
         ...RegisterValue,
         avatar: `${imageUrl?.data?.folderName}/${imageUrl?.data?.filename} `,
@@ -183,16 +179,17 @@ export const RegisterContainer: React.FC = () => {
             </div>
           </div>
           {/* fullname */}
+
           <div className="flex  items-center gap-[10px] justify-between w-full">
             <div className="flex w-full flex-col tracking-wide items-start h-[65px] lg:h-[73px]">
-              <label htmlFor={"firstName"}>First Name</label>
-              <input
-                id="firstName"
-                type="text"
-                value={RegisterValue["firstName"]}
-                onChange={(e) => handleInputChange(e, "firstName")}
-                className=" w-full  outline-none py-[7px] px-[8px] bg-[#fbfbfb] border-[#5d50772d] rounded-md border-[1px]"
-              />
+              {
+                <Input
+                  label="First Name"
+                  onChange={(e) => handleInputChange(e, "firstName")}
+                  value={RegisterValue["firstName"] as string}
+                  type="text"
+                />
+              }
               {
                 <div className="text-[12px] text-[#af2e2e]">
                   {ValidateError.firstName}
@@ -200,13 +197,11 @@ export const RegisterContainer: React.FC = () => {
               }
             </div>
             <div className="flex w-full flex-col items-start h-[65px] tracking-wide lg:h-[73px]">
-              <label htmlFor={"lastName"}>Last Name</label>
-              <input
-                id="lastName"
+              <Input
+                label="Last Name"
                 type="text"
-                value={RegisterValue["lastName"]}
+                value={RegisterValue["lastName"] as string}
                 onChange={(e) => handleInputChange(e, "lastName")}
-                className=" w-full bg-[#fbfbfb] border-[#5d50772d] outline-none  py-[7px] px-[8px] rounded-md border-[1px]"
               />
               {ValidateError && (
                 <div className="text-[12px] text-[#af2e2e] ">
@@ -217,17 +212,13 @@ export const RegisterContainer: React.FC = () => {
           </div>
           {/* Email */}
           <div className="flex w-full tracking-wide  flex-col  h-[65px] lg:h-[73px]  items-start ">
-            Email
-            <label htmlFor="email" className="font-Poppins text-[15px]"></label>
-            <input
-              type="email"
-              id="email"
-              value={RegisterValue.email}
-              onChange={(e) =>
-                handleInputChange(e, "email" as keyof Auth.ValidationType)
-              }
-              className="outline-none py-[7px] px-[8px] bg-[#fbfbfb] border-[#5d50772d] rounded-md border-[1px] w-full"
+            <Input
+              label="Email"
+              type="text"
+              value={RegisterValue["email"] as string}
+              onChange={(e) => handleInputChange(e, "email")}
             />
+
             {ValidateError["email"] && (
               <div className="text-[12px] text-[#af2e2e] flex flex-col ">
                 {ValidateError["email"]}
@@ -235,20 +226,14 @@ export const RegisterContainer: React.FC = () => {
             )}
           </div>
           {/* phoneNumber */}
+
           <div className="flex w-full tracking-wide  flex-col h-[65px] lg:h-[73px]  items-start ">
-            Phone Number
-            <label
-              htmlFor="phoneNumber"
-              className="font-Poppins text-[15px]"
-            ></label>
-            <input
-              type="text"
-              id="phoneNumber"
-              value={RegisterValue.phoneNumber}
+            <Input
+              label="Phone Number"
+              value={RegisterValue["phoneNumber"] as string}
               onChange={(e) =>
                 handleInputChange(e, "phoneNumber" as keyof Auth.ValidationType)
               }
-              className="outline-none py-[7px] px-[8px] bg-[#fbfbfb] border-[#5d50772d] rounded-md border-[1px] w-full "
             />
             {ValidateError["email"] && (
               <div className="text-[12px] text-[#af2e2e] flex flex-col ">
@@ -257,33 +242,26 @@ export const RegisterContainer: React.FC = () => {
             )}
           </div>
           {/* passwords */}
-          <div className="w-full flex sm:flex-row flex-col justify-center items-center gap-[10px]">
+          <div className="w-full flex sm:flex-row flex-col justify-center items-center gap-4">
             <div className="flex  tracking-wide w-full flex-col h-[65px] lg:h-[73px]  items-start  relative cursor-pointer">
-              <label htmlFor="password" className="font-Poppins text-[15px]">
-                Password
-              </label>
-              <input
-                autoComplete="off"
+              <Input
                 type={showPassword ? "text" : "password"}
-                id="password"
-                value={RegisterValue.password}
+                label="Password"
+                value={RegisterValue["password"] as string}
                 onChange={(e) =>
                   handleInputChange(e, "password" as keyof Auth.ValidationType)
                 }
-                className="outline-none py-[7px] px-[8px] bg-[#fbfbfb] border-[#5d50772d] rounded-md border-[1px] w-full"
               />
-
               <div
                 className="absolute top-[33px] text-[#646168]  right-[14px] w-[15px] h-[15px]"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <Icons.eyeClose className=" size-5 sm:size-6  " />
-                ) : (
                   <Icons.eyeOpen className=" size-5 sm:size-6  " />
+                ) : (
+                  <Icons.eyeClose className=" size-5 sm:size-6  " />
                 )}
               </div>
-
               {ValidateError["password"] && (
                 <div className="text-[12px] text-[#af2e2e] flex flex-col ">
                   {ValidateError["password"]}
@@ -291,23 +269,17 @@ export const RegisterContainer: React.FC = () => {
               )}
             </div>
             <div className="flex tracking-wide  w-full flex-col h-[65px] lg:h-[73px]  items-start relative  cursor-pointer">
-              <label htmlFor="confirmPassword" className=" text-[15px]">
-                Confirm Password
-              </label>
-              <input
-                autoComplete="off"
+              <Input
+                label="Confirm Password"
                 type={showPassword ? "text" : "password"}
-                id="confirmPassword"
-                value={RegisterValue.confirmPassword}
+                value={RegisterValue["confirmPassword"] as string}
                 onChange={(e) =>
                   handleInputChange(
                     e,
                     "confirmPassword" as keyof Auth.ValidationType
                   )
                 }
-                className="outline-none  relative py-[7px] px-[8px] bg-[#fbfbfb] border-[#5d50772d] rounded-md border-[1px] w-full"
               />
-
               <div
                 className="absolute  top-[33px]  right-[14px] w-[15px] h-[15px] text-[#646168] "
                 onClick={() => setShowPassword(!showPassword)}

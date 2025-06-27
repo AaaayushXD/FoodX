@@ -2,9 +2,10 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import { useAppDispatch, useAppSelector } from "@/hooks/useActions";
-import { Icons } from "../../../utils";
+import { Icons, toaster } from "../../../utils";
 import { deleteAccount } from "@/services";
 import { authLogout } from "@/reducer";
+import { ApiError } from "@/helpers";
 
 export const AccountDelete = () => {
   const [confirm, setConfirm] = useState("");
@@ -13,30 +14,51 @@ export const AccountDelete = () => {
 
   const { auth } = useAppSelector();
   const dispatch = useAppDispatch();
-  const confirmationText = `delete foodX.com.np/${auth?.userInfo.fullName}`;
+  const confirmationText = `delete foodX.com.np`;
 
   const handleSubmit = async () => {
     if (confirm !== confirmationText) {
-      return toast.error("Incorrect confirmation text!");
+      return toaster({
+        message: "Incorrect confirmation text!",
+        icon: "error",
+        className: "bg-red-50",
+      });
     }
     if (!reason.trim()) {
-      return toast.error("Please provide a reason for deletion.");
+      return toaster({
+        message: "Please provide a reason for deletion.",
+        icon: "error",
+        className: "bg-red-50",
+      });
     }
 
     const toastLoader = toast.loading("Deleting account, please wait...");
     setLoading(true);
 
     try {
-      await deleteAccount();
-      toast.dismiss(toastLoader);
-      toast.success("Account deleted successfully");
+      const response = await deleteAccount({
+        uid: auth?.userInfo.uid as string,
+        role: auth?.userInfo.role as Auth.role,
+      });
+      toaster({
+        message: response.message,
+        icon: "success",
+        className: "bg-green-50",
+      });
       dispatch(authLogout());
     } catch (error) {
+      if (error instanceof ApiError) {
+        toaster({
+          message: error.message,
+          icon: "error",
+          className: "bg-red-50",
+        });
+      }
+    } finally {
+      setLoading(false);
       toast.dismiss(toastLoader);
-      toast.error("Failed to delete account. Try again later.");
     }
-    setLoading(false);
-  };  
+  };
 
   return (
     <div className="w-full flex flex-col items-center  pb-20  px-2 pt-5 sm:p-6 bg-white justify-center">

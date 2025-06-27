@@ -14,7 +14,6 @@ export const Image = ({
   className: string;
   draggabe?: boolean;
   }) => {
-  console.log(highResSrc)
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
  

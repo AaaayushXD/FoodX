@@ -30,7 +30,7 @@ declare namespace Api {
 
   interface ResponseNotification
     extends Pick<FetchNotification, "currentFirstDoc" | "currentLastDoc"> {
-    notifications: Models.Notification[];
+    notifications: Model.Notification[];
     length: number;
   }
 
@@ -55,7 +55,7 @@ declare namespace Api {
     date: string;
     open?: boolean;
     userId?: string;
-    userRole?: string | UserRole["role"];
+    userRole?: string | Auth.role;
     handleClick?: (id: string) => void;
   }
 }

@@ -19,9 +19,10 @@ export const RecentOrder = () => {
       currentFirstDoc: null,
       currentLastDoc: null,
       direction: "next",
-      filter: "orderRequest",
+      filter: "orderFullfilled",
       userId: store?.auth?.userInfo?.uid as string,
-      status: "pending",
+      status: "completed",
+      sort:"desc"
     },
     { enable: isVisible }
   );
@@ -31,16 +32,19 @@ export const RecentOrder = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full relative group/recent h-full flex text-[var(--dark-text)]  flex-col gap-6 bg-[var--light-foreground] px-5 py-4   rounded items-start justify-center">
-      <h1 className="sm:text-[25px] text-[21px] tracking-wider font-semibold ">
-        Recent Orders
-      </h1>
+      <button onClick={() => navigate(-1)} className="flex  justify-start items-center gap-2">
+        <Icons.chevronLeft className="size-5 mt-1" />
+        <h1 className="sm:text-[25px] text-[21px] tracking-wider font-semibold ">
+          Recent Orders
+        </h1>
+     </button>
       <div
         ref={recentCardReference}
         className="flex items-center w-full h-full gap-5 pb-4 overflow-x-auto item-scrollbar "
       >
         {!loading ? (
           data.length > 0 ? (
-            data?.map((order) => <RecentCard key={order.id} item={order} />)
+            data?.map((order) => <RecentCard key={order?.id} item={order} />)
           ) : (
             <div className="flex flex-col items-center justify-center w-full h-full p-4 text-center">
               <img src={Empty} alt="No orders found" className="mb-4 size-40" />
@@ -70,7 +74,7 @@ export const RecentOrder = () => {
           </div>
         )}
       </div>
-      {data?.length > 0 && (
+      {data?.length > 5 && (
         <div className="absolute z-50 px-1 flex justify-between  w-full duration-200 right-0 gap-40  group-hover/recent:visible group-hover/recent:opacity-100 top-[8rem] sm:top-36">
           <button
             onClick={() => {
@@ -90,7 +94,7 @@ export const RecentOrder = () => {
                 left: 300,
               });
             }}
-            className="  p-2 hover:bg-[#68656541] duration-150  text-[var(--dark-text)] rounded-full "
+            className="p-2 hover:bg-[#68656541] duration-150  text-[var(--dark-text)] rounded-full "
           >
             <Icons.chevronRight className=" text-gray-800 size-5 " />
           </button>

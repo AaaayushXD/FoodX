@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import toast from "react-hot-toast";
+import { toaster } from "@/utils";
 
 export const useFeedbackFn = () => {
   const [rating, setRating] = useState(0);
@@ -28,15 +29,29 @@ export const useFeedbackFn = () => {
     );
     form.append("feedback_type", feedbackType);
     form.append("feedback", feedback);
-    const toastLoader = toast.loading("Loading...");
+    const toastLoader = toaster({
+      icon: "loading",
+      message: "Sending feedback...",
+    });
     try {
       await axios({
         method: "post",
         url: "https://api.emailjs.com/api/v1.0/email/send-form",
         data: form,
       });
+      toaster({
+        className: "bg-green-50",
+        icon: "success",
+        message: "Thank you for your feedback.",
+      });
     } catch (error) {
-      throw new Error("Error while submit feedback " + error);
+      if (axios.isAxiosError(error)) {
+        toaster({
+          className: "bg-red-50",
+          icon: "error",
+          message: "Something went wrong",
+        });
+      }
     } finally {
       toast.dismiss(toastLoader);
       setFeedback("");
@@ -47,12 +62,6 @@ export const useFeedbackFn = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: handleSubmit,
-    onSuccess: () => {
-      toast.success("Thank you for your review.");
-    },
-    onError: (error: any) => {
-      if (error instanceof Error) toast.error(error.message);
-    },
   });
 
   return {

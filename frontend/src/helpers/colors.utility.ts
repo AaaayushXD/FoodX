@@ -118,7 +118,7 @@ async function extractDominantColors(
 			}
 
 			const { width, height } = img;
-			 console.log(width, height)
+		
 			const scaleFactor = Math.min(1, maxSize / Math.max(width, height));
 
 			canvas.width = width * scaleFactor;
@@ -128,8 +128,7 @@ async function extractDominantColors(
 
 			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			const pixels = imageData.data;
-			 console.log(pixels)
-
+		
 			const colorMap: ColorMap = countColors(
 				pixels,
 				colorSimilarityThreshold,

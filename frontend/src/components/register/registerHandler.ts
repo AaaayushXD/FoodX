@@ -27,8 +27,8 @@ export const validateEmail = (
   if (error.email) return;
   const emailAddress = email?.toLowerCase().trim();
   const validateCollegeEmail = emailAddress?.split("@")[1];
-
-  if (!emailAddress || validateCollegeEmail !== collegeEmail)
+ console?.log(validateCollegeEmail)
+  if (!emailAddress || validateCollegeEmail !== "gmail.com" || !collegeEmail)
     return (error.email = "Please enter valid email");
 };
 

@@ -4,7 +4,7 @@ import { ProductSearch } from "@/features";
 import { debounce, Icons } from "@/utils";
 import { useAllProducts } from "@/hooks";
 import { useNavigate } from "react-router-dom";
-import { Empty as EmptyComponent } from "@/commons";
+import { Empty as EmptyComponent } from "@/common";
 import Empty from "@/assets/empty.png";
 
 export const SearchPage = () => {

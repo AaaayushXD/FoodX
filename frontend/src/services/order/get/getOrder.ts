@@ -16,7 +16,7 @@ export const getOrderByUser = async (
     if (axios.isAxiosError(error)) {
       const { errors, message } = error?.response?.data;
       const status = error?.response?.status;
-      throw new ApiError(status, message, errors, false);
+      throw new ApiError(status as number, message, errors, false);
     }
     throw new ApiError(500);
   }
@@ -34,8 +34,9 @@ export const getOrder = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const { status, data } = error?.response;
-      throw new ApiError(status, data?.message, data?.errors, false);
+      const status = error?.response?.status;
+      const { errors, message } = error?.response?.data;
+      throw new ApiError(status as number, message, errors, false);
     }
     throw new ApiError(500);
   }

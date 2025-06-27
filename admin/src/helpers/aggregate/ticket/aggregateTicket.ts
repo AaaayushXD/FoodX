@@ -16,7 +16,7 @@ export const aggregateTickets = async(tickets: Ui.TicketType[],queryClient: Quer
   });
  
   const aggregatePromiseResolveUser = await Promise.all(userPromises);
-  
+   console.log(aggregatePromiseResolveUser);
 
   const allTicket = tickets?.map(async (ticket): Promise<Ui.TicketType> => {
     const findUser = aggregatePromiseResolveUser?.find((user) => user.uid === ticket.uid);

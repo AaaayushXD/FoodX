@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { pdf } from "@react-pdf/renderer";
 import { useAppSelector, useAppDispatch, useHooks } from "@/hooks";
-import { Table } from "@/commons";
+import { Table } from "@/common";
 import { ApiError, useAggregateUserOrder } from "@/helpers";
 import { Icons, toaster } from "@/utils";
 
@@ -79,9 +79,9 @@ export const OrderHistory = () => {
             <p>
               {item.id == selectedId && isCollapsed
                 ? item.products.map(
-                    (product) => `${product.name}* ${product.quantity} ,`
+                    (product) => `${product?.name}* ${product?.quantity} ,`
                   )
-                : item.products[0].name + ` (${item.products[0].quantity})`}
+                : item.products[0]?.name + ` (${item.products[0]?.quantity})`}
             </p>
             <span
               onClick={() => {
@@ -91,7 +91,7 @@ export const OrderHistory = () => {
             >
               <Icons.chevronRight
                 className={`size-3 ${
-                  selectedId === item.id && isCollapsed ? "rotate-90" : ""
+                  selectedId === item?.id && isCollapsed ? "rotate-90" : ""
                 }  duration-200 cursor-pointer `}
               />
               {}{" "}
@@ -179,7 +179,7 @@ export const OrderHistory = () => {
         direction: direction,
         currentFirstDoc: currentFirstDoc || null,
         currentLastDoc: currentLastDoc || null,
-        status: "pending",
+        status: "completed",
         userId: auth?.userInfo?.uid,
       });
       const userOrder = response as {
@@ -312,9 +312,10 @@ export const OrderHistory = () => {
                 store?.auth?.userInfo?.uid as string,
                 product.id
               );
+              navigate("/checkout");
               dispatch(addToCart({ ...product }));
             });
-            navigate("/cart/checkout");
+            
           },
           downloadFn: (id: string) => {
             const findOrder = data?.find((order) => order.id === id);

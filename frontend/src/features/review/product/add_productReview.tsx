@@ -1,4 +1,4 @@
-import { ApiError, Image } from "@/helpers";
+import { ApiError, compressImage, Image } from "@/helpers";
 import { useAppSelector } from "@/hooks";
 import {
   add_productFeedback,
@@ -15,6 +15,7 @@ interface AddProductReviewProp {
   openReview: boolean;
   setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
   productId: string;
+  feedbackId?: string;
 }
 
 export const AddProductReview: React.FC<AddProductReviewProp> = ({
@@ -22,6 +23,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   setOpenReview,
   productId,
   action,
+  feedbackId
 }) => {
   const { auth } = useAppSelector();
   const [originalFile, setOriginalFile] = useState<File>();
@@ -29,7 +31,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
   const [data, setData] = useState<Ui.FeedbackInfo>({
     message: "",
     productId: "",
-    rating: 0,
+    rating: "",
     uid: "",
   });
 
@@ -51,14 +53,19 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
     try {
       let uploadedImage;
       if (originalFile) {
-        const response = await userUpload(originalFile, "reviews");
+        const compressedImage = await compressImage(originalFile, {
+          maxWidth: 150,
+          maxHeight: 150,
+          quality: 0.5,
+        });
+        const response = await userUpload(compressedImage as File, "reviews");
         uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
 
       const response = await add_productFeedback({
         message: data.message as string,
         productId: productId,
-        rating: data?.rating as number,
+        rating: data?.rating,
         uid: auth?.userInfo?.uid as string,
         image: uploadedImage,
       });
@@ -73,7 +80,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       setData({
         message: "",
         productId: "",
-        rating: 0,
+        rating: "",
         uid: "",
         image: "",
         userId: "",
@@ -113,7 +120,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         uploadedImage = `${response?.data?.folderName}/${response?.data?.filename}`;
       }
 
-      const updatedData = {...data};
+      const updatedData = { ...data };
       if (uploadedImage) {
         updatedData.image = uploadedImage;
       }
@@ -121,24 +128,43 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
       Object.keys(updatedData).forEach(async (key) => {
         const typedKey = key as keyof Ui.FeedbackInfo;
         if (updatedData[typedKey] !== "") {
-          const response = await update_productFeedback(
+          await update_productFeedback(
             productId,
             key as keyof Model.FeedbackDetail,
             updatedData[typedKey],
+            feedbackId as string,
             auth?.userInfo?.uid
-          );
-          queryClient.invalidateQueries(["product:review"] as any);
-          toaster({
-            className: "bg-green-50 ",
-            icon: "success",
-            message: response?.message,
-            title: "Your review updated!",
+          ).catch((err) => {
+            if (err instanceof ApiError) {
+              return toaster({
+                title: "Error",
+                className: "bg-red-50 ",
+                icon: "error",
+                message: err?.message,
+              });
+            }
+          }).then((res) => {
+            if (res instanceof ApiError) {
+              return toaster({
+                title: "Error",
+                className: "bg-red-50 ",
+                icon: "error",
+                message: res?.message,
+              });
+            }
+            queryClient?.invalidateQueries(["product:review"] as any);
+            toaster({
+              title: "Success",
+              className: "bg-green-50 ",
+              icon: "success",
+              message: "Review updated successfully",
+            });
+            setOpenReview(!openReview);
           });
-          setOpenReview(!openReview);
           setData({
             message: "",
             productId: "",
-            rating: 0,
+            rating: "0",
             uid: "",
             image: "",
             userId: "",
@@ -146,6 +172,7 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         }
       });
     } catch (error) {
+      
       if (error instanceof ApiError) {
         toaster({
           title: "Error",
@@ -199,9 +226,8 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
 
   return (
     <div
-      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60 backdrop-blur-lg  left-0 right-0 bottom-0 w-screen h-screen ${
-        openReview ? "opacity-100 visible  " : "opacity-0 invisible"
-      } `}
+      className={` duration-150 fixed  top-0 flex flex-col items-center md:justify-center justify-between bg-gradient-to-t from-transparent to-black/60  left-0 right-0 bottom-0 w-screen h-screen ${openReview ? "opacity-100 visible  " : "opacity-0 invisible"
+        } `}
     >
       <div className="w-full md:hidden flex  p-2   items-center justify-between">
         <button
@@ -216,11 +242,10 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
         <div></div>
       </div>
       <div
-        className={`w-full duration-150 ${
-          openReview
+        className={`w-full duration-150 ${openReview
             ? "bottom-0 visible opacity-100"
             : "-bottom-96 invisible opacity-0 "
-        } bg-slate-100  rounded-xl p-5  md:max-w-lg flex flex-col items-start justify-start gap-7`}
+          } bg-slate-100  rounded-xl p-5  md:max-w-lg flex flex-col items-start justify-start gap-7`}
       >
         <Rating
           openReview={openReview}
@@ -254,7 +279,7 @@ const Rating = ({
   setOpenReview,
   openReview,
 }: {
-  action: (rate: number) => void;
+  action: (rate: string) => void;
   openReview: boolean;
   setOpenReview: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -277,17 +302,16 @@ const Rating = ({
         {[1, 2, 3, 4, 5]?.map((star) => (
           <button
             onClick={() => {
-              action(star);
+              action(star.toString());
               setIndex(star);
             }}
             key={star}
           >
             <Icons.tomato
-              className={`size-8 transition-transform  duration-300 ease-in-out ${
-                index >= star
+              className={`size-8 transition-transform  duration-300 ease-in-out ${index >= star
                   ? "fill-red-500 scale-110"
                   : "fill-gray-400 group-hover:fill-red-500 group-hover:scale-125" // Hover: Red & bigger
-              }`}
+                }`}
             />
           </button>
         ))}

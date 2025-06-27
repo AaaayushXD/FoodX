@@ -22,9 +22,8 @@ class ApiError<T> extends Error {
 
 export { ApiError };
 
-export function handleApiError(error: any): ApiError {
+export function handleApiError(error: any): ApiError<any> {
   if (typeof error === "object" && error !== null) {
-    console.log(error);
     return new ApiError(
       error?.statusCode || 400,
       error?.message || "Something went wrong",

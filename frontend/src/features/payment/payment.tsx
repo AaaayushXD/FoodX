@@ -4,19 +4,26 @@ import { MoonLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { TimePicker } from "@/features";
-import { resetCart } from "@/reducer";
-import { addOrder as orderAdd, resendOtp } from "@/services";
+import { addOrder, resetCart } from "@/reducer";
+import { addOrder as orderAdd, resendOtp, userUpload } from "@/services";
 import { addRevenue, addNotification, removeProductFromCart } from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
-import { RippleButton } from "@/commons";
+import { RippleButton } from "@/common";
 import { VerificationContainer } from "@/pages";
-import { Modal } from "@/commons";
+import { Modal } from "@/common";
+import { FaUpload, FaTimes } from 'react-icons/fa';
+import { QrCode, QrCodeIcon } from "lucide-react";
+import qrImageAsset from "@/assets/qr.png";
 
 export const Payment: React.FC = () => {
   const [paymentMethod, setPayementMethod] = useState<Model.PaymentMethod>();
-  const [note, setNote] = useState<string>("");
+  const [preOrder, setPreOrder] = useState<boolean>(false);
+  const [preOrderTime, setPreOrderTime] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [qrImage, setQrImage] = useState<File | null>(null);
+  const [qrPreview, setQrPreview] = useState<string>("");
+  const [showQrModal, setShowQrModal] = useState(false);
 
   const navigate = useNavigate();
   const { auth, cart } = useAppSelector();
@@ -29,6 +36,19 @@ export const Payment: React.FC = () => {
   const store = useAppSelector();
   const dispatch = useAppDispatch();
 
+  const handleQrChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setQrImage(file);
+      setQrPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeQr = () => {
+    setQrImage(null);
+    setQrPreview("");
+  };
+
   const handlePayment = async () => {
     if (!paymentMethod) {
       toaster({
@@ -39,10 +59,38 @@ export const Payment: React.FC = () => {
       });
       return;
     }
-
+    if (paymentMethod === "online" && !qrImage) {
+      toaster({
+        icon: "warning",
+        className: "bg-yellow-100",
+        title: "QR Image Required",
+        message: "Please upload your payment QR image.",
+      });
+      return;
+    }
+    if (cart?.products?.length <= 0) {
+      return toaster({
+        icon: "warning",
+        className: "bg-orange-100",
+        title: "No products in cart",
+        message: "You have to add products to cart to order",
+      });
+    }
+    if (preOrder && !preOrderTime) {
+      return toaster({
+        icon: "warning",
+        className: "bg-yellow-100",
+        title: "Preorder Time Required",
+        message: "Please select a preorder time.",
+      });
+    }
     try {
       if (!auth?.userInfo?.isVerified) {
-        await resendOtp();
+        await resendOtp({
+          email: auth?.userInfo?.email as string || localStorage?.getItem("email") as string,
+          type: "reset",
+          uid: auth?.userInfo?.uid as string || localStorage?.getItem("uid") as string
+        });
         toaster({
           className: "bg-yellow-50",
           icon: "warning",
@@ -55,14 +103,32 @@ export const Payment: React.FC = () => {
         return setIsUserVerified(false);
       }
       setLoading(true);
-      const response = await orderAdd({
+      let image = "";
+      if (paymentMethod === "online") {
+        const uploadImage = await userUpload(qrImage as File, "orders");
+        image = `${uploadImage?.data?.folderName}/${uploadImage?.data?.filename}`;
+      }
+      // Prepare payload for API (not Redux)
+      const orderPayload : Model.Order = {
         role: auth?.userInfo?.role,
         uid: auth?.userInfo?.uid as string,
         products: cart?.products,
         orderRequest: dayjs().toISOString(),
+        status: "pending" as Model.OrderStatus,
+        note: preOrder && preOrderTime ? `Preorder Time: ${preOrderTime}` : "",
+        image: image,
+        paymentMethod: paymentMethod
+      };
+      const response = await orderAdd(orderPayload);
+      dispatch(addOrder({
+        orderId: response?.data,
+        products: cart?.products,
         status: "pending",
-        note: note,
-      });
+        orderRequest: dayjs().toISOString(),
+        uid: auth?.userInfo?.uid as string,
+        note: preOrder && preOrderTime ? `Preorder Time: ${preOrderTime}` : "",
+        role: auth?.userInfo?.role,
+      }));
       if (response?.message)
         toaster({
           title: response?.message,
@@ -102,11 +168,44 @@ export const Payment: React.FC = () => {
     }
   };
 
+
   return (
     <div className="w-full md:max-w-md p-5 lg:mt-12 rounded-lg bg-[var(--light-foreground)]">
       <h1 className="text-xl font-semibold tracking-wider text-[var(--dark-text)] mb-5">
         Payment Information
       </h1>
+      
+      {/* QR Payment Modal Trigger */}
+      <div className="flex justify-end mb-2">
+        <button
+          type="button"
+          onClick={() => setShowQrModal(true)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold shadow hover:from-green-600 hover:to-green-800 transition-all text-sm"
+        >
+          <QrCode className="w-5 h-5" />
+          Show QR for Payment
+        </button>
+      </div>
+      {/* QR Modal */}
+      <Modal close={!showQrModal} closeModal={() => setShowQrModal(false)}>
+        <div className="flex flex-col items-center justify-center p-6 bg-white rounded-lg max-w-xs w-full">
+          <h2 className="text-lg font-bold mb-4 text-gray-800">Scan & Pay</h2>
+          <img
+            src={qrImageAsset}
+            alt="Payment QR"
+            className="w-full h-[300px]  object-top object-cover rounded border border-gray-200 shadow mb-4"
+          />
+          <a
+            href={qrImageAsset}
+            download="payment-qr.jpeg"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium shadow hover:bg-green-700 transition-all"
+          >
+            <FaUpload /> Download QR
+          </a>
+          <p className="text-xs text-gray-500 mt-3 text-center">Use any e-wallet or banking app to scan and pay. Save this QR for future payments.</p>
+        </div>
+      </Modal>
+
       <div className="flex flex-col gap-4">
         {/* Payment Method */}
         <div className="flex flex-col">
@@ -116,57 +215,85 @@ export const Payment: React.FC = () => {
           <div className="flex gap-3 mt-2">
             <RippleButton
               onClick={() => handlePaymentSelection("online")}
-              className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${
-                paymentMethod === "online"
+              className={`w-full py-3 bg-green-500 font-semibold tracking-wide rounded-lg text-white ${paymentMethod === "online"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
-              }`}
+                }`}
             >
               Online
             </RippleButton>
             <RippleButton
               onClick={() => handlePaymentSelection("cash")}
-              className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${
-                paymentMethod === "cash"
+              className={`w-full py-3   font-semibold bg-orange-500  tracking-wide rounded-lg text-white ${paymentMethod === "cash"
                   ? "ring-[4px] ring-[var(--dark-border)]  "
                   : ""
-              }`}
+                }`}
             >
               Cash
             </RippleButton>
           </div>
         </div>
 
-        {/* Note Section */}
-        <div className="flex relative flex-col w-full mt-4">
-          <label className="text-[var(--dark-secondary-text)]">
-            Add a Note (Optional)
+        {/* Preorder Section */}
+        <div className="flex flex-col w-full mt-4">
+          <label className="text-[var(--dark-secondary-text)] mb-2 flex justify-between items-center gap-2">
+            <span>Do you want to Pre-order?</span>
+            <span className="relative inline-block w-10 align-middle select-none transition duration-200 ease-in">
+              <input
+                type="checkbox"
+                name="preorder"
+                id="preorder-toggle"
+                checked={preOrder}
+                onChange={() => setPreOrder((prev) => !prev)}
+                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-200"
+                style={{ left: preOrder ? '1.5rem' : '0' }}
+              />
+              <label
+                htmlFor="preorder-toggle"
+                className={`toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 ${preOrder ? "bg-green-500" : "bg-gray-300"} cursor-pointer`}
+              ></label>
+            </span>
           </label>
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="w-full p-3 mt-2 outline-none text-[14px] rounded-lg bg-[var(--light-background)] border-[1px] border-[var(--dark-border)] text-[var(--dark-text)] placeholder:text-[var(--dark-secondary-text)]"
-            placeholder="Special requests or instructions"
-            rows={3}
-          />
-          <div className="w-full bottom-0 absolute flex justify-end mt-0.5  ">
-            <TimePicker
-              action={(time) =>
-                setNote((prev) => {
-                  if (prev?.includes("Arrival Time: ")) {
-                    return prev.replace(
-                      /(Arrival Time: ).*$/,
-                      `$1${dayjs(time).format("h:mm:ss A")}`
-                    );
-                  }
-                  return ` ${prev}  \n Arrival Time: ${dayjs(time).format(
-                    "h:mm:ss A"
-                  )} `;
-                })
-              }
-            />
-          </div>
+          {preOrder && (
+            <div className="flex items-center gap-3 mt-3">
+              {/* <span className="text-[var(--dark-secondary-text)]">Select Time:</span> */}
+              <TimePicker
+                action={(time) => setPreOrderTime(dayjs(time).format("h:mm:ss A"))}
+              />
+              {preOrderTime && (
+                <span className="ml-2 text-green-600 font-semibold">{preOrderTime}</span>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* QR Upload for Online Payment */}
+        {paymentMethod === "online" && (
+          <div className="flex flex-col items-center w-full mt-4">
+            <label className="text-[var(--dark-secondary-text)] mb-2 font-medium">Upload Payment QR Image</label>
+            <div className="w-full flex flex-col items-center justify-center border-2 border-dashed border-[var(--dark-border)] rounded-lg p-4 bg-[var(--light-background)] hover:bg-[var(--light-foreground)] transition-all cursor-pointer relative group">
+              {qrPreview ? (
+                <div className="relative w-32 h-32 flex flex-col items-center justify-center">
+                  <img src={qrPreview} alt="QR Preview" className="object-contain w-full h-full rounded-lg shadow" />
+                  <button type="button" onClick={removeQr} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition-all">
+                    <FaTimes size={16} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <QrCodeIcon className="text-[var(--primary-color)] size-4 mb-2"  />
+                  <span className="text-[var(--dark-secondary-text)] text-sm mb-2">Drag & drop or click to upload</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleQrChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Payment Action */}
         <div className="flex items-center justify-between mt-5">
@@ -186,7 +313,7 @@ export const Payment: React.FC = () => {
       </div>
       {!isUserVeried && (
         <Modal
-          children={<VerificationContainer />}
+          children={<VerificationContainer closeModal={() => setIsUserVerified(!isUserVeried)} />}
           close={isUserVeried}
           closeModal={() => setIsUserVerified(!isUserVeried)}
         />

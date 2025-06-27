@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useAppSelector, useNotification } from "@/hooks";
-import { Empty, Error } from "@/commons";
+import { Empty, Error } from "@/common";
 import { NotificationLoader, NotificationCard } from "@/components";
 import { useInView } from "react-intersection-observer";
 
@@ -12,13 +12,10 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
   const {
     currentDoc,
     hasMore,
-    data,
-    error,
     fetchData,
     fetchNextPage,
-    hasNextPage,
     isError,
-    isLoading,
+    loading,
     totalData,
   } = useNotification({
     isOpen: isOpen,
@@ -28,6 +25,8 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
     rootMargin: "0px 0px 100px 0px",
     threshold: [1],
   });
+
+  
 
   useEffect(() => {
     if (inView && hasMore && fetchData?.length + 1 !== totalData) {
@@ -40,6 +39,8 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
     }
   }, [inView, fetchNextPage]);
 
+
+
   return (
     <div className="p-2 w-full min-h-40 flex flex-col items-start justify-center bg-[var(--light-foreground)] border-[var(--dark-border)] border-[1px]  rounded-xl ">
       <h2 className=" py-2 mb-2 w-full  text-lg font-semibold">
@@ -50,7 +51,7 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
         id="notification"
         className="w-full h-[350px] flex flex-col  scrollbar-custom   justify-stretch pr-4 "
       >
-        {isLoading ? (
+        {loading ? (
           <NotificationLoader />
         ) : isError ? (
           <Error
@@ -61,7 +62,7 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
             message={"Something went wrong"}
             title="Error"
           />
-        ) : isLoading && fetchData?.length <= 0 ? (
+        ) : loading && fetchData?.length <= 0 ? (
           <NotificationLoader />
         ) : fetchData?.length <= 0 ? (
           <Empty title="You don't have any notification" />
@@ -69,13 +70,13 @@ export const NotificationPage: React.FC<Notifications> = ({ isOpen }) => {
           fetchData?.map((notification, index) => (
             <NotificationCard
               key={index}
-              isLoading={isLoading}
+              isLoading={loading}
               notification={notification}
             />
           ))
         )}
         <div className="w-full " ref={ref}>
-          {isLoading && fetchData.length > 0 && <NotificationLoader />}
+          {loading && fetchData.length > 0 && <NotificationLoader />}
         </div>
       </div>
     </div>

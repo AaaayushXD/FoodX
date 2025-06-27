@@ -8,7 +8,7 @@ export const createTicket = async (
   try {
     const response = await makeRequest({
       method: "post",
-      url: "tickets/add-ticket",
+      url: "tickets/add",
       data: data,
     });
     return response.data;

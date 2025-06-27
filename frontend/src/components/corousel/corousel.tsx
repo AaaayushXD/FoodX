@@ -17,11 +17,11 @@ export const Carousel: React.FC<CarouselProp> = ({
   const imageRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<any>();
 
-  const prevSlide = () => {
-    const newSlide = currentSlide === 0 ? props.length - 1 : currentSlide - 1;
-    setCurrentSlide(newSlide);
-    imageRef.current?.classList.add("fade-in");
-  };
+  // const prevSlide = () => {
+  //   const newSlide = currentSlide === 0 ? props.length - 1 : currentSlide - 1;
+  //   setCurrentSlide(newSlide);
+  //   imageRef.current?.classList.add("fade-in");
+  // };
   const nextSlide = () => {
     const newSlide = currentSlide === props.length - 1 ? 0 : currentSlide + 1;
     setCurrentSlide(newSlide);
@@ -54,6 +54,7 @@ export const Carousel: React.FC<CarouselProp> = ({
     };
   }, [currentSlide]);
 
+
   return (
     <div className="relative w-full h-full py-2 group z-1">
       <a
@@ -71,7 +72,7 @@ export const Carousel: React.FC<CarouselProp> = ({
           style={{
             backgroundImage: `url(${
               import.meta.env.VITE_URI + "assets/" + props[currentSlide]?.image
-            }), url('${Image}')`,
+            })`,
           }}
           onError={(e) => {
             const target = e.target as HTMLDivElement;

@@ -2,9 +2,9 @@ import { useNotification, useViewPort } from "@/hooks";
 import { Icons } from "@/utils";
 import { NotificationCard, NotificationLoader } from "@/components";
 import { useNavigate } from "react-router-dom";
-import { Empty } from "@/commons";
+import { Empty } from "@/common";
 import { useEffect } from "react";
-import { Error } from "@/commons";
+import { Error } from "@/common";
 import { useInView } from "react-intersection-observer";
 
 export const MobileNotification = () => {

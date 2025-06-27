@@ -18,8 +18,8 @@ export const TotalPay = () => {
       amount: totalAmount,
     },
     {
-      title: "Service Charge (5%)",
-      amount: 16,
+      title: "Service Charge",
+      amount: 0,
     },
   ];
 

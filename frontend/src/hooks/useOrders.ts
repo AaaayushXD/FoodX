@@ -93,7 +93,7 @@ export const useOrders = ({
   const { auth } = useAppSelector();
   const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const getUserOrders = async ({ pageParam }) => {
+  const getUserOrders = async ({ pageParam }: { pageParam: { currentFirstDoc: string; currentLastDoc: string } }) => {
     setLoading(true);
     setError("");
     const isPreviousOrderExist = data?.some((order) => order.status === status);
@@ -156,8 +156,8 @@ export const useOrders = ({
   useEffect(() => {
     getUserOrders({
       pageParam: {
-        currentFirstDoc: null,
-        currentLastDoc: null,
+        currentFirstDoc: "",
+        currentLastDoc: "",
       },
     });
   }, [status]);

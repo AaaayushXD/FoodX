@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Empty from "@/assets/empty.png";
 import { PopularProduct } from "@/components";
 import { Skeleton } from "@/helpers";
-import { Empty as EmptyComponent, Error as ErrorComponent } from "@/commons";
+import { Empty as EmptyComponent, Error as ErrorComponent } from "@/common";
 import { useQuery } from "@tanstack/react-query";
 
 export const PopularProducts = () => {

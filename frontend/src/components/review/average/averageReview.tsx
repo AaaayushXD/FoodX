@@ -2,7 +2,8 @@ import { Icons } from "@/utils";
 import { StarRating } from "../star/starReview";
 import React, { useState } from "react";
 import { AddProductReview } from "@/features";
-import { Portal, RippleButton } from "@/commons";
+import { Portal, RippleButton } from "@/common";
+import { useAppSelector } from "@/hooks";
 
 export const AverageReview = React.memo(
   ({
@@ -16,16 +17,22 @@ export const AverageReview = React.memo(
       if (!ratings || ratings.length === 0) return 0;
 
       return (
-        ratings.reduce((acc, rating) => acc + (rating?.rating || 0), 0) /
-        ratings.length
+        ratings.reduce(
+          (acc, rating) => acc + (Number(rating?.rating) || 0),
+          0
+        ) / ratings.length
       );
     }, [ratings]);
 
     const allRating = React.useMemo(() => {
       return [1, 2, 3, 4, 5]?.filter((revenue) =>
-        ratings?.some((rate) => rate.rating === revenue)
+        ratings?.some((rate) => rate.rating === revenue.toString())
       );
     }, [ratings]);
+    const { auth } = useAppSelector();
+const haveReview = ratings?.some((rate)=> rate?.uid === auth?.userInfo?.uid)
+    
+
 
     const [openRating, setOpenRating] = useState<boolean>(false);
 
@@ -35,13 +42,17 @@ export const AverageReview = React.memo(
           <h1 className=" sm:text-[24px] text-[18px] font-semibold ">
             Reviews and ratings
           </h1>
+          
           <RippleButton
             onClick={() => setOpenRating(!openRating)}
-            className="flex max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3"
+            className={`flex ${
+              haveReview ? "hidden" : ""
+            } max-w-[140px] sm:max-w-[155px] w-full justify-center items-center border border-gray-300 p-2  rounded-full  gap-3`}
           >
             <Icons.comment className="sm:size-5 size-4 " />
             <p className=" sm:text-[16px] text-[14px]  ">Write a review</p>
           </RippleButton>
+          
         </div>
 
         {/* average ratings */}
@@ -63,7 +74,7 @@ export const AverageReview = React.memo(
           <div className="w-full h-full border-dotted md:border-none   border-t flex   flex-col items-start justify-between gap-8 pt-5 ">
             {allRating.map((rating, key) => {
               const ratingCount = ratings?.filter(
-                (rate) => rate.rating === rating
+                (rate) => rate.rating === rating.toString()
               );
               const percentage = (ratingCount.length / ratings.length) * 100;
               return (
@@ -86,9 +97,9 @@ export const AverageReview = React.memo(
                   ></div>
                   {allRating[0] && (
                     <span className=" text-[0.75rem]  text-gray-600 right-5 -top-5 sm:top-[-1.75rem]  absolute sm:text-[18px] ">
-                      {`${ratingCount.length}(${ratingCount[0].rating.toFixed(
-                        1
-                      )}) `}
+                      {`${ratingCount.length}(${Number(
+                        ratingCount[0].rating
+                      ).toFixed(1)}) `}
                     </span>
                   )}
                 </div>
@@ -98,6 +109,7 @@ export const AverageReview = React.memo(
           <Portal isOpen={openRating} onClose={() => setOpenRating(false)}>
             <div className="bg-white rounded-lg p-6 max-w-[90%] w-[500px] relative">
               <AddProductReview
+              feedbackId={haveReview ? ratings?.find((rate)=> rate?.uid === auth?.userInfo?.uid)?.id : undefined}
                 action="add"
                 openReview={openRating}
                 productId={productId as string}

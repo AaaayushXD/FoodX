@@ -68,12 +68,12 @@ const Profile: React.FC<Prop> = ({ user }: Prop) => {
       <div className="w-full flex-col space-y-2 items-start justify-center">
         <p className="text-[13px] text-[var(--dark-text)]">More options</p>
         <div className="flex flex-col items-start justify-start gap-1 w-full">
-          <button
+          {/* <button
             onClick={() => navigate("/orders")}
             className=" flex tracking-wider justify-start items-center  rounded-md text-[var(--dark-text)] hover:bg-[#8080807c] w-full text-[15px] py-1 px-2 bg-[var(--secondary-light-text)]"
           >
             View Orders
-          </button>
+          </button> */}
           <button
             onClick={() => handleLogout()}
             className=" flex justify-start items-center  rounded text-[var(--dark-text)] hover:bg-[#8080807c] w-full text-[15px] py-1 px-2 bg-[var(--secondary-light-text)]"
