@@ -10,7 +10,7 @@ const links: { icon: React.ReactNode; href: string; title?: string }[] = [
     title: "Linkedin",
   },
   {
-    href: "https://www.facebook.com/texasintlcollege",
+    href: "https://www.facebook.com/texascollegesifal",
     icon: (
       <Icons.facebook className="sm:size-5 size-4 duration-150 text-[var(--primary-color)] " />
     ),
@@ -81,7 +81,7 @@ export const Footer: React.FC = () => {
                 href="/"
                 className="cursor-pointer hover:underline hover:text-[var(--secondary-color)]"
               >
-                Home
+                Home3
               </a>
               <a
                 href="/checkout"
@@ -164,7 +164,7 @@ interface LinkProp {
 
 const Link: React.FC<LinkProp> = ({ href, icon, title }) => {
   return (
-    <div className="flex z-[100] sm:z-[1900] items-center gap-9">
+    <div className="flex  sm:z-[1900] items-center gap-9">
       <a aria-label={`Go to ${title}`} target="_blank" href={href}>
         <button className=" bg-white p-1.5 rounded-full ">{icon}</button>
       </a>

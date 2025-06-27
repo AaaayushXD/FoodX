@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import Cookies from "js-cookie";
 import { Store } from "@/store";
 import { authLogout, resetOrder, resetCart, resetFavourite } from "@/reducer";
 import { ApiError } from "./helpers";
@@ -17,7 +16,7 @@ export const makeRequest: AxiosInstance = axios.create({
 
 makeRequest.interceptors.request.use(
   (config) => {
-    const accessToken = Cookies.get("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -45,7 +44,7 @@ makeRequest.interceptors.response.use(
       "Error verifying your token. Please try again later. TokenExpiredError: jwt expired"
     ) {
       // Unauthorized - likely due to an expired access token
-      const refreshToken = Cookies.get("refreshToken");
+      const refreshToken = localStorage.getItem("refreshToken");
 
       if (!refreshToken) {
         // No refresh token, force logout
@@ -66,7 +65,7 @@ makeRequest.interceptors.response.use(
 
       if (!isRefreshing) {
         isRefreshing = true;
-        Cookies.remove("accessToken"); // Remove expired access token
+        localStorage.removeItem("accessToken"); // Remove expired access token
 
         try {
           const response = await axios.post(
@@ -77,8 +76,8 @@ makeRequest.interceptors.response.use(
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             response.data.data;
 
-          Cookies.set("accessToken", newAccessToken, { secure: true });
-          Cookies.set("refreshToken", newRefreshToken, { secure: true });
+          localStorage.setItem("accessToken", newAccessToken);
+          localStorage.setItem("refreshToken", newRefreshToken);
 
           failedRequestsQueue.forEach((cb) => cb(newAccessToken));
           failedRequestsQueue = [];
@@ -89,7 +88,7 @@ makeRequest.interceptors.response.use(
           return makeRequest(error.config);
         } catch (refreshError: any) {
           if (refreshError.response.data.statusCode === 403)
-            Cookies.remove("refreshToken");
+            localStorage.removeItem("refreshToken");
           Store.dispatch(authLogout());
 
           failedRequestsQueue = [];
@@ -111,7 +110,7 @@ makeRequest.interceptors.response.use(
       error?.response?.data?.message === "Unauthorized access, Tokens unaviable."
     ) {
       // Forbidden - Invalid or expired refresh token
-      Cookies.remove("refreshToken");
+      localStorage.remove("refreshToken");
       toaster({
         title: "Session expired",
         message: "Your session was expired, Please login again",

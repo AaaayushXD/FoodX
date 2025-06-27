@@ -666,9 +666,9 @@ export const MobileNavbar = () => {
     <div
       className={`w-full ${
         isScroll === "up" || null ? "bottom-0 lg:bottom-10 " : "lg:bottom-5"
-      } duration-150 flex  justify-between  z-[10000] items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
+      } duration-150 flex  justify-between  z-[1000] items-center fixed bottom-0 lg:bg-transparent bg-white left-0 right-0  lg:shadow-none shadow`}
     >
-      <div className="w-full flex-col z-[10000]  duration-150    flex items-center justify-between">
+      <div className="w-full flex-col z-[1000]  duration-150    flex items-center justify-between">
         <CartPopup />
 
         <div

@@ -31,6 +31,15 @@ export const CategoryProduct: React.FC<Ui.Product> = (product) => {
       icon: "loading",
     });
     try {
+      if (!auth?.userInfo?.uid) {
+        toaster({
+          title: "Authentication Required",
+          icon: "warning",
+          className: "bg-yellow-50 text-white",
+          message: "Please login to add product to cart",
+        });
+        return;
+      }
       const response = await addProductToCart(
         auth?.userInfo?.uid as string,
         product?.id

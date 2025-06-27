@@ -286,15 +286,15 @@ const OrderList = () => {
                 </div>
               }
               sort={[
-                { label: "Requested", value: "orderRequest", id: "jfhkdj" },
+                { label: "Pending", value: "pending", id: "jfhkdj" },
+                // {
+                //   label: "Status",
+                //   value: "status",
+                //   id: "kfljdsfsdfkjk",
+                // },
                 {
-                  label: "Status",
-                  value: "status",
-                  id: "kfljdsfsdfkjk",
-                },
-                {
-                  label: "Delivered",
-                  value: "orderFullfilled",
+                  label: "Completed",
+                  value: "completed",
                   id: "kfljdsfsdf",
                 },
               ]}

@@ -1,9 +1,9 @@
-import Cookies from "js-cookie";
+
 import { JwtPayload, jwtDecode } from "jwt-decode";
 
 export const getRoleFromAccessToken = async () => {
   try {
-    const accessToken = Cookies.get("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) throw new Error("Token not Available");
 
     const decodeToken = jwtDecode<JwtPayload>(accessToken) as any;

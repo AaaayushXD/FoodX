@@ -1,6 +1,5 @@
 import { globalRequest } from "@/globalRequest";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 import axios from "axios";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
@@ -41,14 +40,8 @@ export const signIn = async (
       >
     >response.data;
 
-    Cookies.set("accessToken", responseData.data.accessToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("refreshToken", responseData.data.refreshToken, {
-      secure: true,
-      sameSite: "strict",
-    });
+    localStorage.setItem("accessToken", responseData.data.accessToken);
+    localStorage.setItem("refreshToken", responseData.data.refreshToken);
     return responseData;
   } catch (error) {
     if (axios.isAxiosError(error)) {

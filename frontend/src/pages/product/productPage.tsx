@@ -152,7 +152,7 @@ const RecommendProduct = () => {
       </h1>
       <div
         ref={recentCardReference}
-        className="w-full  h-full overflow-y-hidden overflow-x-auto"
+        className="w-full  h-full  overflow-x-auto"
       >
         <div className=" w-max  flex  items-start justify-start gap-5">
           {products.map((product) => (

@@ -121,9 +121,10 @@ export const RegisterContainer: React.FC = () => {
       <div className="flex lg:w-auto w-full flex-col items-center justify-start  ">
         <div className="bg-[#fbfbfb] sm:static fixed z-50 shadow sm:shadow-none lg:bg-transparent w-full lg:w-auto py-2 mb-4 flex justify-start">
           <img
+            onClick={() => navigate("/")}
             src={logo}
             alt="FoodX Logo"
-            className="lg:w-[500px] w-[120px] sm:h-auto h-[60px] transition-transform duration-300 ease-in-out transform hover:scale-105"
+            className="lg:w-[500px] cursor-pointer w-[120px] sm:h-auto h-[60px] transition-transform duration-300 ease-in-out transform hover:scale-105"
           />
         </div>
         <h1 className="text-center text-[20px] px-2 sm:mt-0 mt-24  sm:text-[28px] md:text-[36px] font-semibold text-[var(--primary-color)] leading-tight sm:mb-6">

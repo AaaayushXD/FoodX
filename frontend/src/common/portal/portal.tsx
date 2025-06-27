@@ -24,9 +24,9 @@ export const Portal = ({ children, isOpen, onClose, container }: PortalProps) =>
     setPortalRoot(element || null);
 
     // Prevent body scroll when portal is open
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    }
+    // if (isOpen) {
+    //   document.body.style.overflow = "hidden";
+    // }
 
     return () => {
       document.body.style.overflow = "unset";

@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as userAction from "@/services";
 import { ApiError } from "@/helpers";
 import { toaster } from "@/utils";
-import Cookies from "js-cookie";
 
 export interface SigninTypes {
   email: string;
@@ -24,8 +23,8 @@ const signUpAction = createAsyncThunk(
         });
       }
       const user = response.data;
-      Cookies.set("accessToken", user.accessToken);
-      Cookies.set("refreshToken", user.refreshToken);
+      localStorage.setItem("accessToken", user.accessToken);
+      localStorage.setItem("refreshToken", user.refreshToken);
 
       localStorage?.setItem("verifyType", "otp");
       if (!data?.isVerified) {

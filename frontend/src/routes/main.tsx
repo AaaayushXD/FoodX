@@ -13,6 +13,9 @@ import { Outlet } from "react-router-dom";
 import { useSocket } from "../utils/socket";
 import Bell from "../assets/order.mp3";
 import ErrorBoundary from "@/errorBoundary";
+// import { useQueryClient } from "@tanstack/react-query";
+// import { toaster } from "@/utils";
+// import toast from "react-hot-toast";
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,9 +45,47 @@ export const HomePage: React.FC = () => {
 
   useScrollToTop();
 
+  // const queryClient = useQueryClient();
+
+
+  // const handleRefresh = async () => {
+  //   const loadingToast = toaster({
+  //     title: "Refreshing...",
+  //     icon: "loading",
+  //   });
+
+  //   try {
+  //     // Invalidate all relevant queries to refresh data
+  //     await Promise.all([
+  //       queryClient.invalidateQueries({ queryKey: ["categories"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["product:popular"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["banner"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["specials"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["fetch-notification"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["orders"] }),
+  //       queryClient.invalidateQueries({ queryKey: ["favourites"] }),
+  //     ]);
+
+  //     toaster({
+  //       title: "Refreshed!",
+  //       icon: "success",
+  //       message: "All data has been updated",
+  //     });
+  //   } catch (error) {
+  //     console.error("Refresh error:", error);
+  //     toaster({
+  //       title: "Refresh failed",
+  //       icon: "error",
+  //       message: "Failed to refresh data. Please try again.",
+  //     });
+  //   } finally {
+  //     toast.dismiss(loadingToast);
+  //   }
+  // };
   return (
     <div className="flex items-center !overflow-x-hidden justify-center w-full h-full min-w-[100vw]  ">
       <ErrorBoundary>
+        {/* <PullToRefresh onRefresh={handleRefresh} className="w-full h-full"> */}
         <div className="w-full  h-full max-w-[1500px] flex flex-col justify-center items-center ">
           <div className="w-full">
             <Outlet />
@@ -55,6 +96,7 @@ export const HomePage: React.FC = () => {
 
           <MobileNavbar />
         </div>
+        {/* </PullToRefresh> */}
       </ErrorBoundary>
     </div>
   );

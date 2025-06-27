@@ -100,7 +100,7 @@
     font-family: "Titillium Web", serif;
     font-weight: 400;
     font-style: normal;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
     background: var(--body-bg);
     scroll-behavior: smooth;
     overscroll-behavior: none;

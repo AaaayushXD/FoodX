@@ -23,7 +23,7 @@ export const useGetRecentOrder = (
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [data, setData] = React.useState<Model.UserOrder[]>([]);
-
+ const auth = useAppSelector();
   const recentOrder = async ({
     pageSize,
     currentFirstDoc,
@@ -34,6 +34,7 @@ export const useGetRecentOrder = (
     status,
     userId,
   }: Actions.GetOrderModal<keyof Model.Order>) => {
+    if(!auth?.auth?.success) return;
     setLoading(true);
     try {
       const response = await getOrderByUser({
@@ -154,13 +155,14 @@ export const useOrders = ({
   };
 
   useEffect(() => {
+    if(!auth?.success) return;
     getUserOrders({
       pageParam: {
         currentFirstDoc: "",
         currentLastDoc: "",
       },
     });
-  }, [status]);
+  }, [status, auth?.success]);
 
   return {
     error,

@@ -7,7 +7,7 @@ import {
 } from "@/services";
 import { Icons, toaster } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface AddProductReviewProp {
@@ -206,17 +206,17 @@ export const AddProductReview: React.FC<AddProductReviewProp> = ({
     }
   };
 
-  useEffect(() => {
-    if (openReview) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+  // useEffect(() => {
+  //   if (openReview) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //   }
 
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [openReview]);
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //   };
+  // }, [openReview]);
 
   // const { mutate } = useMutation({
   //   mutationKey: ["update:feedback"],

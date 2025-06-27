@@ -1,7 +1,6 @@
 import React from "react";
 import toast from "react-hot-toast";
 import { authLogout, resetOrder, resetFavourite, resetCart } from "@/reducer";
-import Cookies from "js-cookie";
 import { addLogs, logoutUser } from "@/services";
 import dayjs from "dayjs";
 
@@ -29,7 +28,7 @@ export const useLogout = (): UseLogoutReturn => {
     setLoading(true);
     try {
       const response = await logoutUser({
-        role: auth?.userInfo?.role,
+        role: auth?.userInfo?.role || "customer",
         uid: auth?.userInfo?.uid,
       });
       if (response.status === 200) {
@@ -51,8 +50,8 @@ export const useLogout = (): UseLogoutReturn => {
       dispatch(authLogout());
       dispatch(resetCart());
       dispatch(resetFavourite());
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
     } catch (error) {
       if (error instanceof ApiError) {
         toaster({
